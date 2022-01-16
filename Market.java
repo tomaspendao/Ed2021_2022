@@ -8,7 +8,6 @@ package temp;
 import ADT.MarketADT;
 import Collections.LinkedList.LinkedQueue;
 
-
 /**
  * Market representa uma implementação de MarketADT.
  *
@@ -19,7 +18,32 @@ public class Market implements MarketADT {
     /**
      * Fila utilizada para armazenar clientes de um mercado.
      */
-    LinkedQueue clients;
+    private LinkedQueue clients;
+
+    /**
+     * Nome do mercado.
+     */
+    private String name;
+    /**
+     * Tipo de localização.
+     */
+    private final String type = "Mercado";
+
+    /**
+     * Construtor vazio que cria uma instância de mercado.
+     */
+    public Market() {
+    }
+
+    /**
+     * Construtor utilizado para a criação de uma instância de mercado com um
+     * determinado nome.
+     *
+     * @param name Nome do mercado.
+     */
+    public Market(String name) {
+        this.name = name;
+    }
 
     /**
      * Adiciona um cliente com uma dada procura ao fim da fila. Apenas deve ser
@@ -65,6 +89,42 @@ public class Market implements MarketADT {
     @Override
     public boolean export() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    /**
+     * Método utilizado para obter uma lista dos clientes de um mercado.
+     *
+     * @return Lista dos clientes de um mercado.
+     */
+    public LinkedQueue getClients() {
+        return clients;
+    }
+
+    /**
+     * Método utilizado para obter o nome de um mercado.
+     *
+     * @return Nome de um mercado.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Método utilizado para obter o tipo de localização.
+     *
+     * @return Tipo de localização.
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Método utilizado para establecer o nome de um mercado.
+     *
+     * @param name Nome a estabelecer de um mercado.
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
