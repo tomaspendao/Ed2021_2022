@@ -4,18 +4,20 @@
  */
 package API;
 
+import Exceptions.InvalidValueException;
+
 /**
  * Local
- * 
+ *
  * @author Tomás Pendão
  */
-public class Place {
-    
+abstract public class Place {
+
     /**
      * Nome do local.
      */
     private String name;
-    
+
     /**
      * Tipo do local.
      */
@@ -23,13 +25,17 @@ public class Place {
 
     /**
      * Construtor para instanciar um local
-     * 
+     *
      * @param name nome do local
      * @param type tipo do local (Mercado, Sede, Armazém)
      */
     public Place(String name, String type) {
         this.name = name;
-        this.type = type;
+        if (checkType(type)) {
+            this.type = type;
+        } else {
+            throw new InvalidValueException(type);
+        }
     }
 
     /**
@@ -40,19 +46,23 @@ public class Place {
 
     /**
      * Retornar uma string que representa o nome do local
-     * 
+     *
      * @return uma String com o nome do local
      */
     public String getName() {
         return name;
     }
-    
+
     /**
      * Retornar uma string que representa o tipo do local
-     * 
+     *
      * @return uma String com o tipo do local
      */
     public String getType() {
         return type;
+    }
+
+    private boolean checkType(String type) {
+        return type.equals("Armazém") || type.equals("Mercado") || type.equals("Sede");
     }
 }

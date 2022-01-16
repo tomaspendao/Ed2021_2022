@@ -9,47 +9,43 @@ import Exceptions.InvalidValueException;
 
 /**
  * Armazém
- * 
+ *
  * @author Tomás Pendão
  */
-public class Warehouse extends Place implements WarehouseADT{
+public class Warehouse extends Place implements WarehouseADT {
 
     private float maxCapacity;
     private float availableCapacity;
 
     public Warehouse(float maxCapacity, float availableCapacity, String name) {
         super(name, "Armazém");
-        if(maxCapacity >= 0 && availableCapacity >= 0){
-            this.maxCapacity = maxCapacity;
-            if(availableCapacity <= maxCapacity){
-                this.availableCapacity = availableCapacity;
-            }
-        }else{
-            this.maxCapacity = this.availableCapacity = 0;
-        }
+        this.setCapacity(maxCapacity);
+        this.setAvailableCapacity(availableCapacity);
     }
-    
+
     @Override
-    public void setCapacity(float maxCapacity) {
-        if(maxCapacity >= 0){
+    public final void setCapacity(float maxCapacity) {
+        if (maxCapacity >= 0 && maxCapacity >= this.availableCapacity) {
             this.maxCapacity = maxCapacity;
-        }else{
+        } else {
             throw new InvalidValueException(Float.toString(maxCapacity));
         }
     }
 
     @Override
-    public void setAvailableCapacity(float capacity) {
-        if(capacity >= 0 && capacity <= this.maxCapacity){
+    public final void setAvailableCapacity(float capacity) {
+        if (capacity >= 0 && capacity <= this.maxCapacity) {
             this.availableCapacity = capacity;
-        }else{
+        } else {
             throw new InvalidValueException(Float.toString(capacity));
         }
     }
 
     @Override
-    public String printWarehouses() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public String printWarehouse() {
+        String str = "";
+        str = "Nome: " + this.getName() + ";Tipo: " + this.getType() + ";Capacidade: " + this.getMaxCapacity() + ";Stock: " + this.availableCapacity;
+        return str;
     }
 
     @Override
@@ -64,6 +60,5 @@ public class Warehouse extends Place implements WarehouseADT{
     public float getAvailableCapacity() {
         return availableCapacity;
     }
-    
-    
+
 }
