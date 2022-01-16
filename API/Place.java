@@ -16,12 +16,12 @@ abstract public class Place {
     /**
      * Nome do local.
      */
-    private String name;
+    private String nome;
 
     /**
      * Tipo do local.
      */
-    private String type;
+    private String tipo;
 
     /**
      * Construtor para instanciar um local
@@ -30,9 +30,9 @@ abstract public class Place {
      * @param type tipo do local (Mercado, Sede, Armazém)
      */
     public Place(String name, String type) {
-        this.name = name;
+        this.nome = name;
         if (checkType(type)) {
-            this.type = type;
+            this.tipo = type;
         } else {
             throw new InvalidValueException(type);
         }
@@ -50,7 +50,7 @@ abstract public class Place {
      * @return uma String com o nome do local
      */
     public String getName() {
-        return name;
+        return this.nome;
     }
 
     /**
@@ -59,7 +59,7 @@ abstract public class Place {
      * @return uma String com o tipo do local
      */
     public String getType() {
-        return type;
+        return this.tipo;
     }
 
     private boolean checkType(String type) {

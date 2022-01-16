@@ -6,6 +6,10 @@ package API;
 
 import ADT.WarehouseADT;
 import Exceptions.InvalidValueException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Armazém
@@ -14,8 +18,8 @@ import Exceptions.InvalidValueException;
  */
 public class Warehouse extends Place implements WarehouseADT {
 
-    private float maxCapacity;
-    private float availableCapacity;
+    private float capacidade;
+    private float stock;
 
     public Warehouse(float maxCapacity, float availableCapacity, String name) {
         super(name, "Armazém");
@@ -25,8 +29,8 @@ public class Warehouse extends Place implements WarehouseADT {
 
     @Override
     public final void setCapacity(float maxCapacity) {
-        if (maxCapacity >= 0 && maxCapacity >= this.availableCapacity) {
-            this.maxCapacity = maxCapacity;
+        if (maxCapacity >= 0 && maxCapacity >= this.stock) {
+            this.capacidade = maxCapacity;
         } else {
             throw new InvalidValueException(Float.toString(maxCapacity));
         }
@@ -34,8 +38,8 @@ public class Warehouse extends Place implements WarehouseADT {
 
     @Override
     public final void setAvailableCapacity(float capacity) {
-        if (capacity >= 0 && capacity <= this.maxCapacity) {
-            this.availableCapacity = capacity;
+        if (capacity >= 0 && capacity <= this.capacidade) {
+            this.stock = capacity;
         } else {
             throw new InvalidValueException(Float.toString(capacity));
         }
@@ -44,21 +48,32 @@ public class Warehouse extends Place implements WarehouseADT {
     @Override
     public String printWarehouse() {
         String str = "";
-        str = "Nome: " + this.getName() + ";Tipo: " + this.getType() + ";Capacidade: " + this.getMaxCapacity() + ";Stock: " + this.availableCapacity;
+        str = "Nome: " + this.getName() + ";Tipo: " + this.getType() + ";Capacidade: " + this.getMaxCapacity() + ";Stock: " + this.stock;
         return str;
     }
 
     @Override
     public boolean export() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        
+        String json = gson.toJson(this);
+        try (FileWriter writer = new FileWriter("Warehouse_"+this.getName()+".json")) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println(json);
+        
+        return true;
     }
 
     public float getMaxCapacity() {
-        return maxCapacity;
+        return capacidade;
     }
 
     public float getAvailableCapacity() {
-        return availableCapacity;
+        return stock;
     }
 
 }

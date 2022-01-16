@@ -61,16 +61,11 @@ public class WarehouseTest {
     /**
      * Test of export method, of class Warehouse.
      */
-    /*@Test
+    @Test
     public void testExport() {
         System.out.println("export");
-        Warehouse instance = null;
-        boolean expResult = false;
-        boolean result = instance.export();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }*/
+        assertTrue(this.armazem.export());
+    }
 
     /**
      * Test of getMaxCapacity method, of class Warehouse.
