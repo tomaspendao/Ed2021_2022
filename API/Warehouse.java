@@ -18,15 +18,39 @@ import java.io.IOException;
  */
 public class Warehouse extends Place implements WarehouseADT {
 
+    /**
+     * Capacidade máxima de um armazém
+     */
     private float capacidade;
+    /**
+     * Stock que o armazém tem no momento
+     */
     private float stock;
 
+    /**
+     * Construtor que intacia armazém
+     * 
+     * @param maxCapacity Capacidade máxima do armazém
+     * @param availableCapacity stock do armazem
+     * @param name nome do armazem
+     */
     public Warehouse(float maxCapacity, float availableCapacity, String name) {
         super(name, "Armazém");
         this.setCapacity(maxCapacity);
         this.setAvailableCapacity(availableCapacity);
     }
 
+    /**
+     * Construtor vazio
+     */
+    public Warehouse() {
+    }
+        
+    /**
+     * Definir uma capacidade máxima de mercadoria que um armazém pode ter.
+     *
+     * @param maxCapacity capacidade máxima
+     */
     @Override
     public final void setCapacity(float maxCapacity) {
         if (maxCapacity >= 0 && maxCapacity >= this.stock) {
@@ -36,6 +60,11 @@ public class Warehouse extends Place implements WarehouseADT {
         }
     }
 
+    /**
+     * Definir a quantidade atual de mercadoria disponivel que um armazém tem.
+     *
+     * @param capacity quantidade atual
+     */
     @Override
     public final void setAvailableCapacity(float capacity) {
         if (capacity >= 0 && capacity <= this.capacidade) {
@@ -45,6 +74,11 @@ public class Warehouse extends Place implements WarehouseADT {
         }
     }
 
+    /**
+     * Lista a informação relativa a um armazém.
+     *
+     * @return Lista um armazém.
+     */
     @Override
     public String printWarehouse() {
         String str = "";
@@ -52,11 +86,19 @@ public class Warehouse extends Place implements WarehouseADT {
         return str;
     }
 
+    /**
+     * Exporta os dados de um armazém para formato JSON.
+     *
+     * @return true caso seja possível exportar para formato JSON, false caso
+     * contrário.
+     */
     @Override
     public boolean export() {
+        
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         
         String json = gson.toJson(this);
+        
         try (FileWriter writer = new FileWriter("Warehouse_"+this.getName()+".json")) {
             gson.toJson(this, writer);
         } catch (IOException e) {
@@ -68,10 +110,20 @@ public class Warehouse extends Place implements WarehouseADT {
         return true;
     }
 
+    /**
+     * Obter o valor da capacidade máxima de um Armazém
+     * 
+     * @return a capacidade máxima
+     */
     public float getMaxCapacity() {
         return capacidade;
     }
 
+    /**
+     * Obter o valor do stock num armazém
+     * 
+     * @return o stock
+     */
     public float getAvailableCapacity() {
         return stock;
     }

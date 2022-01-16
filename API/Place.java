@@ -37,7 +37,7 @@ abstract public class Place {
             throw new InvalidValueException(type);
         }
     }
-
+    
     /**
      * Construtor vazio
      */
@@ -62,6 +62,12 @@ abstract public class Place {
         return this.tipo;
     }
 
+    /**
+     * Verifixar se o tipo adicionado é válido de acordo com os tipo permitidos
+     * 
+     * @param type tipo a verificar
+     * @return true se for um tipo válido, falso se for um tipo inválido
+     */
     private boolean checkType(String type) {
         return type.equals("Armazém") || type.equals("Mercado") || type.equals("Sede");
     }
