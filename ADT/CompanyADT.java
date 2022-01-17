@@ -8,12 +8,26 @@ package ADT;
 import API.*;
 
 /**
+ * CompanyADT define uma interface com comportamentos de uma empresa.
  *
+ * @author
  */
 public interface CompanyADT {
 
+    /**
+     * Método utilizado para adicionar um vendedor a uma empresa.
+     *
+     * @param vendedor Vendedor a adicionar a uma empresa.
+     */
     public void addSeller(Seller vendedor);
 
+    /**
+     * Método utilizado para editar um vendedor de uma empresa.
+     *
+     * @param id ID do vendedor a alterar.
+     * @param capacity Nova capacidade máxima do vendedor.
+     * @return
+     */
     public boolean editSeller(int id, float capacity);
 
     public void addMarket(Market market);
