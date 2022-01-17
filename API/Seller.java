@@ -6,6 +6,8 @@
 package API;
 
 import ADT.SellerADT;
+import ADT.UnorderedListADT;
+import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import Collections.LinkedList.MyLinkedList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,7 +24,7 @@ public class Seller implements SellerADT {
     /**
      * Lista de mercados associado a um determinado vendedor.
      */
-    private MyLinkedList mercados_a_visitar;
+    private UnorderedListADT<String> mercados_a_visitar;
 
     /**
      * Representa a capacidad que um dado vendedor consegue transportar em kg
@@ -58,6 +60,7 @@ public class Seller implements SellerADT {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
+        this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
 
     /**
@@ -69,7 +72,9 @@ public class Seller implements SellerADT {
      */
     @Override
     public void addMarket(String name) {
-        mercados_a_visitar.add(name);
+        if(this.mercados_a_visitar.contains(name) != true){
+            this.mercados_a_visitar.addToRear(name);
+        }
     }
 
     /**
@@ -133,7 +138,7 @@ public class Seller implements SellerADT {
      *
      * @return Mercados a visitar pelo vendedor.
      */
-    public MyLinkedList getMercados_a_visitar() {
+    public UnorderedListADT getMercados_a_visitar() {
         return mercados_a_visitar;
     }
 

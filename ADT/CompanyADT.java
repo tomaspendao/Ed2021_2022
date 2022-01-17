@@ -14,19 +14,19 @@ public interface CompanyADT {
 
     public void addSeller(Seller vendedor);
 
-    public boolean editSeller();
+    public boolean editSeller(int id, float capacity);
 
     public void addMarket(Market market);
 
-    public boolean editMarket();
+    public boolean editMarket(String market, float demand);
 
     public void addWarehouse(Warehouse warehouse);
 
-    public boolean editWarehouse();
+    public boolean editWarehouse(String warehouse, float capacity, float stock);
 
     public void addRoute(String start, String dest, float weight);
 
-    public boolean editRoute();
+    public void editRoute(String start, String dest, float weight);
 
     public String printSellers();
 

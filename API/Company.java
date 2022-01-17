@@ -6,19 +6,16 @@ package API;
 
 import ADT.CompanyADT;
 import ADT.UnorderedListADT;
-import Collections.Array.ArrayUnorderedList;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import Collections.LinkedList.GraphWeightList;
+import Collections.LinkedList.MyLinkedList;
 import Exceptions.ElementNotFoundException;
+import Exceptions.InvalidValueException;
 import Models.Nodes.ArestaWeight;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -33,7 +30,7 @@ public class Company extends Place implements CompanyADT {
     private GraphWeightList<Place> caminhos;
 
     public Company(UnorderedListADT<Seller> vendedores, UnorderedListADT<Place> locais, GraphWeightList<Place> caminhos, String name) {
-        super(name,"Sede");
+        super(name, "Sede");
         this.vendedores = vendedores;
         this.locais = locais;
         this.caminhos = caminhos;
@@ -46,34 +43,135 @@ public class Company extends Place implements CompanyADT {
 
     @Override
     public void addSeller(Seller vendedor) {
-        this.vendedores.addToRear(vendedor);
+        //try {
+        if (this.checkIfSellerExists(vendedor.getId()) == null) {
+            this.vendedores.addToRear(vendedor);
+            this.removeNotValidMarketsFromSeller(vendedor.getId());
+        }
+        //} catch (InvalidValueException ex) {
+        //}
+    }
+
+    private int removeNotValidMarketsFromSeller(int id) {
+        int count = 0;
+        Seller seller = this.checkIfSellerExists(id);
+        Iterator marketIter = seller.getMercados_a_visitar().iterator();
+        while (marketIter.hasNext()) {
+            String marketString = (String) marketIter.next();
+            if (this.checkIfMarketExists(marketString) == null) {
+                seller.getMercados_a_visitar().remove(marketString);
+                count++;
+            }
+        }
+        return count;
     }
 
     @Override
-    public boolean editSeller() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean editSeller(int id, float capacity) {
+        Seller oldSeller = this.checkIfSellerExists(id);
+        if (oldSeller == null) {
+            return false;
+        } else if (capacity >= 0) {
+            oldSeller.editCapacity(capacity);
+        }
+
+        return false;
+    }
+
+    public boolean addMarketToSeller(int id, String market) {
+        Seller oldSeller = this.checkIfSellerExists(id);
+        if (oldSeller == null) {
+            return false;
+        } else if (this.checkIfMarketExists(market) != null) {
+            oldSeller.addMarket(market);
+        }
+        return false;
+    }
+
+    /*private boolean checkIfMarketExists(String name) {
+        try {
+            Place place = this.findPlaceByName(name);
+            if (place.getType().equals("Mercado")) {
+                return true;
+            }
+        } catch (ElementNotFoundException ex) {
+            return false;
+        }
+        return false;
+    }*/
+    private Market checkIfMarketExists(String name) {
+        try {
+            Place place = this.findPlaceByName(name);
+            if (place.getType().equals("Mercado")) {
+                Market market = (Market) place;
+                return market;
+            }
+        } catch (ElementNotFoundException ex) {
+            System.err.println("ELEMENT NOT FOUND");
+            return null;
+        }
+        return null;
+    }
+
+    private Seller checkIfSellerExists(int id) {
+        Iterator sellerIter = this.vendedores.iterator();
+
+        while (sellerIter.hasNext()) {
+            Seller sellerValue = (Seller) sellerIter.next();
+            if (sellerValue.getId() == id) {
+                return sellerValue;
+            }
+        }
+        return null;
     }
 
     @Override
     public void addMarket(Market market) {
-        this.locais.addToRear(market);
-        this.caminhos.addVertex(market);
+        if (checkIfMarketExists(market.getName()) == null) {
+            this.locais.addToRear(market);
+            this.caminhos.addVertex(market);
+        }
     }
 
     @Override
-    public boolean editMarket() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean editMarket(String market, float demand) {
+        Market mak = checkIfMarketExists(market);
+        if (mak != null) {
+            mak.addClients(demand);
+        }
+        return false;
     }
 
     @Override
     public void addWarehouse(Warehouse warehouse) {
-        this.locais.addToRear(warehouse);
-        this.caminhos.addVertex(warehouse);
+        if (checkIfWarehouseExists(warehouse.getName()) == null) {
+            this.locais.addToRear(warehouse);
+            this.caminhos.addVertex(warehouse);
+        }
     }
 
     @Override
-    public boolean editWarehouse() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean editWarehouse(String warehouse, float capacity, float stock) {
+        Warehouse ware = checkIfWarehouseExists(warehouse);
+        if (ware != null) {
+            ware.setAvailableCapacity(stock);
+            ware.setCapacity(capacity);
+        }
+        return false;
+    }
+
+    private Warehouse checkIfWarehouseExists(String name) {
+        try {
+            Place place = this.findPlaceByName(name);
+            if (place.getType().equals("Armazém")) {
+                Warehouse warehouse = (Warehouse) place;
+                return warehouse;
+            }
+        } catch (ElementNotFoundException ex) {
+            System.err.println("ELEMENT NOT FOUND");
+            return null;
+        }
+        return null;
     }
 
     @Override
@@ -89,12 +187,12 @@ public class Company extends Place implements CompanyADT {
                 return value;
             }
         }
-        throw new ElementNotFoundException("place");
+        throw new ElementNotFoundException(name);
     }
 
     @Override
-    public boolean editRoute() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void editRoute(String start, String dest, float weight) {
+        this.addRoute(start, dest, weight);
     }
 
     @Override
@@ -104,7 +202,7 @@ public class Company extends Place implements CompanyADT {
         Iterator iter = this.vendedores.iterator();
         while (iter.hasNext()) {
             Seller temp = (Seller) iter.next();
-            str = str + temp;
+            str = str + temp.getNome() + ";";
         }
 
         return str;
@@ -118,7 +216,7 @@ public class Company extends Place implements CompanyADT {
         while (iter.hasNext()) {
             Place temp = (Place) iter.next();
             if (temp.getType().equals("Mercado")) {
-                str = str + temp;
+                str = str + temp.getName() + ";";
             }
         }
 
@@ -134,7 +232,7 @@ public class Company extends Place implements CompanyADT {
             Place temp = (Place) iter.next();
             if (temp.getType().equals("Armazém")) {
                 Warehouse newTemp = (Warehouse) temp;
-                str = str + newTemp.printWarehouse();
+                str = str + newTemp.getName() + ";";
             }
         }
 
@@ -143,7 +241,7 @@ public class Company extends Place implements CompanyADT {
 
     @Override
     public boolean export() {
-        try (JsonWriter writer = new JsonWriter(new FileWriter("test.json"))) {
+        try (JsonWriter writer = new JsonWriter(new FileWriter("Company_" + this.getName() + ".json"))) {
             writer.setIndent("  ");
             writer.beginObject();
 
@@ -154,12 +252,16 @@ public class Company extends Place implements CompanyADT {
             while (sellersIter.hasNext()) {
                 Seller value = (Seller) sellersIter.next();
                 writer.beginObject();
-                //writer.name("id").value(value.getId());
-                //writer.name("nome").value(value.getName());
-                //writer.name("capacidade").value(value.getCapacity());
+                writer.name("id").value(value.getId());
+                writer.name("nome").value(value.getNome());
+                writer.name("capacidade").value(value.getCapacidade());
                 writer.name("mercados_a_visitar");
                 writer.beginArray();
-                //imprimir os markets
+                Iterator marketIter = value.getMercados_a_visitar().iterator();
+                while (marketIter.hasNext()) {
+                    String marketString = (String) marketIter.next();
+                    writer.value(marketString);
+                }
                 writer.endArray();
                 writer.endObject();
             }
@@ -185,10 +287,11 @@ public class Company extends Place implements CompanyADT {
                         Market merc = (Market) value;
                         writer.name("clientes");
                         writer.beginArray();
-                        Iterator clientIter = this.vendedores.iterator();
-                        while (clientIter.hasNext()) {
-                            float need = (float) clientIter.next();
-                            writer.value(need);
+                        if (merc.getClients().isEmpty() == false) {
+                            String[] clientIter = merc.getClients().toString().split(" ");
+                            for (int i = 0; i < clientIter.length; i++) {
+                                writer.value(Float.parseFloat(clientIter[i]));
+                            }
                         }
                         writer.endArray();
                         break;
@@ -205,7 +308,7 @@ public class Company extends Place implements CompanyADT {
             writer.beginArray();
             DoubleLinkedUnorderedList<ArestaWeight>[] paths = this.caminhos.getAdjList();
             for (int i = 0; i < this.caminhos.size(); i++) {
-                if (paths[i].size() > 0) {                    
+                if (paths[i].size() > 0) {
                     System.out.println(paths[i].size());
                     Iterator pathsIter = paths[i].iterator();
                     while (pathsIter.hasNext()) {
@@ -215,7 +318,7 @@ public class Company extends Place implements CompanyADT {
                         writer.name("para").value(this.caminhos.getVertice(value.getTarget()).getName());
                         writer.name("distancia").value(value.getWeight());
                         writer.endObject();
-                    }                    
+                    }
                 }
             }
             writer.endArray();
