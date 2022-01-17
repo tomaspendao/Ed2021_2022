@@ -1,13 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+/**
+ * Epoca Normal ED
+ * Daniel Pinto 8200412
+ * Tomás Pendão 8170308
  */
 package API;
 
 import Exceptions.InvalidValueException;
 
 /**
- * Local
+ * Classe abstrata que irá armazenar informação sobre um local.
  *
  * @author Tomás Pendão
  */
@@ -24,49 +25,52 @@ abstract public class Place {
     private String tipo;
 
     /**
-     * Construtor para instanciar um local
+     * Construtor para instanciar um local com um nome e um tipo. Um local é
+     * apenas criado se cumprir com os requesito do tipo de local.
      *
-     * @param name nome do local
-     * @param type tipo do local (Mercado, Sede, Armazém)
+     * @param name Nome do local.
+     * @param type Tipo do local (Mercado, Sede ou Armazém).
      */
     public Place(String name, String type) {
         this.nome = name;
+
         if (checkType(type)) {
             this.tipo = type;
         } else {
             throw new InvalidValueException(type);
         }
     }
-    
+
     /**
-     * Construtor vazio
+     * Construtor vazio.
      */
     public Place() {
     }
 
     /**
-     * Retornar uma string que representa o nome do local
+     * Método utilizado para retornar uma string que representa o nome do local.
      *
-     * @return uma String com o nome do local
+     * @return Uma string com o nome do local.
      */
     public String getName() {
         return this.nome;
     }
 
     /**
-     * Retornar uma string que representa o tipo do local
+     * Método utilizado para retornar uma string que representa o tipo do local.
      *
-     * @return uma String com o tipo do local
+     * @return Uma string com o tipo do local.
      */
     public String getType() {
         return this.tipo;
     }
 
     /**
-     * Verifixar se o tipo adicionado é válido de acordo com os tipo permitidos
-     * 
-     * @param type tipo a verificar
-     * @return true se for um tipo válido, falso se for um tipo inválido
+     * Método utilizado para verificar se o tipo adicionado é válido de acordo
+     * com os tipo permitidos.
+     *
+     * @param type Tipo a verificar.
+     * @return true se for um tipo válido, falso se for um tipo inválido.
      */
     private boolean checkType(String type) {
         return type.equals("Armazém") || type.equals("Mercado") || type.equals("Sede");

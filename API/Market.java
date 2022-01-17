@@ -6,8 +6,11 @@
 package API;
 
 import ADT.MarketADT;
-import API.Place;
 import Collections.LinkedList.LinkedQueue;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Market representa uma implementação de MarketADT.
@@ -80,7 +83,20 @@ public class Market extends Place implements MarketADT {
      */
     @Override
     public boolean export() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        String json = gson.toJson(this);
+
+        try ( FileWriter writer = new FileWriter("Market_" + this.getName() + ".json")) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(json);
+
+        return true;
     }
 
     /**
