@@ -6,8 +6,11 @@
 package API;
 
 import ADT.MarketADT;
-import API.Place;
 import Collections.LinkedList.LinkedQueue;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Market representa uma implementação de MarketADT.
@@ -35,7 +38,6 @@ public class Market extends Place implements MarketADT {
      */
     public Market(String name) {
         super(name, "Mercado");
-        this.clients = new LinkedQueue();
     }
 
     /**
@@ -46,7 +48,7 @@ public class Market extends Place implements MarketADT {
      * @param demand Procura do cliente.
      */
     @Override
-    public void addClients(float demand) {
+    public void addClient(float demand) {
         if (demand > 0) {
             clients.enqueue(demand);
         }
@@ -80,8 +82,32 @@ public class Market extends Place implements MarketADT {
      * contrário.
      */
     @Override
-    public boolean export() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public boolean exportJSON() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        String json = gson.toJson(this);
+
+        try ( FileWriter writer = new FileWriter("Market_" + this.getName() + ".json")) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(json);
+
+        return true;
+    }
+
+    /**
+     * Importa os dados de um mercado de formato JSON.
+     *
+     * @return true caso seja possível importar de formato JSON, false caso
+     * contrário.
+     */
+    @Override
+    public boolean importJSON() {
+       
+        return true;
     }
 
     /**
@@ -92,5 +118,4 @@ public class Market extends Place implements MarketADT {
     public LinkedQueue getClients() {
         return clients;
     }
-
 }
