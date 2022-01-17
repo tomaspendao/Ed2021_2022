@@ -5,24 +5,26 @@
  */
 package ADT;
 
+import API.*;
+
 /**
- * 
+ *
  */
 public interface CompanyADT {
 
-    public boolean addSeller();
+    public void addSeller(Seller vendedor);
 
     public boolean editSeller();
 
-    public boolean addMarket();
+    public void addMarket(Market market);
 
     public boolean editMarket();
 
-    public boolean addWarehouse();
+    public void addWarehouse(Warehouse warehouse);
 
     public boolean editWarehouse();
 
-    public boolean addRoute();
+    public void addRoute(String start, String dest, float weight);
 
     public boolean editRoute();
 
@@ -30,7 +32,7 @@ public interface CompanyADT {
 
     public String printMarket();
 
-    public String printWarehouse();
-    
+    public String printWarehouses();
+
     public boolean export();
 }
