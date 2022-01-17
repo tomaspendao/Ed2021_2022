@@ -18,7 +18,7 @@ public interface MarketADT {
      *
      * @param demand Procura do cliente.
      */
-    public void addClients(float demand);
+    public void addClient(float demand);
 
     /**
      * Remove um cliente quando a procura deste foi satisfeita.
@@ -40,5 +40,13 @@ public interface MarketADT {
      * @return true caso seja possível exportar para formato JSON, false caso
      * contrário.
      */
-    public boolean export();
+    public boolean exportJSON();
+
+    /**
+     * Importa os dados de um mercado de formato JSON.
+     *
+     * @return true caso seja possível importar de formato JSON, false caso
+     * contrário.
+     */
+    public boolean importJSON();
 }
