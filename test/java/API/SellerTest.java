@@ -94,8 +94,8 @@ public class SellerTest {
         System.out.println("getMercados_a_visitar");
         Seller instance = new Seller();
         MyLinkedList expResult = null;
-        MyLinkedList result = instance.getMercados_a_visitar();
-        assertEquals(expResult, result);
+        //MyLinkedList result = instance.getMercados_a_visitar();
+        //assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
