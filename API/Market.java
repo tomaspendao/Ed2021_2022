@@ -107,7 +107,7 @@ public class Market extends Place implements MarketADT {
      */
     @Override
     public boolean importJSON() {
-       
+
         return true;
     }
 
@@ -118,5 +118,24 @@ public class Market extends Place implements MarketADT {
      */
     public LinkedQueue getClients() {
         return clients;
+    }
+
+    public float getTotalDemand() {
+        float res = 0;
+        float[] temp = new float[this.clients.size()];
+
+        for (int i = 0; i < clients.size(); i++) {
+            temp[i] = (float) clients.dequeue();
+        }
+
+        for (int i = 0; i < temp.length; i++) {
+            res += temp[i];
+        }
+
+        for (int i = 0; i < temp.length; i++) {
+            clients.enqueue(temp[i]);
+        }
+
+        return res;
     }
 }
