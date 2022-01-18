@@ -60,11 +60,11 @@ public class Seller implements SellerADT {
      * @param nome Nome do vendedor.
      * @param stock Stock do vendedor.
      */
-    public Seller(float capacidade, int id, String nome, float stock) {
+    public Seller(float capacidade, int id, String nome) {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
-        this.stock = stock;
+        this.stock = 0;
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
 
