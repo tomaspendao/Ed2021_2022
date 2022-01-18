@@ -7,11 +7,9 @@ package API;
 
 import Collections.LinkedList.LinkedQueue;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 
 /**
  * Classe utilizada para realizar testes à classe Market.
@@ -43,34 +41,16 @@ public class MarketTest {
     }
 
     /**
-     * Testa o método addCilents da classe Market.
-     */
-    @Test
-    public void testAddClients() {
-        System.out.println("addClients");
-
-        float demand = 0.0F;
-        Market instance = new Market();
-        instance.addClient(demand);
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Testa o método removeClient da classe Market.
      */
     @Test
     public void testRemoveClient() {
         System.out.println("removeClient");
 
-        Market instance = new Market();
-        boolean expResult = false;
-        boolean result = instance.removeClient();
-        assertEquals(expResult, result);
+        mercado.addClient(20);
+        mercado.addClient(10);
 
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        mercado.removeClient();
     }
 
     /**
@@ -80,13 +60,9 @@ public class MarketTest {
     public void testPrintClients() {
         System.out.println("printClients");
 
-        Market instance = new Market();
-        String expResult = "";
-        String result = instance.printClients();
-        assertEquals(expResult, result);
+        mercado.addClient(10);
 
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        mercado.printClients();
     }
 
     /**
@@ -106,13 +82,11 @@ public class MarketTest {
     public void testGetClients() {
         System.out.println("getClients");
 
-        Market instance = new Market();
+        mercado.addClient(10);
+        
         LinkedQueue expResult = null;
-        LinkedQueue result = instance.getClients();
+        LinkedQueue result = mercado.getClients();
         assertEquals(expResult, result);
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
     /**
@@ -122,12 +96,8 @@ public class MarketTest {
     public void testAddClient() {
         System.out.println("addClient");
 
-        float demand = 0.0F;
-        Market instance = new Market();
-        instance.addClient(demand);
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        mercado.addClient(10);
+        assertEquals(10, this.mercado.getClients());
     }
 
     /**
