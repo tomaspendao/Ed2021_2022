@@ -38,6 +38,7 @@ public class Market extends Place implements MarketADT {
      */
     public Market(String name) {
         super(name, "Mercado");
+        this.clients = new LinkedQueue();
     }
 
     /**
