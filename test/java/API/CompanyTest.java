@@ -224,9 +224,9 @@ public class CompanyTest {
         this.setUp();
 
         Market market1 = new Market("mercadinho1");
-        market1.addClients(10);
-        market1.addClients(40);
-        market1.addClients(50);
+        market1.addClient(10);
+        market1.addClient(40);
+        market1.addClient(50);
         this.empresa.addMarket(market1);
         this.empresa.addMarket(new Market("mercado2"));
         this.empresa.addMarket(new Market("mercado2"));//não é para aparecer, done;
