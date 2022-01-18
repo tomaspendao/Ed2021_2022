@@ -8,8 +8,15 @@ import ADT.WarehouseADT;
 import Exceptions.InvalidValueException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Armazém
@@ -128,4 +135,35 @@ public class Warehouse extends Place implements WarehouseADT {
         return stock;
     }
 
+    /**
+     * Importar um JSON para criar um armazém
+     *
+     * @return armazém importado com JSON
+     */
+    public static Warehouse importJSON(){
+        Gson gson = new Gson();
+	
+        Reader reader = null;
+        try {
+            reader = Files.newBufferedReader(Paths.get("Warehouse_armazém1.json"));
+        } catch (IOException ex) {
+            Logger.getLogger(Warehouse.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Warehouse ware = gson.fromJson(reader, Warehouse.class);
+        
+        System.out.println(ware.capacidade);
+        System.out.println(ware.stock);
+        System.out.println(ware.getName());
+        System.out.println(ware.getType());
+        
+        try {
+            reader.close();
+            // 2. JSON string to Java object
+        } catch (IOException ex) {
+            Logger.getLogger(Warehouse.class.getName()).log(Level.SEVERE, null, ex);
+        }
+	
+        return ware;
+    }
 }
