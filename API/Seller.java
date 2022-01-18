@@ -1,4 +1,4 @@
-/**
+ /**
  * Epoca Normal ED
  * Daniel Pinto 8200412
  * Tomás Pendão 8170308
@@ -6,7 +6,7 @@
 package API;
 
 import ADT.SellerADT;
-import Collections.LinkedList.MyLinkedList;
+import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileWriter;
@@ -22,7 +22,7 @@ public class Seller implements SellerADT {
     /**
      * Lista de mercados associado a um determinado vendedor.
      */
-    private MyLinkedList mercados_a_visitar;
+    private DoubleLinkedUnorderedList<String> mercados_a_visitar;
 
     /**
      * Representa a capacidad que um dado vendedor consegue transportar em kg
@@ -65,6 +65,7 @@ public class Seller implements SellerADT {
         this.id = id;
         this.nome = nome;
         this.stock = stock;
+        this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
 
     /**
@@ -76,7 +77,7 @@ public class Seller implements SellerADT {
      */
     @Override
     public void addMarket(String name) {
-        mercados_a_visitar.add(name);
+        mercados_a_visitar.addToRear(name);
     }
 
     /**
@@ -152,7 +153,7 @@ public class Seller implements SellerADT {
      *
      * @return Mercados a visitar pelo vendedor.
      */
-    public MyLinkedList getMercados_a_visitar() {
+    public DoubleLinkedUnorderedList getMercados_a_visitar() {
         return mercados_a_visitar;
     }
 
