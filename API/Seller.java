@@ -41,6 +41,11 @@ public class Seller implements SellerADT {
     private String nome;
 
     /**
+     * Stock que o vendedor tem disponível.
+     */
+    private float stock;
+
+    /**
      * Construtor vazio
      */
     public Seller() {
@@ -48,16 +53,18 @@ public class Seller implements SellerADT {
 
     /**
      * Construtor utilizado para criar uma instância de Seller com uma
-     * capacidade, id e nome definido.
+     * capacidade, id, nome e stock definido.
      *
      * @param capacidade Capacidade que o vendedor consegue transportar.
      * @param id ID do vendedor.
      * @param nome Nome do vendedor.
+     * @param stock Stock do vendedor.
      */
-    public Seller(float capacidade, int id, String nome) {
+    public Seller(float capacidade, int id, String nome, float stock) {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
+        this.stock = stock;
     }
 
     /**
@@ -127,7 +134,7 @@ public class Seller implements SellerADT {
         return true;
     }
 
-     /**
+    /**
      * Importa os dados de um mercado de formato JSON.
      *
      * @return true caso seja possível importar de formato JSON, false caso
@@ -135,10 +142,10 @@ public class Seller implements SellerADT {
      */
     @Override
     public boolean importJSON() {
-       
+
         return true;
     }
-    
+
     /**
      * Método utilizado para obter uma lista de mercados a visitar pelo
      * vendedor.
@@ -179,6 +186,15 @@ public class Seller implements SellerADT {
     }
 
     /**
+     * Método utilizado para obter o stock de um vendedor.
+     *
+     * @return Stock de um vendedor
+     */
+    public float getStock() {
+        return stock;
+    }
+
+    /**
      * Método utilizado para estabelecer a identificação de um vendedor.
      *
      * @param id Identificação de um vendedor.
@@ -194,6 +210,15 @@ public class Seller implements SellerADT {
      */
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    /**
+     * Método utilizado para estabelecer o stock de um vendedor.
+     *
+     * @param stock Stock de um vendedor.
+     */
+    public void setStock(float stock) {
+        this.stock = stock;
     }
 
 }
