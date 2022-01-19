@@ -115,5 +115,5 @@ public interface CompanyADT {
      *
      * @return retorna uma empresa gerada a partir de um JSON.
      */
-    public Company importCompany();
+    //public Company importCompany();
 }
