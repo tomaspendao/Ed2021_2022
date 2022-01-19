@@ -287,7 +287,7 @@ public class CompanyTest {
     @Test
     public void testImport() {
         this.setUp();
-        Company empresa = Company.importCompany();
+        Company empresa = Company.importCompany("Company_empresaCR.json");
         empresa.export();
         this.tearDown();
     }
