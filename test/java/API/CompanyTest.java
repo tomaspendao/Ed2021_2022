@@ -280,5 +280,16 @@ public class CompanyTest {
         assertEquals("mercado1", this.sellers.first().getMercados_a_visitar().first());
         this.tearDown();
     }
+    
+    /**
+     * Test of import method, of class Company.
+     */
+    @Test
+    public void testImport() {
+        this.setUp();
+        Company empresa = Company.importCompany();
+        empresa.export();
+        this.tearDown();
+    }
 
 }
