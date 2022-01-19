@@ -10,14 +10,22 @@ import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import Collections.LinkedList.GraphWeightList;
 import Exceptions.ElementNotFoundException;
 import Models.Nodes.ArestaWeight;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.Clock;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe que define uma empresa.
- * 
+ *
  * @author Tomás Pendão
  */
 public class Company extends Place implements CompanyADT {
@@ -54,7 +62,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Adicionar um vendedor a empresa.
-     * 
+     *
      * @param vendedor vendedor a adicionar.
      */
     @Override
@@ -66,9 +74,9 @@ public class Company extends Place implements CompanyADT {
     }
 
     /**
-     * Remove os Mercados que não existem da lista de mercados que um 
-     * determindo vendedor tem que visitar.
-     * 
+     * Remove os Mercados que não existem da lista de mercados que um determindo
+     * vendedor tem que visitar.
+     *
      * @param id identificador do vendedor em questão.
      * @return retorna o número de mercados inválidos removidos.
      */
@@ -88,7 +96,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Editar um vendedor já existente na empresa.
-     * 
+     *
      * @param id identificador do vendedor a editar.
      * @param capacity capacidade máxima para um vendedos transportar.
      * @return true se a edição for concluida com sucesso, false se não.
@@ -106,9 +114,9 @@ public class Company extends Place implements CompanyADT {
     }
 
     /**
-     * Adiciona um mercado que existe na empresa a visitar a um vendedor
-     * em especifico.
-     * 
+     * Adiciona um mercado que existe na empresa a visitar a um vendedor em
+     * especifico.
+     *
      * @param id identificador do vendedor em questão.
      * @param market nome de um mercado existente para adicionar a lista de
      * mercados a visitar pelo vendedor.
@@ -126,7 +134,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Verificar se um determinado mercado passado como parametro existe.
-     * 
+     *
      * @param name nome de um mercado para verificar
      * @return retorna o mercado se existir e null se não existir
      */
@@ -138,7 +146,7 @@ public class Company extends Place implements CompanyADT {
                 return market;
             }
         } catch (ElementNotFoundException ex) {
-            System.err.println("ELEMENT NOT FOUND");
+            //System.err.println("ELEMENT NOT FOUND");
             return null;
         }
         return null;
@@ -146,7 +154,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Verificar se um determinado vendedor passado como parametro existe.
-     * 
+     *
      * @param id identificador de um vendedor para verificar
      * @return retorna o vendedor se existir e null se não existir
      */
@@ -164,7 +172,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Adicionar um mercado a empresa.
-     * 
+     *
      * @param market mercado a ser adicionado.
      */
     @Override
@@ -176,9 +184,9 @@ public class Company extends Place implements CompanyADT {
     }
 
     /**
-     * Editar um mercado já existente na empresa adicionando um cliente a esse 
+     * Editar um mercado já existente na empresa adicionando um cliente a esse
      * mercado.
-     * 
+     *
      * @param market nome do mercado(identificador) a ser adicionado.
      * @param demand cliente a ser adicionado.
      * @return true se a edição for concluida com sucesso, false se não.
@@ -194,7 +202,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Adicionar um armazém a empresa.
-     * 
+     *
      * @param warehouse armazém a ser adicionado.
      */
     @Override
@@ -207,7 +215,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Editar um armazém já existente na empresa.
-     * 
+     *
      * @param warehouse nome do armazém(identificador) a ser adicionado.
      * @param capacity valor a ser adicionado como nova capacidade máxima.
      * @param stock valor a ser adicionado como novo stock.
@@ -225,7 +233,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Verificar se um determinado aramzém passado como parametro existe.
-     * 
+     *
      * @param name nome de um armazém para verificar
      * @return retorna o aramazém se existir e null se não existir
      */
@@ -237,7 +245,7 @@ public class Company extends Place implements CompanyADT {
                 return warehouse;
             }
         } catch (ElementNotFoundException ex) {
-            System.err.println("ELEMENT NOT FOUND");
+            //System.err.println("ELEMENT NOT FOUND");
             return null;
         }
         return null;
@@ -245,7 +253,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Adiciona uma rota entre dois locais na empresa.
-     * 
+     *
      * @param start nome do local(identificador) do inicio da rota.
      * @param dest nome do local(identificador) do fim da rota.
      * @param weight valor da distância do start ao dest.
@@ -257,7 +265,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Encontrar um local (Sede,armazém,mercado) atraves do nome do mesmo
-     * 
+     *
      * @param name nome do local a encontrar
      * @return retorna o local encontrado, se não existir manda uma exceção
      * ElementNotFoundException
@@ -284,7 +292,7 @@ public class Company extends Place implements CompanyADT {
     public void editRoute(String start, String dest, float weight) {
         this.addRoute(start, dest, weight);
     }
-    
+
     /**
      * Imprime os vendedores da empresa.
      *
@@ -325,7 +333,7 @@ public class Company extends Place implements CompanyADT {
 
     /**
      * Imprime os armazéns da empresa.
-     * 
+     *
      * @return String com os armazéns da empresa.
      */
     @Override
@@ -446,9 +454,80 @@ public class Company extends Place implements CompanyADT {
      *
      * @return retorna uma empresa gerada a partir de um JSON.
      */
-    @Override
-    public Company importCompany() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public static Company importCompany() {
+        UnorderedListADT<Seller> vendedoresRes = new DoubleLinkedUnorderedList<>();
+        UnorderedListADT<Place> locaisRes = new DoubleLinkedUnorderedList<>();
+        GraphWeightList<Place> caminhosRes = new GraphWeightList<>();
+
+        Company res = new Company(vendedoresRes, locaisRes, caminhosRes, "empresa"); //tirar o nome do argumento
+        JsonObject jsonObject = new JsonObject();
+        try {
+            jsonObject = new JsonParser().parse(new FileReader("Company_empresaCR.json")).getAsJsonObject(); //receber como argumento
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        //Array de locais
+        JsonArray locaisJSONArray = jsonObject.get("locais").getAsJsonArray();
+        System.out.println(locaisJSONArray);
+
+        for (int i = 0; i < locaisJSONArray.size(); i++) {
+            //um local
+            //System.out.println(locaisJSONArray.get(i));
+            switch (locaisJSONArray.get(i).getAsJsonObject().get("tipo").getAsString()) {
+                case "Mercado":
+                    Market local1 = new Market(locaisJSONArray.get(i).getAsJsonObject().get("nome").getAsString());
+                    JsonArray arrayDeDemands = locaisJSONArray.get(i).getAsJsonObject().get("clientes").getAsJsonArray();
+                    for (int j = 0; j < arrayDeDemands.size(); j++) {
+                        local1.addClient(arrayDeDemands.get(j).getAsFloat());
+                    }
+                    res.addMarket(local1);
+                    break;
+                case "Armazém":
+                    Warehouse local2 = new Warehouse(locaisJSONArray.get(i).getAsJsonObject().get("capacidade").getAsFloat(), locaisJSONArray.get(i).getAsJsonObject().get("stock").getAsFloat(), locaisJSONArray.get(i).getAsJsonObject().get("nome").getAsString());
+                    res.addWarehouse(local2);
+                    break;
+                default:
+                    System.err.println("Local " + locaisJSONArray.get(i).getAsJsonObject().get("nome").getAsString() + " invalido");
+                    break;
+                //throw new AssertionError();
+            }
+        }
+
+        System.out.println(res.locais.first().getName());
+        //System.out.println(res.printMarket());
+        //System.out.println(res.printWarehouses());
+        //Array de vendedores
+        JsonArray vendedoresJSONArray = jsonObject.get("vendedores").getAsJsonArray();
+        //System.out.println(vendedoresJSONArray);
+        //iterar vendedores
+        for (int i = 0; i < vendedoresJSONArray.size(); i++) {
+            //um vendedor
+            JsonObject vendedorJSONObject = (JsonObject) vendedoresJSONArray.get(i);
+            Seller seller = new Seller(vendedorJSONObject.get("capacidade").getAsFloat(), vendedorJSONObject.get("id").getAsInt(), vendedorJSONObject.get("nome").getAsString());
+
+            //Array de mercados a visitar
+            JsonArray mercados_VisitarJSONArray = vendedorJSONObject.get("mercados_a_visitar").getAsJsonArray();
+            for (int j = 0; j < mercados_VisitarJSONArray.size(); j++) {
+                seller.addMarket(mercados_VisitarJSONArray.get(j).getAsString());
+            }
+            res.addSeller(seller);
+            //System.out.println(res.printSellers());
+            //System.out.println(seller.getMercados_a_visitar().toString());
+        }
+
+        //Array de caminhos
+        JsonArray caminhosJSONArray = jsonObject.get("caminhos").getAsJsonArray();
+        //System.out.println(caminhosJSONArray);
+
+        for (int i = 0; i < caminhosJSONArray.size(); i++) {
+            //um caminho
+            JsonObject path = caminhosJSONArray.get(i).getAsJsonObject();
+            //System.out.println(path.get("de").getAsString().equals("empresa"));
+            res.addRoute(path.get("de").getAsString(), path.get("para").getAsString(), path.get("distancia").getAsFloat());
+        }
+
+        return res;
     }
-    
+
 }
