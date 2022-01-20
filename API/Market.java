@@ -124,7 +124,7 @@ public class Market extends Place implements MarketADT {
         float res = 0;
         float[] temp = new float[this.clients.size()];
 
-        for (int i = 0; i < clients.size(); i++) {
+        for (int i = 0; i < temp.length; i++) {
             temp[i] = (float) clients.dequeue();
         }
 
