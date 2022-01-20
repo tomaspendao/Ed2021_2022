@@ -9,8 +9,14 @@ import ADT.MarketADT;
 import Collections.LinkedList.LinkedQueue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Market representa uma implementação de MarketADT.
@@ -102,12 +108,21 @@ public class Market extends Place implements MarketADT {
     /**
      * Importa os dados de um mercado de formato JSON.
      *
+     * @param filepath
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
     @Override
-    public boolean importJSON() {
+    public boolean importJSON(String filepath) {
 
+        JsonObject jsonObject = new JsonObject();
+        
+        try {
+            jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Seller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return true;
     }
 
