@@ -18,16 +18,25 @@ public class Route {
     private UnorderedListADT<Place> rota; 
     private int amountOfRefills;
     private float totalDistance;
+    private Seller vendedor;
     private float stock;
+    
+    //e capaz de nao ser necessario
+    private Place start;
+    private Place target;
 
-    public Route() {
+    public Route(Seller vendedor) {
         this.rota = new DoubleLinkedUnorderedList<>();
         this.amountOfRefills = 0;
         this.totalDistance = 0;
+        this.vendedor = vendedor; 
         this.stock = 0;
+        //
+        this.start = null;//sede
+        this.target = null;
     }
     
-    public Iterator generateRoute(GraphWeightList<Place> caminhos) {
+    public Iterator generateRoute(GraphWeightList<Place> caminhos, Seller vendedor) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
