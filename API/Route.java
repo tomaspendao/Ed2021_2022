@@ -36,11 +36,11 @@ public class Route {
         this.target = null;
     }
     
-    public Iterator generateRoute(GraphWeightList<Place> caminhos, Seller vendedor) {
+    public static Iterator generateRoute(GraphWeightList<Place> caminhos, Seller vendedor) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    public Iterator refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Warehouse> armazens) {
+    public static Iterator refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Warehouse> armazens) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
