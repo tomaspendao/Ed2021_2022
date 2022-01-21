@@ -69,7 +69,7 @@ public class Company extends Place implements CompanyADT {
         if (this.checkIfSellerExists(vendedor.getId()) == null) {
             this.vendedores.addToRear(vendedor);
             this.removeNotValidMarketsFromSeller(vendedor.getId());
-        }else {
+        } else {
             this.editSeller(vendedor.getId(), vendedor.getCapacidade());
         }
     }
@@ -181,7 +181,7 @@ public class Company extends Place implements CompanyADT {
             this.locais.addToRear(market);
             this.caminhos.addVertex(market);
         } else {
-            this.editMarket(market.getName(),(float)market.getClients().first());
+            this.editMarket(market.getName(), (float) market.getClients().first());
         }
     }
 
@@ -363,7 +363,7 @@ public class Company extends Place implements CompanyADT {
      */
     @Override
     public boolean export() {
-        try (JsonWriter writer = new JsonWriter(new FileWriter("Company_" + this.getName() + ".json"))) {
+        try ( JsonWriter writer = new JsonWriter(new FileWriter("Company_" + this.getName() + ".json"))) {
             writer.setIndent("  ");
             writer.beginObject();
 
@@ -456,8 +456,8 @@ public class Company extends Place implements CompanyADT {
     /**
      * Fazer import de um JSON para a criação de uma empresa.
      *
-     * @param filepath nome do ficheiro com caminho se necessário
-     * para fazer o import.
+     * @param filepath nome do ficheiro com caminho se necessário para fazer o
+     * import.
      * @return retorna uma empresa gerada a partir de um JSON.
      */
     public static Company importCompany(String filepath) {
@@ -474,9 +474,15 @@ public class Company extends Place implements CompanyADT {
 
         //Array de locais
         JsonArray locaisJSONArray = jsonObject.get("locais").getAsJsonArray();
-        
-        Company res = new Company(vendedoresRes, locaisRes, caminhosRes, getSedeName(locaisJSONArray)); //tirar o nome do argumento
-        
+
+        String nameDaEmpresa = "default";
+        try {
+            nameDaEmpresa = getSedeName(locaisJSONArray);
+        } catch (ElementNotFoundException ex) {
+            nameDaEmpresa = "EmpresaNameDefault";
+        }
+        Company res = new Company(vendedoresRes, locaisRes, caminhosRes, nameDaEmpresa);
+
         for (int i = 0; i < locaisJSONArray.size(); i++) {
             //um local
             switch (locaisJSONArray.get(i).getAsJsonObject().get("tipo").getAsString()) {
@@ -525,23 +531,23 @@ public class Company extends Place implements CompanyADT {
         }
 
         System.out.println("-----Import Concluido-----");
-        
+
         return res;
     }
-    
+
     /**
      * Obter o nome da sede/empresa a partir de um jsonArray, tem como objectivo
      * fazer suporte ao metodo importCompany.
-     * 
+     *
      * @param array JsonArray que vai percorrer até encontrar um local com tipo
      * sede.
      * @return retorna a string do nome da empresa, se não encontrar vai retorna
      * uma exceção.
      */
-    private static String getSedeName(JsonArray array){
+    private static String getSedeName(JsonArray array) {
         String str = "";
         for (int i = 0; i < array.size(); i++) {
-            if(array.get(i).getAsJsonObject().get("tipo").getAsString().equals("Sede")){
+            if (array.get(i).getAsJsonObject().get("tipo").getAsString().equals("Sede")) {
                 str = array.get(i).getAsJsonObject().get("nome").getAsString();
                 return str;
             }
