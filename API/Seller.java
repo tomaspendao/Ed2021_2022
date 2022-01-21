@@ -43,7 +43,7 @@ public class Seller implements SellerADT {
     /**
      * Stock que o vendedor tem disponível.
      */
-    private float stock;
+    //private float stock;
 
     /**
      * Construtor vazio
@@ -64,7 +64,7 @@ public class Seller implements SellerADT {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
-        this.stock = 0;
+        //this.stock = 0;
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
 
@@ -190,10 +190,10 @@ public class Seller implements SellerADT {
      * Método utilizado para obter o stock de um vendedor.
      *
      * @return Stock de um vendedor
-     */
+     
     public float getStock() {
         return stock;
-    }
+    }*/
 
     /**
      * Método utilizado para estabelecer a identificação de um vendedor.
@@ -217,9 +217,9 @@ public class Seller implements SellerADT {
      * Método utilizado para estabelecer o stock de um vendedor.
      *
      * @param stock Stock de um vendedor.
-     */
+     
     public void setStock(float stock) {
         this.stock = stock;
-    }
+    }*/
 
 }
