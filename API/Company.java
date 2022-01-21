@@ -18,7 +18,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Clock;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +69,8 @@ public class Company extends Place implements CompanyADT {
         if (this.checkIfSellerExists(vendedor.getId()) == null) {
             this.vendedores.addToRear(vendedor);
             this.removeNotValidMarketsFromSeller(vendedor.getId());
+        }else {
+            this.editSeller(vendedor.getId(), vendedor.getCapacidade());
         }
     }
 
@@ -147,7 +148,6 @@ public class Company extends Place implements CompanyADT {
             }
         } catch (ElementNotFoundException ex) {
             //System.err.println("ELEMENT NOT FOUND");
-            return null;
         }
         return null;
     }
@@ -180,6 +180,8 @@ public class Company extends Place implements CompanyADT {
         if (checkIfMarketExists(market.getName()) == null) {
             this.locais.addToRear(market);
             this.caminhos.addVertex(market);
+        } else {
+            this.editMarket(market.getName(),(float)market.getClients().first());
         }
     }
 
@@ -210,6 +212,8 @@ public class Company extends Place implements CompanyADT {
         if (checkIfWarehouseExists(warehouse.getName()) == null) {
             this.locais.addToRear(warehouse);
             this.caminhos.addVertex(warehouse);
+        } else {
+            this.editWarehouse(warehouse.getName(), warehouse.getMaxCapacity(), warehouse.getAvailableCapacity());
         }
     }
 
@@ -527,7 +531,7 @@ public class Company extends Place implements CompanyADT {
     
     /**
      * Obter o nome da sede/empresa a partir de um jsonArray, tem como objectivo
-     * fazer suporte ao metodo importCompany
+     * fazer suporte ao metodo importCompany.
      * 
      * @param array JsonArray que vai percorrer até encontrar um local com tipo
      * sede.
