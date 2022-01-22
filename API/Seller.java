@@ -5,12 +5,17 @@
  */
 package API;
 
+import ADT.RouteADT;
 import ADT.SellerADT;
+import ADT.UnorderedListADT;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
+import Collections.LinkedList.GraphWeightList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Seller representa uma implementação de SellerADT.
@@ -41,11 +46,6 @@ public class Seller implements SellerADT {
     private String nome;
 
     /**
-     * Stock que o vendedor tem disponível.
-     */
-    //private float stock;
-
-    /**
      * Construtor vazio
      */
     public Seller() {
@@ -58,13 +58,11 @@ public class Seller implements SellerADT {
      * @param capacidade Capacidade que o vendedor consegue transportar.
      * @param id ID do vendedor.
      * @param nome Nome do vendedor.
-     * @param stock Stock do vendedor.
      */
     public Seller(float capacidade, int id, String nome) {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
-        //this.stock = 0;
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
 
@@ -124,7 +122,10 @@ public class Seller implements SellerADT {
 
         String json = gson.toJson(this);
 
-        try ( FileWriter writer = new FileWriter("Seller_" + this.getNome() + ".json")) {
+        File file = new File("exportJSON/vendedor/Seller_" + this.getNome() + ".json");
+        file.getParentFile().mkdirs();
+        
+        try ( FileWriter writer = new FileWriter(file)) {
             gson.toJson(this, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,15 +188,6 @@ public class Seller implements SellerADT {
     }
 
     /**
-     * Método utilizado para obter o stock de um vendedor.
-     *
-     * @return Stock de um vendedor
-     
-    public float getStock() {
-        return stock;
-    }*/
-
-    /**
      * Método utilizado para estabelecer a identificação de um vendedor.
      *
      * @param id Identificação de um vendedor.
@@ -212,14 +204,5 @@ public class Seller implements SellerADT {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    /**
-     * Método utilizado para estabelecer o stock de um vendedor.
-     *
-     * @param stock Stock de um vendedor.
-     
-    public void setStock(float stock) {
-        this.stock = stock;
-    }*/
-
+    
 }

@@ -8,8 +8,7 @@ import ADT.WarehouseADT;
 import Exceptions.InvalidValueException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
@@ -29,6 +28,7 @@ public class Warehouse extends Place implements WarehouseADT {
      * Capacidade máxima de um armazém
      */
     private float capacidade;
+    
     /**
      * Stock que o armazém tem no momento
      */
@@ -106,7 +106,10 @@ public class Warehouse extends Place implements WarehouseADT {
         
         String json = gson.toJson(this);
         
-        try (FileWriter writer = new FileWriter("Warehouse_"+this.getName()+".json")) {
+        File file = new File("exportJSON/armazem/Warehouse_" + this.getName() + ".json");
+        file.getParentFile().mkdirs();
+        
+        try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(this, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -152,10 +155,10 @@ public class Warehouse extends Place implements WarehouseADT {
 
         Warehouse ware = gson.fromJson(reader, Warehouse.class);
         
-        System.out.println(ware.capacidade);
-        System.out.println(ware.stock);
-        System.out.println(ware.getName());
-        System.out.println(ware.getType());
+        //System.out.println(ware.capacidade);
+        //System.out.println(ware.stock);
+        //System.out.println(ware.getName());
+        //System.out.println(ware.getType());
         
         try {
             reader.close();

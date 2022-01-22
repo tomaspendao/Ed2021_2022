@@ -6,6 +6,7 @@ package API;
 
 import ADT.CompanyADT;
 import ADT.UnorderedListADT;
+import Collections.Array.ArrayUnorderedList;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import Collections.LinkedList.GraphWeightList;
 import Exceptions.ElementNotFoundException;
@@ -14,6 +15,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -180,7 +182,7 @@ public class Company extends Place implements CompanyADT {
         if (checkIfMarketExists(market.getName()) == null) {
             this.locais.addToRear(market);
             this.caminhos.addVertex(market);
-        } else {
+        } else if(market.getClients().isEmpty() != true){
             this.editMarket(market.getName(), (float) market.getClients().first());
         }
     }
@@ -274,7 +276,7 @@ public class Company extends Place implements CompanyADT {
      * @return retorna o local encontrado, se não existir manda uma exceção
      * ElementNotFoundException
      */
-    private Place findPlaceByName(String name) {
+    public Place findPlaceByName(String name) {
         Iterator iter = this.locais.iterator();
         while (iter.hasNext()) {
             Place value = (Place) iter.next();
@@ -363,7 +365,9 @@ public class Company extends Place implements CompanyADT {
      */
     @Override
     public boolean export() {
-        try ( JsonWriter writer = new JsonWriter(new FileWriter("Company_" + this.getName() + ".json"))) {
+        File file = new File("exportJSON/empresa/Company_" + this.getName() + ".json");
+        file.getParentFile().mkdirs();
+        try ( JsonWriter writer = new JsonWriter(new FileWriter(file))) {
             writer.setIndent("  ");
             writer.beginObject();
 
@@ -553,6 +557,32 @@ public class Company extends Place implements CompanyADT {
             }
         }
         throw new ElementNotFoundException("Sede");
+    }
+
+    public UnorderedListADT<Seller> getVendedores() {
+        return vendedores;
+    }
+
+    public UnorderedListADT<Place> getLocais() {
+        return locais;
+    }
+
+    public GraphWeightList<Place> getCaminhos() {
+        return caminhos;
+    }
+    
+    public UnorderedListADT<Place> getWarehouses(){
+        UnorderedListADT<Place> listaRes = new DoubleLinkedUnorderedList<>();
+        
+        Iterator<Place> iter = this.locais.iterator();
+        while(iter.hasNext()){
+            Place value = (Place) iter.next();
+            if(value.getType().equals("Armazém")){
+                listaRes.addToRear(value);
+            }
+        }
+        
+        return listaRes;
     }
 
 }
