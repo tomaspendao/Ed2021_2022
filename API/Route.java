@@ -52,7 +52,7 @@ public class Route {
         this.amountOfRefills = amountOfRefills;
     }
     
-    public void incrmentAmountOfRefills() {
+    public void incrementAmountOfRefills() {
         this.amountOfRefills++;
     }
 
