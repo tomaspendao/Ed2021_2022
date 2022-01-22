@@ -35,13 +35,76 @@ public class Route {
         this.start = null;//sede
         this.target = null;
     }
+
+    public UnorderedListADT<Place> getRota() {
+        return rota;
+    }
+
+    public void setRota(UnorderedListADT<Place> rota) {
+        this.rota = rota;
+    }
+
+    public int getAmountOfRefills() {
+        return amountOfRefills;
+    }
+
+    public void setAmountOfRefills(int amountOfRefills) {
+        this.amountOfRefills = amountOfRefills;
+    }
     
-    public static Iterator generateRoute(GraphWeightList<Place> caminhos, Seller vendedor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void incrmentAmountOfRefills() {
+        this.amountOfRefills++;
     }
 
-    public static Iterator refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Warehouse> armazens) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public float getTotalDistance() {
+        return totalDistance;
     }
 
+    public void setTotalDistance(float totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+    
+    public void addTotalDistance(float plusDistance) {
+        this.totalDistance = this.totalDistance + plusDistance;
+    }
+
+    public Seller getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(Seller vendedor) {
+        this.vendedor = vendedor;
+    }
+
+    public float getStock() {
+        return stock;
+    }
+
+    public void setStock(float stock) {
+        this.stock = stock;
+    }
+    
+    public void addStock(float plusStock) {
+        this.stock = this.stock + plusStock;
+    }
+    
+    public void removeStock(float minusStock) {
+        this.stock = this.stock - minusStock;
+    }
+
+    public Place getStart() {
+        return start;
+    }
+
+    public void setStart(Place start) {
+        this.start = start;
+    }
+
+    public Place getTarget() {
+        return target;
+    }
+
+    public void setTarget(Place target) {
+        this.target = target;
+    }
 }
