@@ -4,6 +4,9 @@
  */
 package API;
 
+import ADT.UnorderedListADT;
+import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -77,25 +80,47 @@ public class Menu {
             switch (companyMenu(in)) {
                 case 1:
                     System.out.println("createSeller");
-                    
+
                     Scanner seller = new Scanner(System.in);
                     System.out.println("Nome do Vendedor (\"Manuel Rocha\"): ");
                     String nameSeller = seller.nextLine();
                     System.out.println("Capacidade Máxima do Vendedor (\"100\"): ");
                     float capacitySeller = seller.nextFloat();
-                    
+
                     Seller vendedor = new Seller(capacitySeller, nameSeller);
                     empresa.addSeller(vendedor);
                     System.out.println(empresa.printSellers());
                     break;
                 case 2:
-                    System.out.println("createMarket");
+                    System.out.println("editSeller");
+
+                    this.printIdOfSeller(empresa);
+                    
+                    Scanner editSeller = new Scanner(System.in);
+                    System.out.println("Id do Vendedor: ");
+                    int idEditSeller = editSeller.nextInt();
+                    System.out.println("Nova Capacidade Máxima do Vendedor (\"100\"): ");
+                    float capacityEditSeller = editSeller.nextFloat();
+
+                    empresa.editSeller(idEditSeller, capacityEditSeller);
                     break;
                 case 3:
-                    System.out.println("createWarehouse");
+                    System.out.println("createMarket");
                     break;
                 case 4:
+                    System.out.println("editMarket");
+                    break;
+                case 5:
+                    System.out.println("createWarehouse");
+                    break;
+                case 6:
+                    System.out.println("editWarehouse");
+                    break;
+                case 7:
                     System.out.println("createPath");
+                    break;
+                case 8:
+                    System.out.println("editPath");
                     break;
                 case 0:
                     System.out.println("Backing");
@@ -109,18 +134,30 @@ public class Menu {
     }
 
     private int companyMenu(Scanner in) {
-        System.out.println("1 - Adicionar um Vendedor\n2 - Adicionar um Mercado\n3 - Adicionar um Armazém\n4 - Adicionar um Caminho"
+        System.out.println("1 - Adicionar um Vendedor\n2 - Editar um Vendedor"
+                + "\n3 - Adicionar um Mercado\n4 - Editar um Mercado\n5 - "
+                + "Adicionar um Armazém\n6 - Editar um Armazém\n7 -"
+                + " Adicionar um Caminho\n8 - Edotar um Caminho"
                 + "\n0 - Back");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
 
         //int choice = in.nextInt();
-        if (choice >= 0 && choice <= 4) {
+        if (choice >= 0 && choice <= 8) {
             return choice;
         } else {
             System.out.println("Opção errada!");
             return choice;
+        }
+    }
+
+    private void printIdOfSeller(Company empresa) {
+        UnorderedListADT<Seller> value = empresa.getVendedores();
+        Iterator<Seller> iter = value.iterator();
+        while (iter.hasNext()) {
+            Seller temp = iter.next();
+            System.out.println(temp.getId() + " --> " + temp.getNome());
         }
     }
 }
