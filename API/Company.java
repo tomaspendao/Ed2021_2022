@@ -60,6 +60,15 @@ public class Company extends Place implements CompanyADT {
         this.locais.addToFront(this);
         this.caminhos.addVertex(this);
     }
+    
+    public Company(String name) {
+        super(name, "Sede");
+        this.vendedores = new DoubleLinkedUnorderedList<>();
+        this.locais = new DoubleLinkedUnorderedList<>();
+        this.caminhos = new GraphWeightList<>();
+        this.locais.addToFront(this);
+        this.caminhos.addVertex(this);
+    }
 
     /**
      * Adicionar um vendedor a empresa.

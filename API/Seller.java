@@ -29,6 +29,8 @@ public class Seller implements SellerADT {
      */
     private DoubleLinkedUnorderedList<String> mercados_a_visitar;
 
+    private static int idStatic = 0;
+    
     /**
      * Representa a capacidad que um dado vendedor consegue transportar em kg
      * (kilogramas).
@@ -39,6 +41,7 @@ public class Seller implements SellerADT {
      * Representa a identificação de um vendedor.
      */
     private int id;
+    
 
     /**
      * Representa o nome de um vendedor.
@@ -59,7 +62,14 @@ public class Seller implements SellerADT {
      * @param id ID do vendedor.
      * @param nome Nome do vendedor.
      */
-    public Seller(float capacidade, int id, String nome) {
+    public Seller(float capacidade, String nome) {
+        this.capacidade = capacidade;
+        this.id = this.idStatic++;
+        this.nome = nome;
+        this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
+    }
+    
+    public Seller(float capacidade,int id, String nome) {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
