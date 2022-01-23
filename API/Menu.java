@@ -63,14 +63,14 @@ public class Menu {
 
     private void createCompany(Scanner name) {
 
-        System.out.println("Nome da Empresa:");
+        System.out.println("Nome da Empresa (ex:\"Super Bock\"):");
 
         String companyName = name.nextLine();
         System.out.println();
 
         Company empresa = new Company(companyName);
 
-        System.out.println("Nome da Empresa (\"Super Bock\"): " + empresa.getName());
+        System.out.println("Nome da Empresa: " + empresa.getName());
         System.out.println("Place 1 : " + empresa.getLocais().first().getName());
         System.out.println("Place 1 : " + empresa.getLocais().first().getType());
 
@@ -79,51 +79,23 @@ public class Menu {
         while (!exit) {
             switch (companyMenu(in)) {
                 case 1:
-                    System.out.println("createSeller");
-
-                    Scanner seller = new Scanner(System.in);
-                    System.out.println("Nome do Vendedor (\"Manuel Rocha\"): ");
-                    String nameSeller = seller.nextLine();
-                    System.out.println("Capacidade Máxima do Vendedor (\"100\"): ");
-                    float capacitySeller = seller.nextFloat();
-
-                    Seller vendedor = new Seller(capacitySeller, nameSeller);
-                    empresa.addSeller(vendedor);
-                    System.out.println(empresa.printSellers());
+                    System.out.println("Adicionar Informação");
+                    Scanner add = new Scanner(System.in);
+                    this.addInfo(add, empresa);
                     break;
                 case 2:
-                    System.out.println("editSeller");
-
-                    this.printIdOfSeller(empresa);
-                    
-                    Scanner editSeller = new Scanner(System.in);
-                    System.out.println("Id do Vendedor: ");
-                    int idEditSeller = editSeller.nextInt();
-                    System.out.println("Nova Capacidade Máxima do Vendedor (\"100\"): ");
-                    float capacityEditSeller = editSeller.nextFloat();
-
-                    empresa.editSeller(idEditSeller, capacityEditSeller);
+                    System.out.println("Editar Informação");
+                    Scanner edit = new Scanner(System.in);
+                    this.editInfo(edit, empresa);
                     break;
                 case 3:
-                    System.out.println("createMarket");
+                    System.out.println("Imprimir Informação");
                     break;
                 case 4:
-                    System.out.println("editMarket");
-                    break;
-                case 5:
-                    System.out.println("createWarehouse");
-                    break;
-                case 6:
-                    System.out.println("editWarehouse");
-                    break;
-                case 7:
-                    System.out.println("createPath");
-                    break;
-                case 8:
-                    System.out.println("editPath");
+                    System.out.println("Exportar Informação");
                     break;
                 case 0:
-                    System.out.println("Backing");
+                    System.out.println("Exiting");
                     exit = true;
                     break;
                 default:
@@ -134,17 +106,14 @@ public class Menu {
     }
 
     private int companyMenu(Scanner in) {
-        System.out.println("1 - Adicionar um Vendedor\n2 - Editar um Vendedor"
-                + "\n3 - Adicionar um Mercado\n4 - Editar um Mercado\n5 - "
-                + "Adicionar um Armazém\n6 - Editar um Armazém\n7 -"
-                + " Adicionar um Caminho\n8 - Edotar um Caminho"
-                + "\n0 - Back");
+        System.out.println("1 - Adicionar Informação\n2 - Editar Informação"
+                + "\n3 - Imprimir Informação\n4 - Exportar Informação\n0 - Sair");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
 
         //int choice = in.nextInt();
-        if (choice >= 0 && choice <= 8) {
+        if (choice >= 0 && choice <= 4) {
             return choice;
         } else {
             System.out.println("Opção errada!");
@@ -152,6 +121,210 @@ public class Menu {
         }
     }
 
+    private void addInfo(Scanner in, Company empresa) {
+        boolean exit = false;
+        while (!exit) {
+            switch (this.addInfoMenu(in)) {
+                case 1:
+                    System.out.println("Adicionar Vendedor");
+                    //System.out.println("createSeller");
+
+                    Scanner seller = new Scanner(System.in);
+                    System.out.println("Nome do Vendedor (ex:\"Manuel Rocha\"): ");
+                    String nameSeller = seller.nextLine();
+
+                    System.out.println("Capacidade Máxima do Vendedor (ex:\"100\"): ");
+                    float capacitySeller = seller.nextFloat();
+
+                    Seller vendedor = new Seller(capacitySeller, nameSeller);
+                    empresa.addSeller(vendedor);
+
+                    System.out.println(empresa.printSellers());
+                    break;
+                case 2:
+                    System.out.println("Adicionar Mercado");
+
+                    Scanner market = new Scanner(System.in);
+                    System.out.println("Nome do Mercado (ex:\"Mercadinhos Adriano\"): ");
+                    String nameMarket = market.nextLine();
+
+                    Market mercado = new Market(nameMarket);
+
+                    //perguntar se quer adicionar clientes automaticamnte ou manualmente
+                    this.addClients(mercado);
+
+                    empresa.addMarket(mercado);
+
+                    System.out.println(empresa.printMarket());
+                    break;
+                case 3:
+                    System.out.println("Adicionar Armazém");
+
+                    Scanner warehouse = new Scanner(System.in);
+                    System.out.println("Nome do Armazém (ex:\"Armazém 1023\"): ");
+                    String nameWarehouse = warehouse.nextLine();
+
+                    System.out.println("Capacidade máxima do Armazém (ex:\"1000\"): ");
+                    float maxCapWarehouse = warehouse.nextFloat();
+
+                    Scanner stockWarehouse = new Scanner(System.in);
+                    float currentCapWarehouse;
+                    switch (this.choiceRandomOrManualMenu(stockWarehouse)) {
+                        case 1:
+                            System.out.println("Capacidade atual do Armazém (ex:\"1000\"): ");
+                            currentCapWarehouse = warehouse.nextFloat();
+                            break;
+                        default:
+                            //random
+                            currentCapWarehouse = (float) (Math.random() * (maxCapWarehouse - 0)) + 0;
+                            System.out.println("Capacidade atual do Armazém: " + currentCapWarehouse);
+                    }
+
+                    Warehouse armazem = new Warehouse(maxCapWarehouse, currentCapWarehouse, nameWarehouse);
+                    empresa.addWarehouse(armazem);
+
+                    break;
+                case 4:
+                    System.out.println("Adicionar Caminho");
+
+                    Scanner edge = new Scanner(System.in);
+                    System.out.println("Start (ex:\"Pingo Doce\"): ");
+                    String startString = edge.nextLine();
+
+                    System.out.println("End (ex:\"Continente\"): ");
+                    String targetString = edge.nextLine();
+
+                    System.out.println("Distancia (ex:\"30\"): ");
+                    float weightPath = edge.nextFloat();
+
+                    empresa.addRoute(startString, targetString, weightPath);
+
+                    break;
+                case 0:
+                    System.out.println("Exiting");
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private int addInfoMenu(Scanner in) {
+        System.out.println("1 - Adicionar Vendedor\n2 - Adicionar Mercado"
+                + "\n3 - Adicionar Armazém\n4 - Adicionar Caminho\n0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+
+        //int choice = in.nextInt();
+        if (choice >= 0 && choice <= 4) {
+            return choice;
+        } else {
+            System.out.println("Opção errada!");
+            return choice;
+        }
+    }
+
+    private void editInfo(Scanner in, Company empresa) {
+        boolean exit = false;
+        while (!exit) {
+            switch (this.editInfoMenu(in)) {
+                case 1:
+                    System.out.println("Editar Vendedor");
+                    //System.out.println("editSeller");
+
+                    this.printIdOfSeller(empresa);
+
+                    Scanner editSeller = new Scanner(System.in);
+                    System.out.println("Id do Vendedor: ");
+                    int idEditSeller = editSeller.nextInt();
+                    System.out.println("Nova Capacidade Máxima do Vendedor (\"100\"): ");
+                    float capacityEditSeller = editSeller.nextFloat();
+
+                    empresa.editSeller(idEditSeller, capacityEditSeller);
+                    break;
+                case 2:
+                    System.out.println("Editar Mercado");
+
+                    Scanner marketEdit = new Scanner(System.in);
+
+                    //System.out.println("Nome do Mercado a Editar (\"Continente\"): ");
+                    String oldName = printExistingMarkets(empresa);
+
+                    System.out.println("Novo Nome para o Mercado (\"Continente\"): ");
+                    String newName = marketEdit.nextLine();
+
+                    empresa.editMarket(oldName, newName);
+                    break;
+                case 3:
+                    System.out.println("Editar Armazém");
+
+                    Scanner warehouse = new Scanner(System.in);
+                    //System.out.println("Nome do Armazém a Editar(\"Armazém 1023\"): ");
+                    String nameWarehouse = this.printExistingWarehouses(empresa);
+
+                    System.out.println("Nova Capacidade máxima do Armazém (ex:\"1000\"): ");
+                    float maxCapWarehouse = warehouse.nextFloat();
+
+                    Scanner stockWarehouse = new Scanner(System.in);
+                    float currentCapWarehouse;
+                    System.out.println("Adicionar o Stock");
+                    switch (this.choiceRandomOrManualMenu(stockWarehouse)) {
+                        case 1:
+                            System.out.println("Nova Capacidade atual do Armazém (ex:\"1000\"): ");
+                            currentCapWarehouse = warehouse.nextFloat();
+                            break;
+                        default:
+                            //random
+                            currentCapWarehouse = (float) (Math.random() * (maxCapWarehouse - 0)) + 0;
+                            System.out.println("Capacidade atual do Armazém: " + currentCapWarehouse);
+                            break;
+                    }
+
+                    empresa.editWarehouse(nameWarehouse, maxCapWarehouse, currentCapWarehouse);
+                    break;
+                case 4:
+                    System.out.println("Editar Caminho");
+
+                    Scanner places = new Scanner(System.in);
+                    System.out.println("Selecionar o ponto de partida");
+                    String startName = this.printExistingPlaces(empresa);
+                    System.out.println("Selecionar o ponto de chegada");
+                    String targetName = this.printExistingPlaces(empresa);
+
+                    System.out.println("Nova Distancia (ex:\"1000\"): ");
+                    float newWeight = places.nextFloat();
+
+                    empresa.editRoute(startName, targetName, newWeight);
+                    break;
+                case 0:
+                    System.out.println("Exiting");
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private int editInfoMenu(Scanner in) {
+        System.out.println("1 - Editar Vendedor\n2 - Editar Mercado"
+                + "\n3 - Editar Armazém\n4 - Editar Caminho\n0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+
+        //int choice = in.nextInt();
+        if (choice >= 0 && choice <= 4) {
+            return choice;
+        } else {
+            System.out.println("Opção errada!");
+            return choice;
+        }
+    }
+
+    //utils
     private void printIdOfSeller(Company empresa) {
         UnorderedListADT<Seller> value = empresa.getVendedores();
         Iterator<Seller> iter = value.iterator();
@@ -159,5 +332,148 @@ public class Menu {
             Seller temp = iter.next();
             System.out.println(temp.getId() + " --> " + temp.getNome());
         }
+    }
+
+    private String printExistingMarkets(Company empresa) {
+        UnorderedListADT<Place> value = empresa.getLocais();
+        Iterator<Place> iter = value.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            Place temp = iter.next();
+            if (temp.getType().equals("Mercado")) {
+                System.out.println(i + " --> " + temp.getName());
+            }
+            i++;
+        }
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Numero do mercado (ex:\"2\"): ");
+        int newI = scanner.nextInt();
+
+        Iterator<Place> iter2 = value.iterator();
+        int j = 0;
+        while (iter2.hasNext()) {
+            Place temp = iter2.next();
+            //System.out.println(i + " --> " + temp.getName());
+
+            if (j == newI) {
+                return temp.getName();
+            }
+            j++;
+        }
+        return null;
+
+    }
+
+    private String printExistingWarehouses(Company empresa) {
+        UnorderedListADT<Place> value = empresa.getLocais();
+        Iterator<Place> iter = value.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            Place temp = iter.next();
+            if (temp.getType().equals("Armazém")) {
+                System.out.println(i + " --> " + temp.getName());
+            }
+            i++;
+        }
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Numero do Armazém (ex:\"2\"): ");
+        int newI = scanner.nextInt();
+
+        Iterator<Place> iter2 = value.iterator();
+        int j = 0;
+        while (iter2.hasNext()) {
+            Place temp = iter2.next();
+            //System.out.println(i + " --> " + temp.getName());
+
+            if (j == newI) {
+                return temp.getName();
+            }
+            j++;
+        }
+        return null;
+
+    }
+
+    private String printExistingPlaces(Company empresa) {
+        UnorderedListADT<Place> value = empresa.getLocais();
+        Iterator<Place> iter = value.iterator();
+        int i = 0;
+        while (iter.hasNext()) {
+            Place temp = iter.next();
+            System.out.println(i + " --> " + temp.getName());
+            i++;
+        }
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Numero do Local (ex:\"2\"): ");
+        int newI = scanner.nextInt();
+
+        Iterator<Place> iter2 = value.iterator();
+        int j = 0;
+        while (iter2.hasNext()) {
+            Place temp = iter2.next();
+            //System.out.println(i + " --> " + temp.getName());
+
+            if (j == newI) {
+                return temp.getName();
+            }
+            j++;
+        }
+        return null;
+
+    }
+
+    private int choiceRandomOrManualMenu(Scanner in) {
+        System.out.println("1 - Manualmente\n2 - Aleatoriamente"
+                + "\n0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+
+        //int choice = in.nextInt();
+        if (choice >= 0 && choice <= 2) {
+            return choice;
+        } else {
+            System.out.println("Opção errada!");
+            return choice;
+        }
+    }
+
+    private boolean addClients(Market mercado) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Adicionar Clientes?\n\t1 - SIM\n\t2 - NÃO");
+        int firstAnswer = scanner.nextInt();
+        System.out.println("ola:" + firstAnswer);
+        if (firstAnswer == 1) {
+            switch (this.choiceRandomOrManualMenu(scanner)) {
+                case 1:
+                    //manual
+                    boolean next = false;
+                    while (!next) {
+                        System.out.println("Adicionar Cliente");
+                        float cliente = scanner.nextFloat();
+                        mercado.addClient(cliente);
+                        System.out.println("Adicionar Outro Cliente?\n\t1 - SIM\n\t2 - NÃO");
+                        int secondAnswer = scanner.nextInt();
+                        if (secondAnswer != 1) {
+                            next = true;
+                        }
+
+                    }
+                    break;
+                default:
+                    //random
+                    int numberOfClients = (int) (Math.random() * (Integer.MAX_VALUE - 0)) + 0;
+                    for (int i = 0; i < numberOfClients; i++) {
+                        mercado.addClient((float) (Math.random() * (100 - 0)) + 0);
+                    }
+                    System.out.println("Clientes adicionados: " + numberOfClients);
+                    break;
+            }
+        }
+        return true;
     }
 }

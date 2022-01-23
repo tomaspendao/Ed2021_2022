@@ -192,7 +192,7 @@ public class Company extends Place implements CompanyADT {
             this.locais.addToRear(market);
             this.caminhos.addVertex(market);
         } else if(market.getClients().isEmpty() != true){
-            this.editMarket(market.getName(), (float) market.getClients().first());
+            this.editMarket(market.getName(), market.getName());
         }
     }
 
@@ -205,10 +205,11 @@ public class Company extends Place implements CompanyADT {
      * @return true se a edição for concluida com sucesso, false se não.
      */
     @Override
-    public boolean editMarket(String market, float demand) {
+    public boolean editMarket(String market, String newName) {
         Market mak = checkIfMarketExists(market);
         if (mak != null) {
-            mak.addClient(demand);
+            mak.setNome(newName);
+            //mak.addClient(demand);
         }
         return false;
     }
@@ -240,8 +241,8 @@ public class Company extends Place implements CompanyADT {
     public boolean editWarehouse(String warehouse, float capacity, float stock) {
         Warehouse ware = checkIfWarehouseExists(warehouse);
         if (ware != null) {
-            ware.setAvailableCapacity(stock);
             ware.setCapacity(capacity);
+            ware.setAvailableCapacity(stock);
         }
         return false;
     }
