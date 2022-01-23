@@ -90,6 +90,8 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("Imprimir Informação");
+                    Scanner printo = new Scanner(System.in);
+                    this.printInfo(printo, empresa);
                     break;
                 case 4:
                     System.out.println("Exportar Informação");
@@ -186,22 +188,21 @@ public class Menu {
                     break;
                 case 4:
                     System.out.println("Adicionar Caminho");
-
+                    
                     Scanner edge = new Scanner(System.in);
-                    System.out.println("Start (ex:\"Pingo Doce\"): ");
-                    String startString = edge.nextLine();
-
-                    System.out.println("End (ex:\"Continente\"): ");
-                    String targetString = edge.nextLine();
+                    System.out.println("Selecionar o ponto de partida");
+                    String startName = this.printExistingPlaces(empresa);
+                    System.out.println("Selecionar o ponto de chegada");
+                    String targetName = this.printExistingPlaces(empresa);
 
                     System.out.println("Distancia (ex:\"30\"): ");
                     float weightPath = edge.nextFloat();
 
-                    empresa.addRoute(startString, targetString, weightPath);
+                    empresa.addRoute(startName, targetName, weightPath);
 
                     break;
                 case 0:
-                    System.out.println("Exiting");
+                    System.out.println("Backing");
                     exit = true;
                     break;
                 default:
@@ -299,7 +300,7 @@ public class Menu {
                     empresa.editRoute(startName, targetName, newWeight);
                     break;
                 case 0:
-                    System.out.println("Exiting");
+                    System.out.println("Backing");
                     exit = true;
                     break;
                 default:
@@ -311,6 +312,52 @@ public class Menu {
     private int editInfoMenu(Scanner in) {
         System.out.println("1 - Editar Vendedor\n2 - Editar Mercado"
                 + "\n3 - Editar Armazém\n4 - Editar Caminho\n0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+
+        //int choice = in.nextInt();
+        if (choice >= 0 && choice <= 4) {
+            return choice;
+        } else {
+            System.out.println("Opção errada!");
+            return choice;
+        }
+    }
+    
+    private void printInfo(Scanner printo, Company empresa) {
+        boolean exit = false;
+        while (!exit) {
+            switch (this.printInfoMenu(printo)) {
+                case 1:
+                    System.out.println("Imprimir Vendedor");
+                    System.out.println(empresa.printSellers());
+                    break;
+                case 2:
+                    System.out.println("Imprimir Mercado");
+                    System.out.println(empresa.printMarket());
+                    break;
+                case 3:
+                    System.out.println("Imprimir Armazéns");
+                    System.out.println(empresa.printWarehouses());
+                    break;
+                case 4:
+                    System.out.println("Imprimir Caminhos");
+                    System.out.println(empresa.getCaminhos().getAdjList().toString());//preciso fazer uma cena para listar caminhos
+                    break;
+                case 0:
+                    System.out.println("Backing");
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    
+    private int printInfoMenu(Scanner in) {
+        System.out.println("1 - Imprimir Vendedores\n2 - Imprimir Mercados"
+                + "\n3 - Imprimir Armazéns\n4 - Imprimir Caminhos\n0 - Back");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
@@ -466,7 +513,7 @@ public class Menu {
                     break;
                 default:
                     //random
-                    int numberOfClients = (int) (Math.random() * (Integer.MAX_VALUE - 0)) + 0;
+                    int numberOfClients = (int) (Math.random()  * (100 - 0)) + 0;
                     for (int i = 0; i < numberOfClients; i++) {
                         mercado.addClient((float) (Math.random() * (100 - 0)) + 0);
                     }
@@ -476,4 +523,5 @@ public class Menu {
         }
         return true;
     }
+
 }
