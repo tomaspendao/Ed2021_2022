@@ -139,6 +139,9 @@ public class Menu {
                     float capacitySeller = seller.nextFloat();
 
                     Seller vendedor = new Seller(capacitySeller, nameSeller);
+                    
+                    this.addMarkets(vendedor);
+                    
                     empresa.addSeller(vendedor);
 
                     System.out.println(empresa.printSellers());
@@ -155,6 +158,8 @@ public class Menu {
                     //perguntar se quer adicionar clientes automaticamnte ou manualmente
                     this.addClients(mercado);
 
+                    //System.out.println(mercado.getClients().toString());
+                    
                     empresa.addMarket(mercado);
 
                     System.out.println(empresa.printMarket());
@@ -488,12 +493,12 @@ public class Menu {
         }
     }
 
-    private boolean addClients(Market mercado) {
+    private void addClients(Market mercado) {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Adicionar Clientes?\n\t1 - SIM\n\t2 - NÃO");
         int firstAnswer = scanner.nextInt();
-        System.out.println("ola:" + firstAnswer);
+        //System.out.println("ola:" + firstAnswer);
         if (firstAnswer == 1) {
             switch (this.choiceRandomOrManualMenu(scanner)) {
                 case 1:
@@ -521,7 +526,32 @@ public class Menu {
                     break;
             }
         }
-        return true;
+    }
+
+    private void addMarkets(Seller vendedor) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Adicionar Mercados?\n\t1 - SIM\n\t2 - NÃO");
+        int firstAnswer = scanner.nextInt();
+        //System.out.println("ola:" + firstAnswer);
+        //if (firstAnswer == 1) {
+            //switch (this.choiceRandomOrManualMenu(scanner)) {
+                //case 1:
+                    //manual
+                    boolean next = false;
+                    while (!next) {
+                        System.out.println("Adicionar Mercado");
+                        String market = scanner.nextLine();
+                        vendedor.addMarket(market);
+                        System.out.println("Adicionar Outro Mercado?\n\t1 - SIM\n\t2 - NÃO");
+                        int secondAnswer = scanner.nextInt();
+                        if (secondAnswer != 1) {
+                            next = true;
+                        }
+
+                    }
+                
+                    
     }
 
 }
