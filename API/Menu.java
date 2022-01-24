@@ -95,6 +95,8 @@ public class Menu {
                     break;
                 case 4:
                     System.out.println("Exportar Informação");
+                    Scanner exporto = new Scanner(System.in);
+                    this.exportInfo(exporto, empresa);
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -139,9 +141,9 @@ public class Menu {
                     float capacitySeller = seller.nextFloat();
 
                     Seller vendedor = new Seller(capacitySeller, nameSeller);
-                    
-                    this.addMarkets(vendedor);
-                    
+
+                    this.addMarkets(vendedor, empresa);
+
                     empresa.addSeller(vendedor);
 
                     System.out.println(empresa.printSellers());
@@ -159,7 +161,6 @@ public class Menu {
                     this.addClients(mercado);
 
                     //System.out.println(mercado.getClients().toString());
-                    
                     empresa.addMarket(mercado);
 
                     System.out.println(empresa.printMarket());
@@ -193,7 +194,7 @@ public class Menu {
                     break;
                 case 4:
                     System.out.println("Adicionar Caminho");
-                    
+
                     Scanner edge = new Scanner(System.in);
                     System.out.println("Selecionar o ponto de partida");
                     String startName = this.printExistingPlaces(empresa);
@@ -329,7 +330,7 @@ public class Menu {
             return choice;
         }
     }
-    
+
     private void printInfo(Scanner printo, Company empresa) {
         boolean exit = false;
         while (!exit) {
@@ -359,10 +360,72 @@ public class Menu {
             }
         }
     }
-    
+
     private int printInfoMenu(Scanner in) {
         System.out.println("1 - Imprimir Vendedores\n2 - Imprimir Mercados"
                 + "\n3 - Imprimir Armazéns\n4 - Imprimir Caminhos\n0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+
+        //int choice = in.nextInt();
+        if (choice >= 0 && choice <= 4) {
+            return choice;
+        } else {
+            System.out.println("Opção errada!");
+            return choice;
+        }
+    }
+
+    private void exportInfo(Scanner exporto, Company empresa) {
+        boolean exit = false;
+        while (!exit) {
+            switch (this.exportInfoMenu(exporto)) {
+                case 1:
+                    System.out.println("Exportar Vendedor");
+                    Iterator<Seller> iterSeller = empresa.getVendedores().iterator();
+                    while (iterSeller.hasNext()) {
+                        Seller next = iterSeller.next();
+                        next.exportJSON();
+                    }
+                    break;
+                case 2:
+                    System.out.println("Exportar Mercado");
+                    Iterator<Place> iterMarket = empresa.getLocais().iterator();
+                    while (iterMarket.hasNext()) {
+                        Place next = iterMarket.next();
+                        if (next.getType().equals("Mercado")) {
+                            next.exportJSON();
+                        }
+
+                    }
+                    break;
+                case 3:
+                    System.out.println("Exportar Armazéns");
+                    Iterator<Place> iterWarehouse = empresa.getWarehouses().iterator();
+                    while (iterWarehouse.hasNext()) {
+                        Place next = iterWarehouse.next();
+                        next.exportJSON();
+                    }
+                    break;
+
+                case 4:
+                    System.out.println("Exportar Empresa");
+                    empresa.export();
+                    break;
+                case 0:
+                    System.out.println("Backing");
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private int exportInfoMenu(Scanner in) {
+        System.out.println("1 - Exportar Vendedores\n2 - Exportar Mercados"
+                + "\n3 - Exportar Armazéns\n4 - Exportar Empresa\n0 - Back");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
@@ -518,7 +581,7 @@ public class Menu {
                     break;
                 default:
                     //random
-                    int numberOfClients = (int) (Math.random()  * (100 - 0)) + 0;
+                    int numberOfClients = (int) (Math.random() * (100 - 0)) + 0;
                     for (int i = 0; i < numberOfClients; i++) {
                         mercado.addClient((float) (Math.random() * (100 - 0)) + 0);
                     }
@@ -528,30 +591,37 @@ public class Menu {
         }
     }
 
-    private void addMarkets(Seller vendedor) {
+    private void addMarkets(Seller vendedor, Company empresa) {
+        
+        if(empresa.getMarkets().isEmpty()){
+            System.out.println("Não existem mercados");
+            //addmarket ??
+            return;
+        }
+        
         Scanner scanner = new Scanner(System.in);
-
+                
         System.out.println("Adicionar Mercados?\n\t1 - SIM\n\t2 - NÃO");
         int firstAnswer = scanner.nextInt();
         //System.out.println("ola:" + firstAnswer);
-        //if (firstAnswer == 1) {
+        if (firstAnswer == 1) {
             //switch (this.choiceRandomOrManualMenu(scanner)) {
-                //case 1:
-                    //manual
-                    boolean next = false;
-                    while (!next) {
-                        System.out.println("Adicionar Mercado");
-                        String market = scanner.nextLine();
-                        vendedor.addMarket(market);
-                        System.out.println("Adicionar Outro Mercado?\n\t1 - SIM\n\t2 - NÃO");
-                        int secondAnswer = scanner.nextInt();
-                        if (secondAnswer != 1) {
-                            next = true;
-                        }
+            //case 1:
+            //manual
+            boolean next = false;
+            while (!next) {
+                System.out.println("Adicionar Mercado a Vendedor");
 
-                    }
-                
-                    
+                vendedor.addMarket(this.printExistingMarkets(empresa));
+                System.out.println("Adicionar Outro Mercado?\n\t1 - SIM\n\t2 - NÃO");
+                int secondAnswer = scanner.nextInt();
+                if (secondAnswer != 1) {
+                    next = true;
+                }
+
+            }
+        }
+
     }
 
 }

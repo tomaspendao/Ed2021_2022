@@ -98,7 +98,7 @@ public class Market extends Place implements MarketADT {
 
         String json = gson.toJson(this);
 
-        File file = new File("exportJSON/mercado/Market_" + this.getName() + ".json");
+        File file = new File("exportJSON/Local/Market_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
         
         try (FileWriter writer = new FileWriter(file)) {

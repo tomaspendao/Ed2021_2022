@@ -5,6 +5,11 @@
 package API;
 
 import Exceptions.InvalidValueException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Local
@@ -74,5 +79,35 @@ public class Place {
      */
     private boolean checkType(String type) {
         return type.equals("Armazém") || type.equals("Mercado") || type.equals("Sede");
+    }
+    
+    public boolean exportJSON() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        String json = gson.toJson(this);
+        
+        File file;
+        
+        if(this.getType().equals("Mercado")){
+            file = new File("exportJSON/Local/Market_" + this.getName() + ".json");
+        } else if(this.getType().equals("Armazém")) {
+            file = new File("exportJSON/Local/Warehouse_" + this.getName() + ".json");
+        } else {
+            file = new File("exportJSON/Local/Place_" + this.getName() + ".json");
+        }
+
+        
+        
+        file.getParentFile().mkdirs();
+        
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(json);
+
+        return true;
     }
 }
