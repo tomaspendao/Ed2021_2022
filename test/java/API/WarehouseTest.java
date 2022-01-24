@@ -84,5 +84,19 @@ public class WarehouseTest {
         System.out.println("getAvailableCapacity");
         assertEquals(300, this.armazem.getAvailableCapacity(),0);
     }
+
+    /**
+     * Test of importJSON method, of class Warehouse.
+     */
+    @Test
+    public void testImportJSON() {
+        System.out.println("importJSON");
+        this.armazem = Warehouse.importJSON();
+        
+        assertEquals(500, this.armazem.getMaxCapacity(),0);
+        assertEquals(300, this.armazem.getAvailableCapacity(),0);
+        assertEquals("armazém1", this.armazem.getName());
+        assertEquals("Armazém", this.armazem.getType());
+    }
     
 }

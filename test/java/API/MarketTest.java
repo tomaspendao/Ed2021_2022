@@ -7,9 +7,11 @@ package API;
 
 import Collections.LinkedList.LinkedQueue;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 /**
  * Classe utilizada para realizar testes à classe Market.
@@ -28,6 +30,7 @@ public class MarketTest {
         System.out.println("Running set up");
 
         this.mercado = new Market("mercado1");
+        
     }
 
     /**
@@ -41,16 +44,30 @@ public class MarketTest {
     }
 
     /**
+     * Testa o método addCilents da classe Market.
+     */
+    @Test
+    public void testAddClients() {
+        System.out.println("addClients");
+        this.mercado.addClient(10);
+        
+        //System.out.println(this.mercado.getTotalDemand());
+        
+        assertEquals(1, this.mercado.getClients().size());
+        assertEquals((float)10.0, this.mercado.getClients().first());
+    }
+
+    /**
      * Testa o método removeClient da classe Market.
      */
     @Test
     public void testRemoveClient() {
         System.out.println("removeClient");
 
-        mercado.addClient(20);
-        mercado.addClient(10);
-
-        mercado.removeClient();
+        this.mercado.addClient(20);
+        this.mercado.addClient(40);
+        this.mercado.removeClient();
+        assertEquals((float)40, (float)this.mercado.getClients().first(),0);
     }
 
     /**
@@ -60,9 +77,8 @@ public class MarketTest {
     public void testPrintClients() {
         System.out.println("printClients");
 
-        mercado.addClient(10);
-
-        mercado.printClients();
+        this.mercado.addClient(20);
+        assertEquals("20.0 ", this.mercado.printClients());
     }
 
     /**
@@ -81,12 +97,8 @@ public class MarketTest {
     @Test
     public void testGetClients() {
         System.out.println("getClients");
-
-        mercado.addClient(10);
-        
-        LinkedQueue expResult = null;
-        LinkedQueue result = mercado.getClients();
-        assertEquals(expResult, result);
+        this.mercado.addClient(20);
+        assertEquals(1, this.mercado.getClients().size());
     }
 
     /**
@@ -96,8 +108,8 @@ public class MarketTest {
     public void testAddClient() {
         System.out.println("addClient");
 
-        mercado.addClient(10);
-        assertEquals(10, this.mercado.getClients());
+        this.mercado.addClient(20);
+        assertEquals(20, (float)this.mercado.getClients().first(),0);
     }
 
     /**
@@ -107,12 +119,19 @@ public class MarketTest {
     public void testImportJSON() {
         System.out.println("importJSON");
 
-        Market instance = new Market();
-        boolean expResult = false;
-        boolean result = instance.importJSON();
-        assertEquals(expResult, result);
-
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        assertTrue(this.mercado.exportJSON());
+    }
+    
+    /**
+     * Test of getTotalDemand method, of class Market.
+     */
+    @Test
+    public void testGetTotalDemand() {
+        System.out.println("setNome");
+        this.mercado.addClient(10);
+        this.mercado.addClient(20);
+        this.mercado.addClient(70);
+        assertEquals(100.0, this.mercado.getTotalDemand(),0);
     }
 }

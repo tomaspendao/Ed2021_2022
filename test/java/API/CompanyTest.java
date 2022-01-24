@@ -96,9 +96,9 @@ public class CompanyTest {
         Market market1 = new Market("mercado1");
         this.empresa.addMarket(market1);
         System.out.println("editMarket");
-        this.empresa.editMarket("mercado1", 10);
+        this.empresa.editMarket("mercado1", "mercado2");
         Market res = (Market) this.places.last();
-        assertEquals((float) 10, res.getClients().first());
+        assertEquals("mercado2", res.getName());
         this.tearDown();
     }
 
@@ -130,9 +130,9 @@ public class CompanyTest {
         Warehouse warehouse = new Warehouse(200, 100, "Armazem1");
         this.empresa.addWarehouse(warehouse);
         System.out.println("editWarehouse");
-        this.empresa.editWarehouse("Armazem1", 50, 10);
+        this.empresa.editWarehouse("Armazem1", 150, 10);
         Warehouse res = (Warehouse) this.places.last();
-        assertEquals(50, res.getMaxCapacity(), 0);
+        assertEquals(150, res.getMaxCapacity(), 0);
         assertEquals(10, res.getAvailableCapacity(), 0);
         this.tearDown();
     }
@@ -289,6 +289,10 @@ public class CompanyTest {
         this.setUp();
         Company empresa = Company.importCompany("Company_empresaCR.json");
         empresa.export();
+        
+        //System.out.println(this.empresa.getLocais().first().getName());
+        //System.out.println(this.empresa.getLocais().first().getType());
+        
         this.tearDown();
     }
 
