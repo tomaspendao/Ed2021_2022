@@ -595,4 +595,17 @@ public class Company extends Place implements CompanyADT {
         return listaRes;
     }
 
+    public UnorderedListADT<Place> getMarkets(){
+        UnorderedListADT<Place> listaRes = new DoubleLinkedUnorderedList<>();
+        
+        Iterator<Place> iter = this.locais.iterator();
+        while(iter.hasNext()){
+            Place value = (Place) iter.next();
+            if(value.getType().equals("Mercado")){
+                listaRes.addToRear(value);
+            }
+        }
+        
+        return listaRes;
+    }
 }

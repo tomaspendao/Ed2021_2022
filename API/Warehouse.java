@@ -106,7 +106,7 @@ public class Warehouse extends Place implements WarehouseADT {
         
         String json = gson.toJson(this);
         
-        File file = new File("exportJSON/armazem/Warehouse_" + this.getName() + ".json");
+        File file = new File("exportJSON/Local/Warehouse_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
         
         try (FileWriter writer = new FileWriter(file)) {
