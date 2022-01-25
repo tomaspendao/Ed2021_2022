@@ -30,10 +30,8 @@ public class Market extends Place implements MarketADT {
      * Fila utilizada para armazenar clientes de um mercado.
      */
     private LinkedQueue<Float> clients;
-    
-    
-    //adicionar metadata tipo entrou com que saiu com que ou uma cena assim no armazem tb
 
+    //adicionar metadata tipo entrou com que saiu com que ou uma cena assim no armazem tb
     /**
      * Construtor vazio que cria uma instância de mercado.
      */
@@ -95,13 +93,11 @@ public class Market extends Place implements MarketADT {
     @Override
     public boolean exportJSON() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         String json = gson.toJson(this);
-
         File file = new File("exportJSON/Local/Market_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
-        
-        try (FileWriter writer = new FileWriter(file)) {
+
+        try ( FileWriter writer = new FileWriter(file)) {
             gson.toJson(this, writer);
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,13 +117,13 @@ public class Market extends Place implements MarketADT {
     @Override
     public boolean importJSON(String filepath) {
         JsonObject jsonObject = new JsonObject();
-        
+
         try {
             jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Seller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return true;
     }
 
@@ -140,12 +136,17 @@ public class Market extends Place implements MarketADT {
         return clients;
     }
 
+    /**
+     * Método utilizado para obter o total de procura num dado mercado.
+     *
+     * @return Procura num dado mercado.
+     */
     public float getTotalDemand() {
         float res = 0;
         float[] temp = new float[this.clients.size()];
 
         System.out.println(this.clients.toString());
-        
+
         for (int i = 0; i < temp.length; i++) {
             temp[i] = (float) clients.dequeue();
         }
@@ -157,6 +158,7 @@ public class Market extends Place implements MarketADT {
         for (int i = 0; i < temp.length; i++) {
             clients.enqueue(temp[i]);
         }
+        
         System.out.println(this.clients.toString());
 
         return res;
