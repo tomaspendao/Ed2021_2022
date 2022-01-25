@@ -1,13 +1,11 @@
 
 import API.Menu;
-import java.util.Scanner;
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
- */
 
 /**
+ * Epoca Normal ED Daniel Pinto 8200412 Tomás Pendão 8170308
+ */
+/**
+ * Classe que irá invocar um menu. É o ponto de partida do programa.
  *
  * @author Tomás Pendão
  */
@@ -18,16 +16,14 @@ public class Main {
      */
     public static void main(String[] args) {
         /**
-         * To-Do
-         * Acabar os tests //done
-         * meter o.jar a dar?
-         * 
-         * Melhorar os imports e os prints
-         * fazer os metodos das routes e adicionar essas opções ao menu
-         * 
+         * To-Do Acabar os tests //done meter o.jar a dar?
+         *
+         * Melhorar os imports e os prints fazer os metodos das routes e
+         * adicionar essas opções ao menu
+         *
          */
-        
+
         Menu.start();
     }
-    
+
 }
