@@ -15,17 +15,37 @@ import java.util.Iterator;
  * @author Tomás Pendão, Daniel Pinto
  */
 public class RouteUtils {
-
-    public static Route generateRoute(GraphWeightList<Place> caminhos, Seller seller, UnorderedListADT<Place> locais, Company empresa) {
+    
+    public static Route generateRoute(GraphWeightList<Place> caminhos, Seller seller, UnorderedListADT<Place> locais,
+            Company empresa) {
         Route rotaFinal = new Route(seller);
+        Seller vendedor = new Seller();
+        Market mercado = new Market();
 
         //marcar o start como a sede
         rotaFinal.setStart(empresa.getLocais().first());
 
         //marcar o target 
         rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
-
+        
         rotaFinal.getRota().addToFront(locais.first()); //adicionar a sede por exemplo
+
+        for (int i = 0; i < vendedor.getMercados_a_visitar().size(); i++) {
+            if (vendedor.getCapacidade() >= mercado.getTotalDemand()) {
+                if (vendedor.getStock() >= mercado.getTotalDemand()) {
+                    //generateshortestpath(start,target
+                    //rotaFinal.addTotalDistance(caminhos.getTripWeight(iterator));
+                    //rotaFinal.getRota().addToRear(locais);
+                    rotaFinal.setStart(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
+                }
+            } else {
+                float amountToReffil = 0;
+                
+                amountToReffil = mercado.getTotalDemand() - vendedor.getStock();
+                
+                rotaFinal.setAmountOfRefills(rotaFinal.getAmountOfRefills() + 1);
+            }
+        }
 
         //um for para percorrer cada mercado que o vendedor vai ter que ir a (targets)
         //verificar se tem capacidade maxima para satisfazer um mercado todo de uma vez
@@ -34,7 +54,8 @@ public class RouteUtils {
         //verificar se tem stock suficiente para satisfazer um mercado
         //se sim tem que ir ao mercado (gerando uma rota (generateshortestpath(start,target) ) ) e satisfazer os clientes
         //adicionar o peso dessa rota ao peso total da rota tipo assim: rotaFinal.addTotalDistance(caminhos.getTripWeight);
-        //adicionar a rota tipo os places a rotaFinal tipo: rotaFinal.getRota().addToRear(//arranjar uma maneira de por todos os places que vem como iteratot)
+        //adicionar a rota tipo os places a rotaFinal tipo: rotaFinal.getRota().addToRear(
+        //arranjar uma maneira de por todos os places que vem como iteratot)
         //no fim vai ter que definir o start como o target
         //e o target como o proximo mercado a visitar
         //se não vai ter que fazer um refillRoute
@@ -51,7 +72,7 @@ public class RouteUtils {
             rota.getRota().addToRear((Place) iterator.next());
         }
     }
-
+    
     public static void refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Place> armazens, Place start, float need) {
         Warehouse warehouseToGo;
         float shortestTrip;
