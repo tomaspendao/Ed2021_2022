@@ -186,7 +186,7 @@ public class Company extends Place implements CompanyADT {
      * @param id Identificador de um vendedor para verificar.
      * @return Retorna o vendedor se existir e null se não existir.
      */
-    private Seller checkIfSellerExists(int id) {
+    protected Seller checkIfSellerExists(int id) {
         Iterator sellerIter = this.vendedores.iterator();
 
         while (sellerIter.hasNext()) {
