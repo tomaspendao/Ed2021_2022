@@ -5,13 +5,10 @@
  */
 package API;
 
-import Collections.LinkedList.LinkedQueue;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 
 /**
  * Classe utilizada para realizar testes à classe Market.
@@ -124,7 +121,7 @@ public class MarketTest {
     }
     
     /**
-     * Test of getTotalDemand method, of class Market.
+     * Testa o método getTotalDemand da classe Market.
      */
     @Test
     public void testGetTotalDemand() {
