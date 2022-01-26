@@ -1,6 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+/**
+ * Epoca Normal ED
+ * Daniel Pinto 8200412
+ * Tomás Pendão 8170308
  */
 package API;
 
@@ -18,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Armazém
+ * Warehouse representa uma implementação de WarehouseADT.
  *
  * @author Tomás Pendão
  */
@@ -28,7 +29,7 @@ public class Warehouse extends Place implements WarehouseADT {
      * Capacidade máxima de um armazém
      */
     private float capacidade;
-    
+
     /**
      * Stock que o armazém tem no momento
      */
@@ -36,7 +37,7 @@ public class Warehouse extends Place implements WarehouseADT {
 
     /**
      * Construtor que intacia armazém
-     * 
+     *
      * @param maxCapacity Capacidade máxima do armazém
      * @param availableCapacity stock do armazem
      * @param name nome do armazem
@@ -52,7 +53,7 @@ public class Warehouse extends Place implements WarehouseADT {
      */
     public Warehouse() {
     }
-        
+
     /**
      * Definir uma capacidade máxima de mercadoria que um armazém pode ter.
      *
@@ -89,7 +90,8 @@ public class Warehouse extends Place implements WarehouseADT {
     @Override
     public String printWarehouse() {
         String str = "";
-        str = "Nome: " + this.getName() + ";Tipo: " + this.getType() + ";Capacidade: " + this.getMaxCapacity() + ";Stock: " + this.stock;
+        str = "Nome: " + this.getName() + ";Tipo: " + this.getType() + ";Capacidade: " + this.getMaxCapacity()
+                + ";Stock: " + this.stock;
         return str;
     }
 
@@ -101,28 +103,28 @@ public class Warehouse extends Place implements WarehouseADT {
      */
     @Override
     public boolean export() {
-        
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        
+
         String json = gson.toJson(this);
-        
+
         File file = new File("exportJSON/Local/Warehouse_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
-        
-        try (FileWriter writer = new FileWriter(file)) {
+
+        try ( FileWriter writer = new FileWriter(file)) {
             gson.toJson(this, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
         System.out.println(json);
-        
+
         return true;
     }
 
     /**
      * Obter o valor da capacidade máxima de um Armazém
-     * 
+     *
      * @return a capacidade máxima
      */
     public float getMaxCapacity() {
@@ -131,7 +133,7 @@ public class Warehouse extends Place implements WarehouseADT {
 
     /**
      * Obter o valor do stock num armazém
-     * 
+     *
      * @return o stock
      */
     public float getAvailableCapacity() {
@@ -143,9 +145,9 @@ public class Warehouse extends Place implements WarehouseADT {
      *
      * @return armazém importado com JSON
      */
-    public static Warehouse importJSON(){
+    public static Warehouse importJSON() {
         Gson gson = new Gson();
-	
+
         Reader reader = null;
         try {
             reader = Files.newBufferedReader(Paths.get("Warehouse_armazém1.json"));
@@ -154,19 +156,18 @@ public class Warehouse extends Place implements WarehouseADT {
         }
 
         Warehouse ware = gson.fromJson(reader, Warehouse.class);
-        
+
         //System.out.println(ware.capacidade);
         //System.out.println(ware.stock);
         //System.out.println(ware.getName());
         //System.out.println(ware.getType());
-        
         try {
             reader.close();
             // 2. JSON string to Java object
         } catch (IOException ex) {
             Logger.getLogger(Warehouse.class.getName()).log(Level.SEVERE, null, ex);
         }
-	
+
         return ware;
     }
 }
