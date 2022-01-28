@@ -132,7 +132,7 @@ public class Market extends Place implements MarketADT {
      *
      * @return Lista dos clientes de um mercado.
      */
-    public LinkedQueue getClients() {
+    public LinkedQueue<Float> getClients() {
         return clients;
     }
 

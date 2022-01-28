@@ -164,7 +164,7 @@ public class Company extends Place implements CompanyADT {
      * @param name Nome de um mercado para verificar.
      * @return Retorna o mercado se existir e null se não existir.
      */
-    private Market checkIfMarketExists(String name) {
+    protected Market checkIfMarketExists(String name) {
         try {
             Place place = this.findPlaceByName(name);
 

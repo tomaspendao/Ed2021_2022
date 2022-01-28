@@ -15,11 +15,10 @@ import java.util.Iterator;
  * @author Tomás Pendão, Daniel Pinto
  */
 public class RouteUtils {
-    
+
     public static Route generateRoute(GraphWeightList<Place> caminhos, Seller seller, UnorderedListADT<Place> locais,
             Company empresa) {
         Route rotaFinal = new Route(seller);
-        Seller vendedor = new Seller();
         Market mercado = new Market();
 
         //marcar o start como a sede
@@ -27,53 +26,60 @@ public class RouteUtils {
 
         //marcar o target 
         rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
-        
+
         rotaFinal.getRota().addToFront(locais.first()); //adicionar a sede por exemplo
 
-        for (int i = 0; i < vendedor.getMercados_a_visitar().size(); i++) {
-            if (vendedor.getCapacidade() >= mercado.getTotalDemand()) {
-                if (vendedor.getStock() >= mercado.getTotalDemand()) {
-                    //generateshortestpath(start,target
-                    //rotaFinal.addTotalDistance(caminhos.getTripWeight(iterator));
-                    //rotaFinal.getRota().addToRear(locais);
-                    rotaFinal.setStart(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
+        for (int i = 0; i < seller.getMercados_a_visitar().size(); i++) {
+            mercado = empresa.checkIfMarketExists((String) seller.getMercados_a_visitar().first());
+
+            if (seller.getCapacidade() >= mercado.getTotalDemand()) {
+                if (rotaFinal.getStock() >= mercado.getTotalDemand()) {
+                    RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
+                } else {
+                    float amountToReffil = 0;
+
+                    amountToReffil = mercado.getTotalDemand() - rotaFinal.getStock();
+                    RouteUtils.refillRoute(caminhos, empresa.getWarehouses(), rotaFinal.getStart(), amountToReffil);
+                    rotaFinal.incrementAmountOfRefills();
+                    RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
                 }
             } else {
-                float amountToReffil = 0;
-                
-                amountToReffil = mercado.getTotalDemand() - vendedor.getStock();
-                
-                rotaFinal.setAmountOfRefills(rotaFinal.getAmountOfRefills() + 1);
+                //LinkedQueue<Float> listaCliente = mercado.getClients();
+
+                if (rotaFinal.getStock() >= (float) mercado.getClients().first()) {
+
+                }
             }
         }
 
-        //um for para percorrer cada mercado que o vendedor vai ter que ir a (targets)
-        //verificar se tem capacidade maxima para satisfazer um mercado todo de uma vez
-        //se sim continua
-        //se não vai ter que ver quantos clientes do mercado pode satisfazer e reabastecer connforme o necessario
-        //verificar se tem stock suficiente para satisfazer um mercado
-        //se sim tem que ir ao mercado (gerando uma rota (generateshortestpath(start,target) ) ) e satisfazer os clientes
-        //adicionar o peso dessa rota ao peso total da rota tipo assim: rotaFinal.addTotalDistance(caminhos.getTripWeight);
-        //adicionar a rota tipo os places a rotaFinal tipo: rotaFinal.getRota().addToRear(
-        //arranjar uma maneira de por todos os places que vem como iteratot)
-        //no fim vai ter que definir o start como o target
+        //um for para percorrer cada mercado que o vendedor vai ter que ir a (targets) FEITO
+        //verificar se tem capacidade maxima para satisfazer um mercado todo de uma vez FEITO
+        //se sim continua FEITO
+        //se não vai ter que ver quantos clientes do mercado pode satisfazer e reabastecer connforme o necessario FEITO
+        //verificar se tem stock suficiente para satisfazer um mercado     FEITO
+        //se sim tem que ir ao mercado (gerando uma rota (generateshortestpath(start,target) ) ) e satisfazer os clientes FEITO
+        //adicionar o peso dessa rota ao peso total da rota tipo assim: rotaFinal.addTotalDistance(caminhos.getTripWeight); FEITO
+        //adicionar a rota tipo os places a rotaFinal tipo: rotaFinal.getRota().addToRear( FEITO
+        //arranjar uma maneira de por todos os places que vem como iteratot) 
+        //no fim vai ter que definir o start como o target 
         //e o target como o proximo mercado a visitar
         //se não vai ter que fazer um refillRoute
-        //incrementar os refills
+        //incrementar os refills FEITO
         //adicionar o peso dessa rota ao peso total da rota tipo assim: rotaFinal.addTotalDistance(caminhos.getTripWeight);
         //adicionar a rota tipo os places a rotaFinal tipo: rotaFinal.getRota().addToRear(//arranjar uma maneira de por todos os places que vem como iteratot)
         return rotaFinal;
     }
 
     //iterator vem com os valores em vertice ou seja place
-    private void addPlacesToRotaFromIterator(Iterator iterator, Route rota) {
+    private static void addPlacesToRotaFromIterator(Iterator iterator, Route rota) {
         iterator.next();//tirar o primeiro que já vai estar adicionado
         while (iterator.hasNext()) {
             rota.getRota().addToRear((Place) iterator.next());
         }
     }
-    
-    public static void refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Place> armazens, Place start, float need) {
+
+    public static void refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Place> armazens, Place start,
+            float need) {
         Warehouse warehouseToGo;
         float shortestTrip;
 
@@ -96,4 +102,18 @@ public class RouteUtils {
         //sempre que fizer uma vez fazer addPlaceToRotaFromIterator com o iterador
         //fazer as vezes suficientes ate o stock for igual ao need basicamente
     }
+
+    private static void aux(GraphWeightList<Place> caminhos, Seller seller, Company empresa, Route rotaFinal) {
+        Iterator<Place> iter = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
+
+        rotaFinal.addTotalDistance(caminhos.getTripWeight(iter));
+        RouteUtils.addPlacesToRotaFromIterator(iter, rotaFinal);
+        rotaFinal.setStart(rotaFinal.getTarget());
+        seller.getMercados_a_visitar().removeFirst();
+
+        if (!seller.getMercados_a_visitar().isEmpty()) {
+            rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
+        }
+    }
+
 }
