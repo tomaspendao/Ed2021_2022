@@ -118,8 +118,9 @@ public class Menu {
                     this.exportInfo(exporto, empresa);
                     break;
                 case 5:
-                    System.out.println("Start");
-
+                    //System.out.println("Start");
+                    this.startTeste(empresa);
+                    System.out.println("Star1");
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -689,7 +690,7 @@ public class Menu {
         System.out.println();
 
         Company empresa = Company.importCompany(file);
-        
+
         boolean exit = false;
         while (!exit) {
             switch (companyMenu(fileName)) {
@@ -724,6 +725,22 @@ public class Menu {
                 default:
                     break;
             }
+        }
+    }
+
+    private void startTeste(Company empresa) {
+        System.out.println("OLALALAL");
+        System.out.println(empresa.getVendedores().size());
+        Iterator<Seller> iter = empresa.getVendedores().iterator();
+        while (iter.hasNext()) {
+            Seller vendedor = iter.next();
+            System.out.println("Rota para o vendedor " + vendedor.getNome() + ":");
+            Route rota = RouteUtils.generateRoute(empresa.getCaminhos(), vendedor, empresa.getLocais(), empresa);
+
+            System.out.println("\tAmount of refills:" + rota.getAmountOfRefills());
+            System.out.println("\tAmount of clients not served by this seller:" + rota.getFailedClients());
+            System.out.println("\tDistancia total:" + rota.getTotalDistance() + "km");
+            System.out.println("\t\tteste: " + rota.toString());
         }
     }
 }
