@@ -118,8 +118,9 @@ public class Menu {
                     this.exportInfo(exporto, empresa);
                     break;
                 case 5:
-                    //System.out.println("Start");
-                    this.startTeste(empresa);
+                    System.out.println("Start1");
+                    Scanner teste = new Scanner(System.in);
+                    this.startTeste(empresa,teste);
                     System.out.println("Star1");
                     break;
                 case 0:
@@ -728,7 +729,7 @@ public class Menu {
         }
     }
 
-    private void startTeste(Company empresa) {
+    private void startTeste(Company empresa,Scanner teste) {
         System.out.println("OLALALAL");
         System.out.println(empresa.getVendedores().size());
         Iterator<Seller> iter = empresa.getVendedores().iterator();
