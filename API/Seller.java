@@ -1,17 +1,21 @@
-/**
+ /**
  * Epoca Normal ED
  * Daniel Pinto 8200412
  * Tomás Pendão 8170308
  */
 package API;
 
+import ADT.RouteADT;
 import ADT.SellerADT;
+import ADT.UnorderedListADT;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
+import Collections.LinkedList.GraphWeightList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Seller representa uma implementação de SellerADT.
@@ -26,9 +30,9 @@ public class Seller implements SellerADT {
     private DoubleLinkedUnorderedList<String> mercados_a_visitar;
 
     private static int idStatic = 0;
-
+    
     /**
-     * Representa a capacidade que um dado vendedor consegue transportar em kg
+     * Representa a capacidad que um dado vendedor consegue transportar em kg
      * (kilogramas).
      */
     private float capacidade;
@@ -37,6 +41,7 @@ public class Seller implements SellerADT {
      * Representa a identificação de um vendedor.
      */
     private int id;
+    
 
     /**
      * Representa o nome de um vendedor.
@@ -44,12 +49,7 @@ public class Seller implements SellerADT {
     private String nome;
 
     /**
-     * Stock do vendedor.
-     */
-    private int stock;
-
-    /**
-     * Construtor vazio.
+     * Construtor vazio
      */
     public Seller() {
     }
@@ -59,6 +59,7 @@ public class Seller implements SellerADT {
      * capacidade, id, nome e stock definido.
      *
      * @param capacidade Capacidade que o vendedor consegue transportar.
+     * @param id ID do vendedor.
      * @param nome Nome do vendedor.
      */
     public Seller(float capacidade, String nome) {
@@ -66,15 +67,13 @@ public class Seller implements SellerADT {
         this.id = this.idStatic++;
         this.nome = nome;
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
-        this.stock = 0;
     }
-
-    public Seller(float capacidade, int id, String nome) {
+    
+    public Seller(float capacidade,int id, String nome) {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
-        this.stock = 0;
     }
 
     /**
@@ -135,7 +134,7 @@ public class Seller implements SellerADT {
 
         File file = new File("exportJSON/vendedor/Seller_" + this.getNome() + ".json");
         file.getParentFile().mkdirs();
-
+        
         try ( FileWriter writer = new FileWriter(file)) {
             gson.toJson(this, writer);
         } catch (IOException e) {
@@ -199,15 +198,6 @@ public class Seller implements SellerADT {
     }
 
     /**
-     * Método utilizado para obter o stock de um vendedor.
-     *
-     * @return Stock de um vendedor.
-     */
-    public int getStock() {
-        return stock;
-    }
-
-    /**
      * Método utilizado para estabelecer a identificação de um vendedor.
      *
      * @param id Identificação de um vendedor.
@@ -224,5 +214,5 @@ public class Seller implements SellerADT {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
+    
 }

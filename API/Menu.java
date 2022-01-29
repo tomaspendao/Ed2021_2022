@@ -134,7 +134,7 @@ public class Menu {
 
     private int companyMenu(Scanner in) {
         System.out.println("1 - Adicionar Informação\n2 - Editar Informação" + "\n3 - Imprimir Informação\n"
-                + "4 - Exportar Informação\n5-Start\n0 - Sair");
+                + "4 - Exportar Informação\n5 - Start\n0 - Sair");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
@@ -689,5 +689,41 @@ public class Menu {
         System.out.println();
 
         Company empresa = Company.importCompany(file);
+        
+        boolean exit = false;
+        while (!exit) {
+            switch (companyMenu(fileName)) {
+                case 1:
+                    System.out.println("Adicionar Informação");
+                    Scanner add = new Scanner(System.in);
+                    this.addInfo(add, empresa);
+                    break;
+                case 2:
+                    System.out.println("Editar Informação");
+                    Scanner edit = new Scanner(System.in);
+                    this.editInfo(edit, empresa);
+                    break;
+                case 3:
+                    System.out.println("Imprimir Informação");
+                    Scanner printo = new Scanner(System.in);
+                    this.printInfo(printo, empresa);
+                    break;
+                case 4:
+                    System.out.println("Exportar Informação");
+                    Scanner exporto = new Scanner(System.in);
+                    this.exportInfo(exporto, empresa);
+                    break;
+                case 5:
+                    System.out.println("Start");
+
+                    break;
+                case 0:
+                    System.out.println("Exiting");
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
