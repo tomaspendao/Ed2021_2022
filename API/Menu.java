@@ -38,6 +38,8 @@ public class Menu {
                     break;
                 case 2:
                     System.out.println("Importar JSON");
+                    Scanner fileName = new Scanner(System.in);
+                    importJSON(fileName);
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -115,6 +117,10 @@ public class Menu {
                     Scanner exporto = new Scanner(System.in);
                     this.exportInfo(exporto, empresa);
                     break;
+                case 5:
+                    System.out.println("Start");
+
+                    break;
                 case 0:
                     System.out.println("Exiting");
                     exit = true;
@@ -128,13 +134,13 @@ public class Menu {
 
     private int companyMenu(Scanner in) {
         System.out.println("1 - Adicionar Informação\n2 - Editar Informação" + "\n3 - Imprimir Informação\n"
-                + "4 - Exportar Informação\n0 - Sair");
+                + "4 - Exportar Informação\n5-Start\n0 - Sair");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
 
         //int choice = in.nextInt();
-        if (choice >= 0 && choice <= 4) {
+        if (choice >= 0 && choice <= 5) {
             return choice;
         } else {
             System.out.println("Opção inválida!");
@@ -430,7 +436,7 @@ public class Menu {
                     break;
                 case 3:
                     System.out.println("Exportar Armazéns");
-                    Iterator<Place> iterWarehouse = empresa.getWarehouses().iterator();
+                    Iterator<Warehouse> iterWarehouse = empresa.getWarehouses().iterator();
 
                     while (iterWarehouse.hasNext()) {
                         Place next = iterWarehouse.next();
@@ -598,7 +604,7 @@ public class Menu {
             return choice;
         } else {
             System.out.println("Opção inválida!");
-            
+
             return choice;
         }
     }
@@ -609,20 +615,20 @@ public class Menu {
         System.out.println("Adicionar Clientes?\n\t1 - SIM\n\t2 - NÃO");
         int firstAnswer = scanner.nextInt();
         //System.out.println("ola:" + firstAnswer);
-        
+
         if (firstAnswer == 1) {
             switch (this.choiceRandomOrManualMenu(scanner)) {
                 case 1:
                     //manual
                     boolean next = false;
-                    
+
                     while (!next) {
                         System.out.println("Adicionar Cliente");
                         float cliente = scanner.nextFloat();
                         mercado.addClient(cliente);
                         System.out.println("Adicionar Outro Cliente?\n\t1 - SIM\n\t2 - NÃO");
                         int secondAnswer = scanner.nextInt();
-                        
+
                         if (secondAnswer != 1) {
                             next = true;
                         }
@@ -631,11 +637,11 @@ public class Menu {
                 default:
                     //random
                     int numberOfClients = (int) (Math.random() * (100 - 0)) + 0;
-                    
+
                     for (int i = 0; i < numberOfClients; i++) {
                         mercado.addClient((float) (Math.random() * (100 - 0)) + 0);
                     }
-                    
+
                     System.out.println("Clientes adicionados: " + numberOfClients);
                     break;
             }
@@ -646,7 +652,7 @@ public class Menu {
         if (empresa.getMarkets().isEmpty()) {
             System.out.println("Não existem mercados");
             //addmarket ??
-            
+
             return;
         }
 
@@ -655,24 +661,33 @@ public class Menu {
         System.out.println("Adicionar Mercados?\n\t1 - SIM\n\t2 - NÃO");
         int firstAnswer = scanner.nextInt();
         //System.out.println("ola:" + firstAnswer);
-        
+
         if (firstAnswer == 1) {
             //switch (this.choiceRandomOrManualMenu(scanner)) {
             //case 1:
             //manual
             boolean next = false;
-            
+
             while (!next) {
                 System.out.println("Adicionar Mercado a Vendedor");
 
                 vendedor.addMarket(this.printExistingMarkets(empresa));
                 System.out.println("Adicionar Outro Mercado?\n\t1 - SIM\n\t2 - NÃO");
                 int secondAnswer = scanner.nextInt();
-                
+
                 if (secondAnswer != 1) {
                     next = true;
                 }
             }
         }
+    }
+
+    private void importJSON(Scanner fileName) {
+        System.out.println("Intoduza o nome do ficheiro: ");
+
+        String file = fileName.next();
+        System.out.println();
+
+        Company empresa = Company.importCompany(file);
     }
 }

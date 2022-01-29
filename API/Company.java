@@ -657,12 +657,12 @@ public class Company extends Place implements CompanyADT {
      *
      * @return Lista de armazéns.
      */
-    public UnorderedListADT<Place> getWarehouses() {
-        UnorderedListADT<Place> listaRes = new DoubleLinkedUnorderedList<>();
+    public UnorderedListADT<Warehouse> getWarehouses() {
+        UnorderedListADT<Warehouse> listaRes = new DoubleLinkedUnorderedList<>();
         Iterator<Place> iter = this.locais.iterator();
 
         while (iter.hasNext()) {
-            Place value = (Place) iter.next();
+            Warehouse value = (Warehouse) iter.next();
 
             if (value.getType().equals("Armazém")) {
                 listaRes.addToRear(value);

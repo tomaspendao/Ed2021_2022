@@ -40,6 +40,8 @@ public class Route {
      */
     private float stock;
 
+    private int failedClients;
+
     //e capaz de nao ser necessario
     private Place start;
     private Place target;
@@ -59,6 +61,7 @@ public class Route {
         this.stock = 0;
         this.start = null;//sede
         this.target = null;
+        this.failedClients = 0;
     }
 
     /**
@@ -146,5 +149,17 @@ public class Route {
 
     public void setTarget(Place target) {
         this.target = target;
+    }
+
+    public int getFailedClients() {
+        return failedClients;
+    }
+
+    public void setFailedClients(int failedClients) {
+        this.failedClients = failedClients;
+    }
+
+    public void incrementFailedClients() {
+        this.failedClients++;
     }
 }
