@@ -164,7 +164,7 @@ public class Seller implements SellerADT {
      *
      * @return Mercados a visitar pelo vendedor.
      */
-    public DoubleLinkedUnorderedList getMercados_a_visitar() {
+    public DoubleLinkedUnorderedList<String> getMercados_a_visitar() {
         return mercados_a_visitar;
     }
 

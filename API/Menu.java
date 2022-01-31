@@ -118,10 +118,7 @@ public class Menu {
                     this.exportInfo(exporto, empresa);
                     break;
                 case 5:
-                    System.out.println("Start1");
-                    Scanner teste = new Scanner(System.in);
-                    this.startTeste(empresa,teste);
-                    System.out.println("Star1");
+
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -717,7 +714,10 @@ public class Menu {
                     break;
                 case 5:
                     System.out.println("Start");
-
+                    System.out.println("Start1");
+                    Scanner teste = new Scanner(System.in);
+                    this.startTeste(empresa, teste);
+                    System.out.println("Star1");
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -729,7 +729,7 @@ public class Menu {
         }
     }
 
-    private void startTeste(Company empresa,Scanner teste) {
+    private void startTeste(Company empresa, Scanner teste) {
         System.out.println("OLALALAL");
         System.out.println(empresa.getVendedores().size());
         Iterator<Seller> iter = empresa.getVendedores().iterator();
@@ -741,7 +741,8 @@ public class Menu {
             System.out.println("\tAmount of refills:" + rota.getAmountOfRefills());
             System.out.println("\tAmount of clients not served by this seller:" + rota.getFailedClients());
             System.out.println("\tDistancia total:" + rota.getTotalDistance() + "km");
-            System.out.println("\t\tteste: " + rota.toString());
+            System.out.println(rota.getRota().toString());
+            //System.out.println("\t\tteste: " + rota.toString());
         }
     }
 }

@@ -73,6 +73,16 @@ public class Market extends Place implements MarketADT {
     public boolean removeClient() {
         return clients.dequeue() != null;
     }
+    
+    /**
+     * Remove todos os clientes fila quando a procura destes foi
+     * satisfeita.
+     */
+    public void removeAllClients() {
+        for (int i = 0; i < this.clients.size(); i++) {
+            clients.dequeue();
+        }
+    }
 
     /**
      * Lista todos os clientes de um mercado.

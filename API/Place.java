@@ -119,4 +119,10 @@ public class Place {
 
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Place{" + "nome=" + nome + '}';
+    }
+     
 }

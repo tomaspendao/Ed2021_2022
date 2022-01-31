@@ -162,4 +162,11 @@ public class Route {
     public void incrementFailedClients() {
         this.failedClients++;
     }
+
+    @Override
+    public String toString() {
+        return "Route{" + "rota=" + rota + ", amountOfRefills=" + amountOfRefills + ", totalDistance=" + totalDistance + ", vendedor=" + vendedor + ", stock=" + stock + ", failedClients=" + failedClients + ", start=" + start + ", target=" + target + '}';
+    }
+    
+    
 }

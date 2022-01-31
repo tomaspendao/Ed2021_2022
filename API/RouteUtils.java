@@ -22,6 +22,8 @@ public class RouteUtils {
         Route rotaFinal = new Route(seller);
         Market mercado = new Market();
 
+        System.out.println("generating route");
+
         //marcar o start como a sede
         rotaFinal.setStart(empresa.getLocais().first());
 
@@ -33,12 +35,21 @@ public class RouteUtils {
         while (!seller.getMercados_a_visitar().isEmpty()) {
             mercado = empresa.checkIfMarketExists((String) seller.getMercados_a_visitar().first());
 
+            System.out.println("Para o mercado " + mercado.getName());
+
+            if (mercado.getTotalDemand() <= 0) {
+                seller.getMercados_a_visitar().removeFirst();
+                break; //passar para o próximo mercado
+            }
+
             if (seller.getCapacidade() >= mercado.getTotalDemand()) {
+                System.out.println("Tem capacidade para a demand toda");
                 if (rotaFinal.getStock() >= mercado.getTotalDemand()) {
+                    System.out.println("Tem stock para a demand toda");
                     RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
                 } else {
                     float amountToReffil;
-
+                    System.out.println("Não tem stock para a demand toda");
                     amountToReffil = mercado.getTotalDemand() - rotaFinal.getStock();
 
                     RouteUtils.refillRoute(caminhos, empresa.getWarehouses(), rotaFinal.getStart(), amountToReffil, rotaFinal);
@@ -46,14 +57,17 @@ public class RouteUtils {
                     RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
                 }
             } else {
+                System.out.println("Não tem capacidade para a demand toda");
+                int count = 0;
                 while (!mercado.getClients().isEmpty()) {
-                    int count = 0;
 
+                    System.out.println("Cliente a Cliente");
                     if (rotaFinal.getStock() >= (float) mercado.getClients().first()) {
+                        System.out.println("Tem stock");
                         RouteUtils.aux2(caminhos, seller, empresa, rotaFinal);
                     } else if (seller.getCapacidade() >= (float) mercado.getClients().first()) {
                         float amountToReffil;
-
+                        System.out.println("Nao tem stock mas tem capacidade para o cliente");
                         amountToReffil = (float) mercado.getClients().first() - rotaFinal.getStock();
 
                         RouteUtils.refillRoute(caminhos, empresa.getWarehouses(), rotaFinal.getStart(), amountToReffil, rotaFinal);
@@ -61,11 +75,12 @@ public class RouteUtils {
                         RouteUtils.aux2(caminhos, seller, empresa, rotaFinal);
                     } else {
                         mercado.getClients().enqueue(mercado.getClients().dequeue());
-
+                        System.out.println("Nao tem stock nem tem capacidade para o cliente");
                         count++;
                         rotaFinal.incrementFailedClients();
-
-                        if (count == mercado.getClients().size()) {
+                        //System.out.println("\t\t" + count);
+                        if (count >= mercado.getClients().size()) {
+                            seller.getMercados_a_visitar().removeFirst();
                             break; //passar para o próximo mercado
                         }
                     }
@@ -94,6 +109,7 @@ public class RouteUtils {
 
     //iterator vem com os valores em vertice ou seja place
     private static void addPlacesToRotaFromIterator(Iterator iterator, Route rota) {
+
         iterator.next();//tirar o primeiro que já vai estar adicionado
 
         while (iterator.hasNext()) {
@@ -104,13 +120,13 @@ public class RouteUtils {
     public static void refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Warehouse> armazens, Place start,
             float need, Route rotaFinal) {
         Warehouse warehouseToGo = null;
-        float shortestTrip = 0;
+        float shortestTrip = Float.MAX_VALUE;
 
         Iterator<Warehouse> iter = armazens.iterator();
 
         while (iter.hasNext()) {
             Warehouse warehouse = iter.next();
-
+            System.out.println("Warehouse name(RefillRoute)" + warehouse.getName());
             if (warehouse.getAvailableCapacity() >= need) {
                 Iterator<Place> iter2 = caminhos.iteratorShortestPath(start, warehouse);
                 float temp = caminhos.getTripWeight(iter2);
@@ -122,35 +138,45 @@ public class RouteUtils {
             }
         }
 
+        //iter = armazens.iterator();
+        System.out.println("Warehouse To GO:" + warehouseToGo);
+        System.out.println("Shortest trip:" + shortestTrip);
+
         if (warehouseToGo == null) {
-                while (iter.hasNext()) {
-                    Warehouse warehouse = iter.next();
-                    Iterator<Place> iter2 = caminhos.iteratorShortestPath(start, warehouse);
-                    float temp = caminhos.getTripWeight(iter2);
+            //System.out.println("Não devia ir para aqui");
+            while (iter.hasNext()) {
+                Warehouse warehouse = iter.next();
+                Iterator<Place> iter2 = caminhos.iteratorShortestPath(start, warehouse);
+                float temp = caminhos.getTripWeight(iter2);
 
-                    if (temp <= shortestTrip) {
-                        shortestTrip = temp;
-                        warehouseToGo = warehouse;
-                    }
+                if (temp <= shortestTrip) {
+                    shortestTrip = temp;
+                    warehouseToGo = warehouse;
                 }
+            }
 
-                Iterator<Place> iter3 = caminhos.iteratorShortestPath(start, warehouseToGo);
+            Iterator<Place> iter3 = caminhos.iteratorShortestPath(start, warehouseToGo);
 
-                rotaFinal.addTotalDistance(caminhos.getTripWeight(iter3));
-                RouteUtils.addPlacesToRotaFromIterator(iter3, rotaFinal);
-                rotaFinal.addStock(warehouseToGo.getAvailableCapacity());
-                warehouseToGo.setAvailableCapacity(0);
-                rotaFinal.setStart(warehouseToGo);
-                RouteUtils.refillRoute(caminhos, armazens, rotaFinal.getStart(), need, rotaFinal);
+            rotaFinal.addTotalDistance(caminhos.getTripWeight(iter3));
+            RouteUtils.addPlacesToRotaFromIterator(iter3, rotaFinal);
+            rotaFinal.addStock(warehouseToGo.getAvailableCapacity());
+            warehouseToGo.setAvailableCapacity(0);
+            rotaFinal.setStart(warehouseToGo);
+            RouteUtils.refillRoute(caminhos, armazens, rotaFinal.getStart(), need, rotaFinal);
         }
 
         Iterator<Place> iter3 = caminhos.iteratorShortestPath(start, warehouseToGo);
 
-        rotaFinal.addTotalDistance(caminhos.getTripWeight(iter3));
+        System.out.println("suposto dar true:" + iter3.hasNext());
+        Iterator<Place> iter3Copy = caminhos.iteratorShortestPath(start, warehouseToGo);
+        rotaFinal.addTotalDistance(caminhos.getTripWeight(iter3Copy));
+        System.out.println("suposto dar true2:" + iter3.hasNext());
         RouteUtils.addPlacesToRotaFromIterator(iter3, rotaFinal);
         warehouseToGo.setAvailableCapacity(warehouseToGo.getAvailableCapacity() - need);
         rotaFinal.addStock(need);
-        rotaFinal.setStart(rotaFinal.getTarget());
+        //rotaFinal.setStart(rotaFinal.getTarget());
+        rotaFinal.setStart(warehouseToGo);
+        System.out.println("\t\t\t2" + rotaFinal.getTarget() + "\tstart:" + rotaFinal.getStart());
 
         //criar uma rota do start para um armazem FEITO
         //ver quais os armazens que têm stock para responder a necessidade(need) de um armazém que um venndeor tem que respeitar (ciclo for) FEITO
@@ -173,11 +199,16 @@ public class RouteUtils {
     }
 
     private static void aux(GraphWeightList<Place> caminhos, Seller seller, Company empresa, Route rotaFinal) {
+        System.out.println("\t\t\t2.1" + rotaFinal.getTarget() + "\tstart:" + rotaFinal.getStart());
         Iterator<Place> iter = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
-
+        Iterator<Place> iterCopy = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
         rotaFinal.addTotalDistance(caminhos.getTripWeight(iter));
-        RouteUtils.addPlacesToRotaFromIterator(iter, rotaFinal);
+
+        RouteUtils.addPlacesToRotaFromIterator(iterCopy, rotaFinal);
+        System.out.println("\t\t\t" + rotaFinal.getTarget());
         rotaFinal.setStart(rotaFinal.getTarget());
+        String marketString = seller.getMercados_a_visitar().first();
+        empresa.checkIfMarketExists(marketString).removeAllClients();
         seller.getMercados_a_visitar().removeFirst();
 
         if (!seller.getMercados_a_visitar().isEmpty()) {
@@ -187,9 +218,10 @@ public class RouteUtils {
 
     private static void aux2(GraphWeightList<Place> caminhos, Seller seller, Company empresa, Route rotaFinal) {
         Iterator<Place> iter = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
+        Iterator<Place> iterCopy = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
 
         rotaFinal.addTotalDistance(caminhos.getTripWeight(iter));
-        RouteUtils.addPlacesToRotaFromIterator(iter, rotaFinal);
+        RouteUtils.addPlacesToRotaFromIterator(iterCopy, rotaFinal);
 
         String first = (String) seller.getMercados_a_visitar().first();
         Market market = empresa.checkIfMarketExists(first);
