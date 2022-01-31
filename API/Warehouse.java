@@ -94,6 +94,7 @@ public class Warehouse extends Place implements WarehouseADT {
                 + ";Stock: " + this.stock;
         return str;
     }
+    
 
     /**
      * Exporta os dados de um armazém para formato JSON.

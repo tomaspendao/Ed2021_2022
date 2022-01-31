@@ -6,6 +6,7 @@
 package API;
 
 import ADT.UnorderedListADT;
+import java.io.File;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -38,11 +39,13 @@ public class Menu {
                     break;
                 case 2:
                     System.out.println("Importar JSON");
+
                     Scanner fileName = new Scanner(System.in);
                     importJSON(fileName);
                     break;
                 case 0:
                     System.out.println("Exiting");
+
                     exit = true;
                     break;
                 default:
@@ -118,10 +121,20 @@ public class Menu {
                     this.exportInfo(exporto, empresa);
                     break;
                 case 5:
-
+                    System.out.println("Start");
+                    Scanner teste = new Scanner(System.in);
+                    this.startTeste(empresa, teste);
                     break;
                 case 0:
                     System.out.println("Exiting");
+                    Scanner scanner = new Scanner(System.in);
+
+                    System.out.println("Deseja guardar a empresa?\n\t1 - SIM\n\t2 - NÃO");
+                    int firstAnswer = scanner.nextInt();
+
+                    if (firstAnswer == 1) {
+                        empresa.export();
+                    }
                     exit = true;
                     break;
                 default:
@@ -366,6 +379,7 @@ public class Menu {
             switch (this.printInfoMenu(printo)) {
                 case 1:
                     System.out.println("Imprimir Vendedor");
+
                     System.out.println(empresa.printSellers());
                     break;
                 case 2:
@@ -682,9 +696,38 @@ public class Menu {
     }
 
     private void importJSON(Scanner fileName) {
-        System.out.println("Intoduza o nome do ficheiro: ");
 
-        String file = fileName.next();
+        File f = new File("./exportJSON/empresa"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o numero do ficheiro: ");
+
+        int filePos = fileName.nextInt();
+        
+        String file = null;
+        int j = 0;
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+                if(j == filePos){
+                    file = file2.getName();
+                    break;
+                }
+            }
+        }
+        if(file == null){
+            System.out.println("No files");
+            return;
+        }
+        
         System.out.println();
 
         Company empresa = Company.importCompany(file);
@@ -714,13 +757,19 @@ public class Menu {
                     break;
                 case 5:
                     System.out.println("Start");
-                    System.out.println("Start1");
                     Scanner teste = new Scanner(System.in);
                     this.startTeste(empresa, teste);
-                    System.out.println("Star1");
                     break;
                 case 0:
                     System.out.println("Exiting");
+                    Scanner scanner = new Scanner(System.in);
+
+                    System.out.println("Deseja guardar a empresa?\n\t1 - SIM\n\t2 - NÃO");
+                    int firstAnswer = scanner.nextInt();
+
+                    if (firstAnswer == 1) {
+                        empresa.export();
+                    }
                     exit = true;
                     break;
                 default:
@@ -730,7 +779,7 @@ public class Menu {
     }
 
     private void startTeste(Company empresa, Scanner teste) {
-        System.out.println("OLALALAL");
+        //System.out.println("OLALALAL");
         System.out.println(empresa.getVendedores().size());
         Iterator<Seller> iter = empresa.getVendedores().iterator();
         while (iter.hasNext()) {

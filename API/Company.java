@@ -7,6 +7,7 @@ package API;
 
 import ADT.CompanyADT;
 import ADT.UnorderedListADT;
+import Collections.Array.ArrayUnorderedList;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import Collections.LinkedList.GraphWeightList;
 import Exceptions.ElementNotFoundException;
@@ -41,6 +42,9 @@ public class Company extends Place implements CompanyADT {
      */
     private UnorderedListADT<Place> locais;
 
+    private UnorderedListADT<Warehouse> armazens = new ArrayUnorderedList<>();//new
+    private UnorderedListADT<Market> mercados = new ArrayUnorderedList<>();//new
+
     /**
      * Grafo Pesado que guarda os caminhos possíveis entre os locais.
      */
@@ -74,6 +78,8 @@ public class Company extends Place implements CompanyADT {
         super(name, "Sede");
         this.vendedores = new DoubleLinkedUnorderedList<>();
         this.locais = new DoubleLinkedUnorderedList<>();
+        this.armazens = new DoubleLinkedUnorderedList<>();//new
+        this.mercados = new DoubleLinkedUnorderedList<>();//new
         this.caminhos = new GraphWeightList<>();
         this.locais.addToFront(this);
         this.caminhos.addVertex(this);
@@ -209,6 +215,7 @@ public class Company extends Place implements CompanyADT {
     public void addMarket(Market market) {
         if (checkIfMarketExists(market.getName()) == null) {
             this.locais.addToRear(market);
+            this.mercados.addToRear(market);//new
             this.caminhos.addVertex(market);
         } else if (market.getClients().isEmpty() != true) {
             this.editMarket(market.getName(), market.getName());
@@ -243,6 +250,7 @@ public class Company extends Place implements CompanyADT {
     public void addWarehouse(Warehouse warehouse) {
         if (checkIfWarehouseExists(warehouse.getName()) == null) {
             this.locais.addToRear(warehouse);
+            this.armazens.addToRear(warehouse);//new
             this.caminhos.addVertex(warehouse);
         } else {
             this.editWarehouse(warehouse.getName(), warehouse.getMaxCapacity(), warehouse.getAvailableCapacity());
@@ -376,6 +384,23 @@ public class Company extends Place implements CompanyADT {
         return str;
     }
 
+    public String printMarketByTotalDemand() {
+        UnorderedListADT<Market> byTotalDemand;
+        float max = 0;
+        Iterator iter = this.getMarkets().iterator();
+
+        while (iter.hasNext()) {
+            Market temp = (Market) iter.next();
+
+            if (temp.getTotalDemand() > 0) {
+
+                max = temp.getTotalDemand();
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Imprime os armazéns da empresa.
      *
@@ -384,17 +409,38 @@ public class Company extends Place implements CompanyADT {
     @Override
     public String printWarehouses() {
         String str = "";
-        Iterator iter = this.locais.iterator();
+        Iterator iter = this.armazens.iterator();
 
         while (iter.hasNext()) {
-            Place temp = (Place) iter.next();
+            Warehouse temp = (Warehouse) iter.next();
 
-            if (temp.getType().equals("Armazém")) {
-                Warehouse newTemp = (Warehouse) temp;
-                str = str + newTemp.getName() + ";";
-            }
+            //if (temp.getType().equals("Armazém")) {
+            Warehouse newTemp = (Warehouse) temp;
+            str = str + newTemp.getName() + ";";
+            //}
         }
 
+        return str;
+    }
+
+    public String printWarehousesByStock() {//crescenste
+        UnorderedListADT<String> byStock = new DoubleLinkedUnorderedList<>();
+        String str = "";
+        while (byStock.size() < this.armazens.size()) {
+            Iterator<Warehouse> iterator = this.armazens.iterator();
+            float maxStock = -1;
+            Warehouse bestWare = null;
+            while (iterator.hasNext()) {
+                Warehouse next = iterator.next();
+                if (next.getAvailableCapacity() >= maxStock) {
+                    if (!(byStock.contains(next.getName()))) {
+                        bestWare = next;
+                    }
+                }
+            }
+            byStock.addToRear(bestWare.getName());
+            str = bestWare.getName() + "\n" + str;
+        }
         return str;
     }
 
@@ -658,18 +704,7 @@ public class Company extends Place implements CompanyADT {
      * @return Lista de armazéns.
      */
     public UnorderedListADT<Warehouse> getWarehouses() {
-        UnorderedListADT<Warehouse> listaRes = new DoubleLinkedUnorderedList<>();
-        Iterator<Place> iter = this.locais.iterator();
-
-        while (iter.hasNext()) {
-            Warehouse value = (Warehouse) iter.next();
-
-            if (value.getType().equals("Armazém")) {
-                listaRes.addToRear(value);
-            }
-        }
-
-        return listaRes;
+        return this.armazens;
     }
 
     /**
@@ -677,17 +712,7 @@ public class Company extends Place implements CompanyADT {
      *
      * @return Lista de mercados.
      */
-    public UnorderedListADT<Place> getMarkets() {
-        UnorderedListADT<Place> listaRes = new DoubleLinkedUnorderedList<>();
-        Iterator<Place> iter = this.locais.iterator();
-
-        while (iter.hasNext()) {
-            Place value = (Place) iter.next();
-            if (value.getType().equals("Mercado")) {
-                listaRes.addToRear(value);
-            }
-        }
-
-        return listaRes;
+    public UnorderedListADT<Market> getMarkets() {
+        return this.mercados;
     }
 }
