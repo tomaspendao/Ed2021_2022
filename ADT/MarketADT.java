@@ -29,10 +29,8 @@ public interface MarketADT {
 
     /**
      * Lista todos os clientes de um mercado.
-     *
-     * @return Lista de todos os clientes de um mercado.
      */
-    public String printClients();
+    public void printClients();
 
     /**
      * Exporta os dados de um mercado para formato JSON.
