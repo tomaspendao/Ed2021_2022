@@ -155,7 +155,7 @@ public class Market extends Place implements MarketADT {
         float res = 0;
         float[] temp = new float[this.clients.size()];
 
-        System.out.println(this.clients.toString());
+        //System.out.println(this.clients.toString());
 
         for (int i = 0; i < temp.length; i++) {
             temp[i] = (float) clients.dequeue();
@@ -169,7 +169,7 @@ public class Market extends Place implements MarketADT {
             clients.enqueue(temp[i]);
         }
         
-        System.out.println(this.clients.toString());
+        //System.out.println(this.clients.toString());
 
         return res;
     }

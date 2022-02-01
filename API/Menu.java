@@ -6,9 +6,16 @@
 package API;
 
 import ADT.UnorderedListADT;
+import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
+import Models.Nodes.ArestaWeight;
+import com.google.gson.stream.JsonWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Classe para armazenar comportamentos de um menu.
@@ -711,23 +718,23 @@ public class Menu {
         System.out.println("Intoduza o numero do ficheiro: ");
 
         int filePos = fileName.nextInt();
-        
+
         String file = null;
         int j = 0;
         for (File file2 : files) {
             if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
                 j++;
-                if(j == filePos){
+                if (j == filePos) {
                     file = file2.getName();
                     break;
                 }
             }
         }
-        if(file == null){
+        if (file == null) {
             System.out.println("No files");
             return;
         }
-        
+
         System.out.println();
 
         Company empresa = Company.importCompany(file);
@@ -780,18 +787,57 @@ public class Menu {
 
     private void startTeste(Company empresa, Scanner teste) {
         //System.out.println("OLALALAL");
-        System.out.println(empresa.getVendedores().size());
+        //System.out.println(empresa.getVendedores().size());
         Iterator<Seller> iter = empresa.getVendedores().iterator();
         while (iter.hasNext()) {
             Seller vendedor = iter.next();
-            System.out.println("Rota para o vendedor " + vendedor.getNome() + ":");
+
             Route rota = RouteUtils.generateRoute(empresa.getCaminhos(), vendedor, empresa.getLocais(), empresa);
 
-            System.out.println("\tAmount of refills:" + rota.getAmountOfRefills());
-            System.out.println("\tAmount of clients not served by this seller:" + rota.getFailedClients());
-            System.out.println("\tDistancia total:" + rota.getTotalDistance() + "km");
-            System.out.println(rota.getRota().toString());
+            if (rota == null) {
+                return;
+            }
+            System.out.println("Rota para o vendedor " + vendedor.getNome() + ":");
+            //System.out.println("\tAmount of refills:" + rota.getAmountOfRefills());
+            //System.out.println("\tAmount of clients not served by this seller:" + rota.getFailedClients());
+            //System.out.println("\tDistancia total:" + rota.getTotalDistance() + "km");
+            //System.out.println(rota.getRota().toString());
             //System.out.println("\t\tteste: " + rota.toString());
+
+            String file = this.exportSellerResults(empresa, vendedor, rota);
+            System.out.println("Resultados Guardados no ficheiro " + file);
+        }
+    }
+    
+    private String exportSellerResults(Company empresa,Seller vendedor, Route rota){
+        File file = new File("exportJSON/resultados/Company_" + empresa.getName() + "_" + vendedor.getNome() +".json");
+            file.getParentFile().mkdirs();
+
+            try ( JsonWriter writer = new JsonWriter(new FileWriter(file))) {
+                writer.setIndent("  ");
+                writer.beginObject();
+                writer.name("vendedor").value(vendedor.getNome());
+                writer.name("refills").value(rota.getAmountOfRefills());
+                writer.name("missed_clients").value(rota.getFailedClients());
+                writer.name("total_distance").value(rota.getTotalDistance() + "km");
+                
+                writer.name("rota");
+                writer.beginArray();
+                Iterator<Place> iterator = rota.getRota().iterator();
+                while(iterator.hasNext()){
+                    Place place = iterator.next();
+                    writer.value(place.getName());
+                }
+                writer.endArray();
+                
+                writer.endObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        try {
+            return file.getCanonicalPath();
+        } catch (IOException ex) {
+            return file.getName();
         }
     }
 }
