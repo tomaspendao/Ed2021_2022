@@ -12,6 +12,7 @@ import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
 import Collections.LinkedList.GraphWeightList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -128,20 +129,33 @@ public class Seller implements SellerADT {
      */
     @Override
     public boolean exportJSON() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        String json = gson.toJson(this);
-
         File file = new File("exportJSON/vendedor/Seller_" + this.getNome() + ".json");
         file.getParentFile().mkdirs();
-        
-        try ( FileWriter writer = new FileWriter(file)) {
-            gson.toJson(this, writer);
+
+        try ( JsonWriter writer = new JsonWriter(new FileWriter(file))) {
+            writer.setIndent("  ");
+            writer.beginObject();
+            writer.name("id").value(this.getId());
+            writer.name("nome").value(this.getNome());
+            writer.name("capacidade").value(this.getCapacidade());
+            
+            
+            writer.name("mercados");
+
+            writer.beginArray();
+            Iterator<String> iterator = this.getMercados_a_visitar().iterator();
+
+            while (iterator.hasNext()) {
+                String str = iterator.next();
+                writer.value(str);
+            }
+
+            writer.endArray();
+
+            writer.endObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(json);
 
         return true;
     }
@@ -154,7 +168,7 @@ public class Seller implements SellerADT {
      */
     @Override
     public boolean importJSON() {
-
+        
         return true;
     }
 
