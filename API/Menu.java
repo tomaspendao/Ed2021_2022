@@ -131,8 +131,13 @@ public class Menu {
                     Scanner exporto = new Scanner(System.in);
                     this.exportInfo(exporto, empresa);
                     break;
-                
                 case 5:
+                    System.out.println("Importar Informação");
+
+                    Scanner importo = new Scanner(System.in);
+                    this.importInfo(importo, empresa);
+                    break;
+                case 6:
                     System.out.println("Start");
 
                     Scanner teste = new Scanner(System.in);
@@ -165,13 +170,13 @@ public class Menu {
      */
     private int companyMenu(Scanner in) {
         System.out.println("1 - Adicionar Informação\n2 - Editar Informação" + "\n3 - Imprimir Informação\n"
-                + "4 - Exportar Informação\n5 - Start\n0 - Sair");
+                + "4 - Exportar Informação\n5 - Importar Informação\n6 - Start\n0 - Sair");
         System.out.print("Opção: ");
 
         int choice = in.nextInt();
         System.out.println();
 
-        if (choice >= 0 && choice <= 5) {
+        if (choice >= 0 && choice <= 6) {
             return choice;
         } else {
             System.out.println("Opção inválida!");
@@ -323,9 +328,8 @@ public class Menu {
 
                     System.out.println("Nova Capacidade Máxima do Vendedor (kg): ");
                     float capacityEditSeller = editSeller.nextFloat();
-                    
-                    //importes e prints
 
+                    //importes e prints
                     empresa.editSeller(idEditSeller, capacityEditSeller);
                     break;
                 case 2:
@@ -552,6 +556,47 @@ public class Menu {
         System.out.println();
 
         if (choice >= 0 && choice <= 4) {
+            return choice;
+        } else {
+            System.out.println("Opção inválida!");
+
+            return choice;
+        }
+    }
+
+    private void importInfo(Scanner importo, Company empresa) {
+        boolean exit = false;
+
+        while (!exit) {
+            switch (this.importInfoMenu(importo)) {
+                case 1:
+                    this.importSellerHelper(importo, empresa);
+                    break;
+                case 2:
+                    this.importMarketHelper(importo, empresa);
+                    break;
+                case 3:
+                    this.importWarehouseHelper(importo, empresa);
+                    break;
+                case 0:
+                    System.out.println("Backing");
+
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private int importInfoMenu(Scanner in) {
+        System.out.println("1 - Importar Vendedores\n2 - Importar Mercados" + "\n3 - Importar Armazéns\n"
+                + "0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+
+        if (choice >= 0 && choice <= 3) {
             return choice;
         } else {
             System.out.println("Opção inválida!");
@@ -871,6 +916,11 @@ public class Menu {
                     this.exportInfo(exporto, empresa);
                     break;
                 case 5:
+                    System.out.println("Importar Informação");
+                    Scanner importo = new Scanner(System.in);
+                    this.importInfo(importo, empresa);
+                    break;
+                case 6:
                     System.out.println("Start");
                     this.startTeste(empresa);
                     break;
@@ -989,7 +1039,7 @@ public class Menu {
                     System.out.println("Imprimir Vendedores Por Mercados");
                     System.out.println(empresa.printSellerByMarkets());
                     break;
-                    
+
                 case 0:
                     System.out.println("Backing");
                     exit = true;
@@ -1131,6 +1181,158 @@ public class Menu {
             System.out.println("Opção inválida!");
 
             return choice;
+        }
+    }
+
+    private void importSellerHelper(Scanner importo, Company empresa) {
+        System.out.println("Importar Vendedor");
+        File f = new File("./exportJSON/vendedor"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o numero do ficheiro: ");
+
+        int filePos = importo.nextInt();
+
+        String file = null;
+        int j = 0;
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Seller vendedor = Seller.importJSON(file);
+        empresa.addSeller(vendedor);
+    }
+
+    private void importMarketHelper(Scanner importo, Company empresa) {
+        System.out.println("Importar Mercado");
+        File f = new File("./exportJSON/mercado"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o numero do ficheiro: ");
+
+        int filePos = importo.nextInt();
+
+        String file = null;
+        int j = 0;
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Market mercado = Market.importJSON(file);
+        empresa.addMarket(mercado);
+    }
+
+    private void importWarehouseHelper(Scanner importo, Company empresa) {
+        System.out.println("Importar Armazém");
+        File f = new File("./exportJSON/armazem"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o numero do ficheiro: ");
+
+        int filePos = importo.nextInt();
+
+        String file = null;
+        int j = 0;
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Warehouse armazem = Warehouse.importJSON(file);
+        empresa.addWarehouse(armazem);
+    }
+
+    /**
+     * Método utilizado para apresentar dados de um vendedor associado a uma
+     * empresa.
+     *
+     * @param empresa Empresa associada a um vendedor.
+     * @return String com informação acerca do vendedor.
+     */
+    private void printSeller(Company empresa) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("ID do vendedor: ");
+        int newI = scanner.nextInt();
+        Iterator iter = empresa.getVendedores().iterator();
+        int j = 1;
+
+        while (iter.hasNext()) {
+            Seller temp = (Seller) iter.next();
+
+            if (j == newI) {
+                temp.printSeller();
+            }
+
+            j++;
         }
     }
 }
