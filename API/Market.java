@@ -11,11 +11,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,16 +75,6 @@ public class Market extends Place implements MarketADT {
     public boolean removeClient() {
         return clients.dequeue() != null;
     }
-    
-    /**
-     * Remove todos os clientes fila quando a procura destes foi
-     * satisfeita.
-     */
-    public void removeAllClients() {
-        for (int i = 0; i < this.clients.size(); i++) {
-            clients.dequeue();
-        }
-    }
 
     /**
      * Lista todos os clientes de um mercado.
@@ -102,18 +94,36 @@ public class Market extends Place implements MarketADT {
      */
     @Override
     public boolean exportJSON() {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String json = gson.toJson(this);
-        File file = new File("exportJSON/Local/Market_" + this.getName() + ".json");
+        File file = new File("exportJSON/mercados/Market_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
+        LinkedQueue<Float> temp = new LinkedQueue();
 
-        try ( FileWriter writer = new FileWriter(file)) {
-            gson.toJson(this, writer);
+        for (int i = 0; i < this.getClients().size(); i++) {
+            temp.enqueue(this.getClients().dequeue());
+        }
+
+        try ( JsonWriter writer = new JsonWriter(new FileWriter(file))) {
+            writer.setIndent(" ");
+            writer.beginObject();
+            writer.name("nome").value(this.getName());
+
+            writer.name("clientes");
+            writer.beginArray();
+
+            for (int i = 0; i < temp.size(); i++) {
+                float aux = temp.dequeue();
+
+                this.getClients().enqueue(aux);
+
+                writer.value(aux);
+            }
+
+            writer.endArray();
+
+            writer.endObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println(json);
 
         return true;
     }
@@ -155,7 +165,7 @@ public class Market extends Place implements MarketADT {
         float res = 0;
         float[] temp = new float[this.clients.size()];
 
-        //System.out.println(this.clients.toString());
+        System.out.println(this.clients.toString());
 
         for (int i = 0; i < temp.length; i++) {
             temp[i] = (float) clients.dequeue();
@@ -168,6 +178,8 @@ public class Market extends Place implements MarketADT {
         for (int i = 0; i < temp.length; i++) {
             clients.enqueue(temp[i]);
         }
+
+        System.out.println(this.clients.toString());
 
         return res;
     }
