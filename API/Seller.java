@@ -1,30 +1,17 @@
- /**
+/**
  * Epoca Normal ED
  * Daniel Pinto 8200412
  * Tomás Pendão 8170308
  */
 package API;
 
-import ADT.RouteADT;
 import ADT.SellerADT;
-import ADT.UnorderedListADT;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
-import Collections.LinkedList.GraphWeightList;
-import Collections.LinkedList.LinkedQueue;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Seller representa uma implementação de SellerADT.
@@ -39,7 +26,7 @@ public class Seller implements SellerADT {
     private DoubleLinkedUnorderedList<String> mercados_a_visitar;
 
     private static int idStatic = 0;
-    
+
     /**
      * Representa a capacidad que um dado vendedor consegue transportar em kg
      * (kilogramas).
@@ -50,7 +37,6 @@ public class Seller implements SellerADT {
      * Representa a identificação de um vendedor.
      */
     private int id;
-    
 
     /**
      * Representa o nome de um vendedor.
@@ -77,8 +63,8 @@ public class Seller implements SellerADT {
         this.nome = nome;
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
-    
-    public Seller(float capacidade,int id, String nome) {
+
+    public Seller(float capacidade, int id, String nome) {
         this.capacidade = capacidade;
         this.id = id;
         this.nome = nome;
@@ -122,11 +108,10 @@ public class Seller implements SellerADT {
      */
     @Override
     public void printSeller() {
-        mercados_a_visitar.toString();
-
-        System.out.println("Capacidade: " + this.getCapacidade());
         System.out.println("ID: " + this.getId());
         System.out.println("Nome: " + this.getNome());
+        System.out.println("Capacidade: " + this.getCapacidade());
+        System.out.println("Mercados a visitar: " + mercados_a_visitar.toString());
     }
 
     /**
@@ -146,8 +131,7 @@ public class Seller implements SellerADT {
             writer.name("id").value(this.getId());
             writer.name("nome").value(this.getNome());
             writer.name("capacidade").value(this.getCapacidade());
-            
-            
+
             writer.name("mercados");
 
             writer.beginArray();
@@ -174,28 +158,10 @@ public class Seller implements SellerADT {
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
-    public static Seller importJSON(String filepath) {
-        
-        UnorderedListADT<String> mercadoRes = new DoubleLinkedUnorderedList<>();
-        
-        JsonObject jsonObject = new JsonObject();
+    @Override
+    public boolean importJSON() {
 
-        try {
-            jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject(); //receber como argumento
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-        
-        Seller sellerRes = new Seller(jsonObject.get("capacidade").getAsFloat(), jsonObject.get("nome").getAsString());
-        
-        JsonArray mercadosJSONArray = jsonObject.get("mercados").getAsJsonArray();
-        
-        for (int i = 0; i < mercadosJSONArray.size(); i++) {
-            sellerRes.addMarket(mercadosJSONArray.get(i).getAsString());
-        }
-
-        return sellerRes;
-
+        return true;
     }
 
     /**
@@ -254,5 +220,5 @@ public class Seller implements SellerADT {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
+
 }
