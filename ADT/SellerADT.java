@@ -43,11 +43,11 @@ public interface SellerADT {
      */
     public boolean exportJSON();
     
-     /**
+    /**
      * Importa os dados de um mercado de formato JSON.
      *
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
-    public boolean importJSON();
+    //public static SellerADT importJSON(String filepath);
 }

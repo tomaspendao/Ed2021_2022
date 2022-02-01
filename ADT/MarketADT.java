@@ -48,5 +48,5 @@ public interface MarketADT {
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
-    public boolean importJSON();
+    //public static MarketADT importJSON(String filepath);
 }
