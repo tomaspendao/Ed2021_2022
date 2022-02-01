@@ -120,9 +120,13 @@ public class Place {
         return true;
     }
 
+    /**
+     * Método para apresentar uma representação de um local.
+     *
+     * @return String com a epresentação de um local.
+     */
     @Override
     public String toString() {
         return "Place{" + "nome=" + nome + '}';
     }
-     
 }
