@@ -90,11 +90,10 @@ public class Warehouse extends Place implements WarehouseADT {
     @Override
     public String printWarehouse() {
         String str = "";
-        str = "Nome: " + this.getName() + ";Tipo: " + this.getType() + ";Capacidade: " + this.getMaxCapacity()
-                + ";Stock: " + this.stock;
+        str = "Nome: " + this.getName() + "\nCapacidade: " + this.getMaxCapacity() + "\nStock: " + this.stock;
+        
         return str;
     }
-    
 
     /**
      * Exporta os dados de um armazém para formato JSON.
@@ -140,7 +139,7 @@ public class Warehouse extends Place implements WarehouseADT {
     public float getAvailableCapacity() {
         return stock;
     }
-    
+
     /**
      * Exporta os dados de um armazem para formato JSON.
      *
@@ -162,7 +161,6 @@ public class Warehouse extends Place implements WarehouseADT {
         }
 
         //System.out.println(json);
-
         return true;
     }
 
