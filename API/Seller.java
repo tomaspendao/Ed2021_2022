@@ -5,13 +5,26 @@
  */
 package API;
 
+import ADT.RouteADT;
 import ADT.SellerADT;
+import ADT.UnorderedListADT;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
+import Collections.LinkedList.GraphWeightList;
+import Collections.LinkedList.LinkedQueue;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Seller representa uma implementação de SellerADT.
@@ -111,7 +124,7 @@ public class Seller implements SellerADT {
         System.out.println("ID: " + this.getId());
         System.out.println("Nome: " + this.getNome());
         System.out.println("Capacidade: " + this.getCapacidade());
-        System.out.println("Mercados a visitar: " + mercados_a_visitar.toString());
+        System.out.println("Mercados a visitar" + mercados_a_visitar.toString());
     }
 
     /**
@@ -158,10 +171,28 @@ public class Seller implements SellerADT {
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
-    @Override
-    public boolean importJSON() {
+    public static Seller importJSON(String filepath) {
 
-        return true;
+        UnorderedListADT<String> mercadoRes = new DoubleLinkedUnorderedList<>();
+
+        JsonObject jsonObject = new JsonObject();
+
+        try {
+            jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject(); //receber como argumento
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        Seller sellerRes = new Seller(jsonObject.get("capacidade").getAsFloat(), jsonObject.get("nome").getAsString());
+
+        JsonArray mercadosJSONArray = jsonObject.get("mercados").getAsJsonArray();
+
+        for (int i = 0; i < mercadosJSONArray.size(); i++) {
+            sellerRes.addMarket(mercadosJSONArray.get(i).getAsString());
+        }
+
+        return sellerRes;
+
     }
 
     /**
