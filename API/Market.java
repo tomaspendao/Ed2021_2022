@@ -9,6 +9,7 @@ import ADT.MarketADT;
 import Collections.LinkedList.LinkedQueue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
@@ -104,7 +105,7 @@ public class Market extends Place implements MarketADT {
      */
     @Override
     public boolean exportJSON() {
-        File file = new File("exportJSON/mercados/Market_" + this.getName() + ".json");
+        File file = new File("exportJSON/mercado/Market_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
         LinkedQueue<Float> temp = new LinkedQueue();
 
@@ -116,7 +117,7 @@ public class Market extends Place implements MarketADT {
             writer.setIndent(" ");
             writer.beginObject();
             writer.name("nome").value(this.getName());
-
+            writer.name("tipo").value(this.getType());
             writer.name("clientes");
             writer.beginArray();
 
@@ -144,17 +145,30 @@ public class Market extends Place implements MarketADT {
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
-    @Override
-    public boolean importJSON(String filepath) {
+    public static Market importJSON(String filepath) {
+        
+        LinkedQueue<Float> clientsRes = new LinkedQueue<>();
+        
         JsonObject jsonObject = new JsonObject();
 
         try {
-            jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject();
+            jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject(); //receber como argumento
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Seller.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        Market marketRes = new Market(jsonObject.get("nome").getAsString());
+        
+        JsonArray clientesJSONArray = jsonObject.get("clientes").getAsJsonArray();
+        
+        for (int i = 0; i < clientesJSONArray.size(); i++) {
+            marketRes.addClient(clientesJSONArray.get(i).getAsFloat());
         }
 
-        return true;
+        return marketRes;
+        
     }
 
     /**

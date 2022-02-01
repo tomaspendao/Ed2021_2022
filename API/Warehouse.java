@@ -109,7 +109,7 @@ public class Warehouse extends Place implements WarehouseADT {
 
         String json = gson.toJson(this);
 
-        File file = new File("exportJSON/Local/Warehouse_" + this.getName() + ".json");
+        File file = new File("exportJSON/armazem/Warehouse_" + this.getName() + ".json");
         file.getParentFile().mkdirs();
 
         try ( FileWriter writer = new FileWriter(file)) {
@@ -140,18 +140,43 @@ public class Warehouse extends Place implements WarehouseADT {
     public float getAvailableCapacity() {
         return stock;
     }
+    
+    /**
+     * Exporta os dados de um armazem para formato JSON.
+     *
+     * @return true caso seja possível exportar para formato JSON, false caso
+     * contrário.
+     */
+    @Override
+    public boolean exportJSON() {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(this);
+        File file = new File("exportJSON/armazem/Warehouse_" + this.getName() + ".json");;
+
+        file.getParentFile().mkdirs();
+
+        try ( FileWriter writer = new FileWriter(file)) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //System.out.println(json);
+
+        return true;
+    }
 
     /**
      * Importar um JSON para criar um armazém
      *
      * @return armazém importado com JSON
      */
-    public static Warehouse importJSON() {
+    public static Warehouse importJSON(String filename) {
         Gson gson = new Gson();
 
         Reader reader = null;
         try {
-            reader = Files.newBufferedReader(Paths.get("Warehouse_armazém1.json"));
+            reader = Files.newBufferedReader(Paths.get(filename));
         } catch (IOException ex) {
             Logger.getLogger(Warehouse.class.getName()).log(Level.SEVERE, null, ex);
         }
