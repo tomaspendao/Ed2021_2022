@@ -109,7 +109,7 @@ public class Market extends Place implements MarketADT {
         file.getParentFile().mkdirs();
         LinkedQueue<Float> temp = new LinkedQueue();
 
-        for (int i = 0; i < this.getClients().size(); i++) {
+        while (!(this.getClients().isEmpty())) {
             temp.enqueue(this.getClients().dequeue());
         }
 
@@ -121,7 +121,7 @@ public class Market extends Place implements MarketADT {
             writer.name("clientes");
             writer.beginArray();
 
-            for (int i = 0; i < temp.size(); i++) {
+            while (!temp.isEmpty()) {
                 float aux = temp.dequeue();
 
                 this.getClients().enqueue(aux);
