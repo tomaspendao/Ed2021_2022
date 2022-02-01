@@ -145,7 +145,7 @@ public class Menu {
                     int firstAnswer = scanner.nextInt();
 
                     if (firstAnswer == 1) {
-                        //empresa.export();
+                        empresa.export();
                     }
 
                     exit = true;
@@ -524,7 +524,7 @@ public class Menu {
                     break;
                 case 4:
                     System.out.println("Exportar Empresa");
-                    //empresa.export();
+                    empresa.export();
                     break;
                 case 0:
                     System.out.println("Backing");
