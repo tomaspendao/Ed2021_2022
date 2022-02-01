@@ -513,7 +513,7 @@ public class Menu {
         while (!exit) {
             switch (this.exportInfoMenu(exporto)) {
                 case 1:
-                    System.out.println("Exportar Vendedor");
+                    System.out.println("Exportar Vendedores");
                     Iterator<Seller> iterSeller = empresa.getVendedores().iterator();
 
                     while (iterSeller.hasNext()) {
@@ -522,7 +522,7 @@ public class Menu {
                     }
                     break;
                 case 2:
-                    System.out.println("Exportar Mercado");
+                    System.out.println("Exportar Mercados");
                     Iterator<Market> iterMarket = empresa.getMarkets().iterator();
 
                     while (iterMarket.hasNext()) {
@@ -641,16 +641,16 @@ public class Menu {
      * @return String com os mercados existentes.
      */
     private String printExistingMarkets(Company empresa) {
-        UnorderedListADT<Place> value = empresa.getLocais();
-        Iterator<Place> iter = value.iterator();
+        UnorderedListADT<Market> value = empresa.getMarkets();
+        Iterator<Market> iter = value.iterator();
         int i = 0;
 
         while (iter.hasNext()) {
-            Place temp = iter.next();
+            Market temp = iter.next();
 
-            if (temp.getType().equals("Mercado")) {
-                System.out.println(i + " --> " + temp.getName());
-            }
+            //if (temp.getType().equals("Mercado")) {
+            System.out.println(i + " --> " + temp.getName());
+            //}
 
             i++;
         }
@@ -659,11 +659,11 @@ public class Menu {
 
         System.out.println("Número do mercado (ex:\"2\"): ");
         int newI = scanner.nextInt();
-        Iterator<Place> iter2 = value.iterator();
+        Iterator<Market> iter2 = value.iterator();
         int j = 0;
 
         while (iter2.hasNext()) {
-            Place temp = iter2.next();
+            Market temp = iter2.next();
             //System.out.println(i + " --> " + temp.getName());
 
             if (j == newI) {
@@ -683,16 +683,16 @@ public class Menu {
      * @return String com os armazéns existentes.
      */
     private String printExistingWarehouses(Company empresa) {
-        UnorderedListADT<Place> value = empresa.getLocais();
-        Iterator<Place> iter = value.iterator();
+        UnorderedListADT<Warehouse> value = empresa.getWarehouses();
+        Iterator<Warehouse> iter = value.iterator();
         int i = 0;
 
         while (iter.hasNext()) {
-            Place temp = iter.next();
+            Warehouse temp = iter.next();
 
-            if (temp.getType().equals("Armazém")) {
-                System.out.println(i + " --> " + temp.getName());
-            }
+            //if (temp.getType().equals("Armazém")) {
+            System.out.println(i + " --> " + temp.getName());
+            //}
 
             i++;
         }
@@ -702,11 +702,11 @@ public class Menu {
         System.out.println("Numero do Armazém (ex:\"2\"): ");
         int newI = scanner.nextInt();
 
-        Iterator<Place> iter2 = value.iterator();
+        Iterator<Warehouse> iter2 = value.iterator();
         int j = 0;
 
         while (iter2.hasNext()) {
-            Place temp = iter2.next();
+            Warehouse temp = iter2.next();
             //System.out.println(i + " --> " + temp.getName());
 
             if (j == newI) {
@@ -1348,7 +1348,7 @@ public class Menu {
             j++;
         }
     }
-
+    
     /**
      * Método utilizado para apresentar dados de um mercado associado a uma
      * empresa.
