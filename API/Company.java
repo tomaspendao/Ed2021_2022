@@ -294,7 +294,7 @@ public class Company extends Place implements CompanyADT {
      * @param name Nome de um armazém para verificar.
      * @return Retorna o aramazém se existir e null se não existir.
      */
-    private Warehouse checkIfWarehouseExists(String name) {
+    protected Warehouse checkIfWarehouseExists(String name) {
         try {
             Place place = this.findPlaceByName(name);
 

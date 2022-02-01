@@ -452,6 +452,18 @@ public class Menu {
                     System.out.println("Imprimir Caminhos");
                     System.out.println(empresa.getCaminhos().getAdjList().toString());//preciso fazer uma cena para listar caminhos
                     break;
+                case 5:
+                    System.out.println("Imprimir Vendedor");
+                    this.printSeller(empresa);
+                    break;
+                case 6:
+                    System.out.println("Imprimir Mercado");
+                    this.printMarket(empresa);
+                    break;
+                case 7:
+                    System.out.println("Imprimir Armazém");
+                    this.printWarehouse(empresa);
+                    break;
                 case 0:
                     System.out.println("Backing");
 
@@ -472,13 +484,14 @@ public class Menu {
      */
     private int printInfoMenu(Scanner in) {
         System.out.println("1 - Imprimir Vendedores\n2 - Imprimir Mercados" + "\n3 - Imprimir Armazéns\n"
-                + "4 - Imprimir Caminhos\n0 - Back");
+                + "4 - Imprimir Caminhos\n5 - Imprimir Vendedor\n6 - Imprimir Mercado\n7 - Imprimir Armazém\n"
+                + "0 - Back");
         System.out.print("Opção: ");
 
         int choice = in.nextInt();
         System.out.println();
 
-        if (choice >= 0 && choice <= 4) {
+        if (choice >= 0 && choice <= 7) {
             return choice;
         } else {
             System.out.println("Opção inválida!");
@@ -1334,5 +1347,39 @@ public class Menu {
 
             j++;
         }
+    }
+
+    /**
+     * Método utilizado para apresentar dados de um mercado associado a uma
+     * empresa.
+     *
+     * @param empresa Empresa associada a um mercado.
+     * @return String com informação acerca do mercado.
+     */
+    private void printMarket(Company empresa) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Nome do mercado: ");
+        String newI = scanner.next();
+        Market temp = empresa.checkIfMarketExists(newI);
+
+        temp.printClients();
+    }
+
+    /**
+     * Método utilizado para apresentar dados de um armazém associado a uma
+     * empresa.
+     *
+     * @param empresa Empresa associada a um armazém.
+     * @return String com informação acerca do armazém.
+     */
+    private void printWarehouse(Company empresa) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Nome do armazém: ");
+        String newI = scanner.next();
+        Warehouse temp = empresa.checkIfWarehouseExists(newI);
+
+        System.out.println(temp.printWarehouse());
     }
 }
