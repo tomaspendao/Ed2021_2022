@@ -45,12 +45,12 @@ public class Company extends Place implements CompanyADT {
     /**
      * Lista não ordenada para armazenar armazéns de uma empresa.
      */
-    private UnorderedListADT<Warehouse> armazens = new ArrayUnorderedList<>();
+    private UnorderedListADT<Warehouse> armazens;
 
     /**
      * Lista não ordenada para armazenar mercados de uma empresa.
      */
-    private UnorderedListADT<Market> mercados = new ArrayUnorderedList<>();
+    private UnorderedListADT<Market> mercados;
 
     /**
      * Grafo Pesado que guarda os caminhos possíveis entre os locais.
