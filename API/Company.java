@@ -658,35 +658,62 @@ public class Company extends Place implements CompanyADT {
      *
      * @return String com os vendedores com base no ID.
      */
-//    public String printTripByWeight() {
-//        UnorderedListADT<String> byWeight = new DoubleLinkedUnorderedList<>();
-//        String str = "";
-//
-//        while (byWeight.size() < this.caminhos.size()) {
-//            DoubleLinkedUnorderedList<ArestaWeight>[] tst = this.caminhos.getAdjList();
-//            for (int i = 0; i < this.locais.size(); i++) {
-//                Iterator<ArestaWeight> iterator = tst[i].iterator();
-//                int weight = -1;
-//                Seller bestTrip = null;
-//
-//                while (iterator.hasNext()) {
-//                    Place next = iterator.next();
-//
-//                    if (next.getTripWeight() >= weight) {
-//                        if (!(byWeight.contains(next.getNome()))) {
-//                            bestTrip = next;
-//                        }
-//                    }
-//                }
-//                byWeight.addToRear(bestTrip.getNome());
-//            str = bestTrip.getNome() + "\n" + str;
-//            }
-//
-//            
-//        }
-//
-//        return str;
-//    }
+    public String printTripByWeight() {
+        UnorderedListADT<ArestaWeight> byWeight = new DoubleLinkedUnorderedList<>();
+        String str = "";
+
+        for (int j = 0; j < this.caminhos.size(); j++) {
+            DoubleLinkedUnorderedList<ArestaWeight>[] tst = this.caminhos.getAdjList();
+            ArestaWeight bestTrip = null;
+
+            for (int i = 0; i < this.locais.size(); i++) {
+                Iterator<ArestaWeight> iterator = tst[i].iterator();
+                float weight = -1;
+
+                while (iterator.hasNext()) {
+                    ArestaWeight next = iterator.next();
+
+                    if (next.getWeight() >= weight) {
+                        if (!(byWeight.contains(next))) {
+                            bestTrip = next;
+                            weight = next.getWeight();
+                        }
+                    }
+                }
+            }
+
+            if (bestTrip != null) {
+                byWeight.addToRear(bestTrip);
+                str = bestTrip + "\n" + str;
+            }
+        }
+
+        return aux(byWeight);
+    }
+
+    /**
+     * Método utilizado para auxiliar na apresentação da informação dos
+     * caminhos.
+     *
+     * @param byWeight Lista dos caminhos.
+     * @return String com uma representação dos caminhos com base na distância.
+     */
+    private String aux(UnorderedListADT<ArestaWeight> byWeight) {
+        Iterator<ArestaWeight> iter = byWeight.iterator();
+        String str = "";
+
+        while (iter.hasNext()) {
+            ArestaWeight next = iter.next();
+            String temp = "De: " + this.caminhos.getVertice(next.getStart()).getName() + "\nPara: "
+                    + this.caminhos.getVertice(next.getTarget()).getName() + "\nDistância: " + next.getWeight()
+                    + "\n---------------\n";
+
+            str = temp + str;
+        }
+
+        return str;
+    }
+
     /**
      * Exportar para um ficheiro json a empresa.
      *
@@ -825,8 +852,10 @@ public class Company extends Place implements CompanyADT {
 
         try {
             jsonObject = new JsonParser().parse(new FileReader(filepath)).getAsJsonObject(); //receber como argumento
+
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Company.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         //Array de locais
