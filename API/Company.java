@@ -45,12 +45,12 @@ public class Company extends Place implements CompanyADT {
     /**
      * Lista não ordenada para armazenar armazéns de uma empresa.
      */
-    private UnorderedListADT<Warehouse> armazens;
+    private UnorderedListADT<Warehouse> armazens = new ArrayUnorderedList<>();
 
     /**
      * Lista não ordenada para armazenar mercados de uma empresa.
      */
-    private UnorderedListADT<Market> mercados;
+    private UnorderedListADT<Market> mercados = new ArrayUnorderedList<>();
 
     /**
      * Grafo Pesado que guarda os caminhos possíveis entre os locais.
@@ -419,6 +419,7 @@ public class Company extends Place implements CompanyADT {
                 if (next.getTotalDemand() >= maxDemand) {
                     if (!(byDemand.contains(next.getName()))) {
                         bestMark = next;
+                        maxDemand = next.getTotalDemand();
                     }
                 }
             }
@@ -451,6 +452,7 @@ public class Company extends Place implements CompanyADT {
                 if (next.getClients().size() >= clients) {
                     if (!(byClients.contains(next.getName()))) {
                         bestMark = next;
+                        clients = next.getClients().size();
                     }
                 }
             }
@@ -505,10 +507,11 @@ public class Company extends Place implements CompanyADT {
                 if (next.getAvailableCapacity() >= maxStock) {
                     if (!(byStock.contains(next.getName()))) {
                         bestWare = next;
+                        maxStock = next.getAvailableCapacity();
                     }
                 }
             }
-
+            System.out.println(bestWare + ", ");
             byStock.addToRear(bestWare.getName());
             str = bestWare.getName() + "\n" + str;
         }
@@ -537,6 +540,7 @@ public class Company extends Place implements CompanyADT {
                 if (next.getAvailableCapacity() >= maxCapacity) {
                     if (!(byCapacity.contains(next.getName()))) {
                         bestWare = next;
+                        maxCapacity = next.getMaxCapacity();
                     }
                 }
             }
@@ -569,6 +573,7 @@ public class Company extends Place implements CompanyADT {
                 if (next.getCapacidade() >= maxCapacity) {
                     if (!(byCapacity.contains(next.getNome()))) {
                         bestSelle = next;
+                        maxCapacity = next.getCapacidade();
                     }
                 }
             }
@@ -602,6 +607,7 @@ public class Company extends Place implements CompanyADT {
                 if (next.getMercados_a_visitar().size() >= clients) {
                     if (!(byClients.contains(next.getNome()))) {
                         bestSelle = next;
+                        clients = next.getMercados_a_visitar().size();
                     }
                 }
             }
@@ -634,6 +640,7 @@ public class Company extends Place implements CompanyADT {
                 if (next.getMercados_a_visitar().size() >= id) {
                     if (!(byId.contains(next.getNome()))) {
                         bestSelle = next;
+                        id = next.getId();
                     }
                 }
             }
@@ -645,37 +652,41 @@ public class Company extends Place implements CompanyADT {
         return str;
     }
 
-//     /**
-//     * Método utilizado para imprimir os vendedores de uma empresa com base no
-//     * ID por ordem crescente.
-//     *
-//     * @return String com os vendedores com base no ID.
-//     */
+    /**
+     * Método utilizado para imprimir os vendedores de uma empresa com base no
+     * ID por ordem crescente.
+     *
+     * @return String com os vendedores com base no ID.
+     */
 //    public String printTripByWeight() {
 //        UnorderedListADT<String> byWeight = new DoubleLinkedUnorderedList<>();
 //        String str = "";
 //
 //        while (byWeight.size() < this.caminhos.size()) {
-//            Iterator<Place> iterator = this.caminhos.iterator(); 
-//            int weight = -1;
-//            Seller bestTrip = null;
+//            DoubleLinkedUnorderedList<ArestaWeight>[] tst = this.caminhos.getAdjList();
+//            for (int i = 0; i < this.locais.size(); i++) {
+//                Iterator<ArestaWeight> iterator = tst[i].iterator();
+//                int weight = -1;
+//                Seller bestTrip = null;
 //
-//            while (iterator.hasNext()) {
-//                Seller next = iterator.next();
+//                while (iterator.hasNext()) {
+//                    Place next = iterator.next();
 //
-//                if (next.getTripWeight() >= weight) {
-//                    if (!(byWeight.contains(next.getNome()))) {
-//                        bestTrip = next;
+//                    if (next.getTripWeight() >= weight) {
+//                        if (!(byWeight.contains(next.getNome()))) {
+//                            bestTrip = next;
+//                        }
 //                    }
 //                }
+//                byWeight.addToRear(bestTrip.getNome());
+//            str = bestTrip.getNome() + "\n" + str;
 //            }
 //
-//            byWeight.addToRear(bestTrip.getNome());
-//            str = bestTrip.getNome() + "\n" + str;
+//            
 //        }
-////
-////        return str;
-////    }
+//
+//        return str;
+//    }
     /**
      * Exportar para um ficheiro json a empresa.
      *
