@@ -131,6 +131,7 @@ public class Menu {
                     Scanner exporto = new Scanner(System.in);
                     this.exportInfo(exporto, empresa);
                     break;
+                
                 case 5:
                     System.out.println("Start");
 
@@ -322,6 +323,8 @@ public class Menu {
 
                     System.out.println("Nova Capacidade Máxima do Vendedor (kg): ");
                     float capacityEditSeller = editSeller.nextFloat();
+                    
+                    //importes e prints
 
                     empresa.editSeller(idEditSeller, capacityEditSeller);
                     break;
@@ -503,14 +506,11 @@ public class Menu {
                     break;
                 case 2:
                     System.out.println("Exportar Mercado");
-                    Iterator<Place> iterMarket = empresa.getLocais().iterator();
+                    Iterator<Market> iterMarket = empresa.getMarkets().iterator();
 
                     while (iterMarket.hasNext()) {
-                        Place next = iterMarket.next();
-
-                        if (next.getType().equals("Mercado")) {
-                            next.exportJSON();
-                        }
+                        Market next = iterMarket.next();
+                        next.exportJSON();
                     }
                     break;
                 case 3:
@@ -518,7 +518,7 @@ public class Menu {
                     Iterator<Warehouse> iterWarehouse = empresa.getWarehouses().iterator();
 
                     while (iterWarehouse.hasNext()) {
-                        Place next = iterWarehouse.next();
+                        Warehouse next = iterWarehouse.next();
                         next.exportJSON();
                     }
                     break;
@@ -978,7 +978,7 @@ public class Menu {
         while (!exit) {
             switch (this.printInfoSellersMenu(printo)) {
                 case 1:
-                    System.out.println("Imprimir Vendedor por ID");
+                    System.out.println("Imprimir Vendedores por ID");
                     System.out.println(empresa.printSellerById());
                     break;
                 case 2:
@@ -989,6 +989,7 @@ public class Menu {
                     System.out.println("Imprimir Vendedores Por Mercados");
                     System.out.println(empresa.printSellerByMarkets());
                     break;
+                    
                 case 0:
                     System.out.println("Backing");
                     exit = true;
