@@ -19,7 +19,7 @@ public class RouteUtils {
 
     public static Route generateRoute(GraphWeightList<Place> caminhos, Seller seller, UnorderedListADT<Place> locais,
             Company empresa) {
-        if(!caminhos.isConnected()){
+        if (!caminhos.isConnected()) {
             System.err.println("Graph is not connected");
             return null;
         }
@@ -27,7 +27,6 @@ public class RouteUtils {
         Market mercado = new Market();
 
         //System.out.println("generating route");
-
         //marcar o start como a sede
         rotaFinal.setStart(empresa.getLocais().first());
 
@@ -41,55 +40,60 @@ public class RouteUtils {
 
             System.out.println("\tPara o mercado " + mercado.getName());
 
-            if (mercado.getTotalDemand() <= 0) {
-                seller.getMercados_a_visitar().removeFirst();
-                break; //passar para o próximo mercado
-            }
+            System.out.println("demand :" + mercado.getTotalDemand());
+            if (mercado.getTotalDemand() > 0) {
 
-            if (seller.getCapacidade() >= mercado.getTotalDemand()) {
-                System.out.println("\t\tTem capacidade para a demand toda");
-                if (rotaFinal.getStock() >= mercado.getTotalDemand()) {
-                    System.out.println("\t\t\tTem stock para a demand toda");
-                    RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
-                } else {
-                    float amountToReffil;
-                    System.out.println("\t\t\tNão tem stock para a demand toda");
-                    amountToReffil = mercado.getTotalDemand() - rotaFinal.getStock();
-
-                    RouteUtils.refillRoute(caminhos, empresa.getWarehouses(), rotaFinal.getStart(), amountToReffil, rotaFinal);
-                    rotaFinal.incrementAmountOfRefills();
-                    RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
-                }
-            } else {
-                System.out.println("\t\tNão tem capacidade para a demand toda");
-                int count = 0;
-                while (!mercado.getClients().isEmpty()) {
-
-                    //System.out.println("\t\tCliente a Cliente");
-                    if (rotaFinal.getStock() >= (float) mercado.getClients().first()) {
-                        System.out.println("\t\t\tTem stock");
-                        RouteUtils.aux2(caminhos, seller, empresa, rotaFinal);
-                    } else if (seller.getCapacidade() >= (float) mercado.getClients().first()) {
+                if (seller.getCapacidade() >= mercado.getTotalDemand()) {
+                    System.out.println("\t\tTem capacidade para a demand toda");
+                    if (rotaFinal.getStock() >= mercado.getTotalDemand()) {
+                        System.out.println("\t\t\tTem stock para a demand toda");
+                        RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
+                    } else {
                         float amountToReffil;
-                        System.out.println("\t\t\tNao tem stock mas tem capacidade para o cliente");
-                        amountToReffil = (float) mercado.getClients().first() - rotaFinal.getStock();
+                        System.out.println("\t\t\tNão tem stock para a demand toda");
+                        amountToReffil = mercado.getTotalDemand() - rotaFinal.getStock();
 
                         RouteUtils.refillRoute(caminhos, empresa.getWarehouses(), rotaFinal.getStart(), amountToReffil, rotaFinal);
                         rotaFinal.incrementAmountOfRefills();
-                        RouteUtils.aux2(caminhos, seller, empresa, rotaFinal);
-                    } else {
-                        mercado.getClients().enqueue(mercado.getClients().dequeue());
-                        System.out.println("\t\t\tNao tem stock nem tem capacidade para o cliente");
-                        count++;
-                        rotaFinal.incrementFailedClients();
-                        //System.out.println("\t\t" + count);
-                        if (count >= mercado.getClients().size()) {
-                            seller.getMercados_a_visitar().removeFirst();
-                            break; //passar para o próximo mercado
-                        }
+                        RouteUtils.aux(caminhos, seller, empresa, rotaFinal);
                     }
+                } else {
+                    System.out.println("\t\tNão tem capacidade para a demand toda");
+                    int count = 0;
+                    while (!mercado.getClients().isEmpty()) {
+
+                        //System.out.println("\t\tCliente a Cliente");
+                        if (rotaFinal.getStock() >= (float) mercado.getClients().first()) {
+                            System.out.println("\t\t\tTem stock");
+                            RouteUtils.aux2(caminhos, seller, empresa, rotaFinal);
+                        } else if (seller.getCapacidade() >= (float) mercado.getClients().first()) {
+                            float amountToReffil;
+                            System.out.println("\t\t\tNao tem stock mas tem capacidade para o cliente");
+                            amountToReffil = (float) mercado.getClients().first() - rotaFinal.getStock();
+
+                            RouteUtils.refillRoute(caminhos, empresa.getWarehouses(), rotaFinal.getStart(), amountToReffil, rotaFinal);
+                            rotaFinal.incrementAmountOfRefills();
+                            RouteUtils.aux2(caminhos, seller, empresa, rotaFinal);
+                        } else {
+                            mercado.getClients().enqueue(mercado.getClients().dequeue());
+                            System.out.println("\t\t\tNao tem stock nem tem capacidade para o cliente");
+                            count++;
+                            rotaFinal.incrementFailedClients();
+                            //System.out.println("\t\t" + count);
+                            if (count >= mercado.getClients().size()) {
+                                seller.getMercados_a_visitar().removeFirst();
+                                break; //passar para o próximo mercado
+                            }
+                        }
+
+                    }
+
                 }
+            } else {
+                seller.getMercados_a_visitar().removeFirst();//passar para o próximo mercado
+
             }
+
         }
 
         //um for para percorrer cada mercado que o vendedor vai ter que ir a (targets) FEITO
@@ -149,7 +153,6 @@ public class RouteUtils {
             //iter = armazens.iterator();
             //System.out.println("Warehouse To GO:" + warehouseToGo);
             //System.out.println("Shortest trip:" + shortestTrip);
-
             if (warehouseToGo == null) {
                 //System.out.println("Não devia ir para aqui");
                 while (iter.hasNext()) {
@@ -213,6 +216,17 @@ public class RouteUtils {
     private static void aux(GraphWeightList<Place> caminhos, Seller seller, Company empresa, Route rotaFinal) {
         try {
             //System.out.println("\t\t\t2.1" + rotaFinal.getTarget() + "\tstart:" + rotaFinal.getStart());
+
+            boolean flag = true;
+            while (flag == true && seller.getMercados_a_visitar().isEmpty()) {
+                if (!(seller.getMercados_a_visitar().isEmpty()) && empresa.checkIfMarketExists(seller.getMercados_a_visitar().first()).getTotalDemand() <= 0) {
+                    seller.getMercados_a_visitar().removeFirst();
+                } else {
+                    flag = false;
+                }
+            }
+            rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
+
             Iterator<Place> iter = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
             Iterator<Place> iterCopy = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
             rotaFinal.addTotalDistance(caminhos.getTripWeight(iter));
@@ -228,6 +242,7 @@ public class RouteUtils {
                 rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
 
             }
+
         } catch (ElementNotFoundException ex) {
             System.err.println("Graph is not connected");
         }
@@ -235,21 +250,36 @@ public class RouteUtils {
 
     private static void aux2(GraphWeightList<Place> caminhos, Seller seller, Company empresa, Route rotaFinal) {
         try {
-            Iterator<Place> iter = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
-            Iterator<Place> iterCopy = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
 
-            rotaFinal.addTotalDistance(caminhos.getTripWeight(iter));
-            RouteUtils.addPlacesToRotaFromIterator(iterCopy, rotaFinal);
-
-            String first = (String) seller.getMercados_a_visitar().first();
-            Market market = empresa.checkIfMarketExists(first);
-
-            market.removeClient();
-
-            if (market.getClients().isEmpty()) {
-                rotaFinal.setStart(rotaFinal.getTarget());
-                seller.getMercados_a_visitar().removeFirst();
+            boolean flag = true;
+            while (flag == true && seller.getMercados_a_visitar().isEmpty()) {
+                if (!(seller.getMercados_a_visitar().isEmpty()) && empresa.checkIfMarketExists(seller.getMercados_a_visitar().first()).getTotalDemand() <= 0) {
+                    seller.getMercados_a_visitar().removeFirst();
+                } else {
+                    flag = false;
+                }
+            }
+            try {
                 rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
+
+                Iterator<Place> iter = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
+                Iterator<Place> iterCopy = caminhos.iteratorShortestPath(rotaFinal.getStart(), rotaFinal.getTarget());
+
+                rotaFinal.addTotalDistance(caminhos.getTripWeight(iter));
+                RouteUtils.addPlacesToRotaFromIterator(iterCopy, rotaFinal);
+
+                String first = (String) seller.getMercados_a_visitar().first();
+                Market market = empresa.checkIfMarketExists(first);
+
+                market.removeClient();
+
+                if (market.getClients().isEmpty()) {
+                    rotaFinal.setStart(rotaFinal.getTarget());
+                    seller.getMercados_a_visitar().removeFirst();
+                    rotaFinal.setTarget(empresa.findPlaceByName(seller.getMercados_a_visitar().first().toString()));
+                }
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                System.err.println("No path found!");
             }
         } catch (ElementNotFoundException ex) {
             System.err.println("Graph is not connected");
