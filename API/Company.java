@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 /**
  * Classe que define uma empresa.
  *
- * @author Tomás Pendão
+ * @author Tomás Pendão e Daniel Pinto
  */
 public class Company extends Place implements CompanyADT {
 
