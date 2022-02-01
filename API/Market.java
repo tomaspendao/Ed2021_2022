@@ -168,8 +168,6 @@ public class Market extends Place implements MarketADT {
         for (int i = 0; i < temp.length; i++) {
             clients.enqueue(temp[i]);
         }
-        
-        //System.out.println(this.clients.toString());
 
         return res;
     }
