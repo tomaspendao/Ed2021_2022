@@ -797,77 +797,73 @@ public class Menu {
      * @param fileName Nome do ficheiro a importar.
      */
     private void importJSON(Scanner fileName) {
+
         File f = new File("./exportJSON/empresa"); // current directory
 
         File[] files = f.listFiles();
         int i = 0;
-
         for (File file : files) {
             if (!file.isDirectory() && file.getName().endsWith(".json")) {
                 i++;
-
                 System.out.println(i + "  " + file.getName());
             }
         }
 
-        System.out.println("Intoduza o número do ficheiro a importar: ");
+        System.out.println("Intoduza o numero do ficheiro: ");
 
         int filePos = fileName.nextInt();
+
         String file = null;
         int j = 0;
-
         for (File file2 : files) {
             if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
                 j++;
-
                 if (j == filePos) {
-                    file = file2.getName();
+                    try {
+                        file = file2.getCanonicalPath();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
                 }
             }
         }
-
         if (file == null) {
-            System.out.println("Sem ficheiros");
+            System.out.println("No files");
             return;
         }
 
         System.out.println();
 
         Company empresa = Company.importCompany(file);
-        boolean exit = false;
 
+        boolean exit = false;
         while (!exit) {
             switch (companyMenu(fileName)) {
                 case 1:
                     System.out.println("Adicionar Informação");
                     Scanner add = new Scanner(System.in);
-
                     this.addInfo(add, empresa);
                     break;
                 case 2:
                     System.out.println("Editar Informação");
                     Scanner edit = new Scanner(System.in);
-
                     this.editInfo(edit, empresa);
                     break;
                 case 3:
                     System.out.println("Imprimir Informação");
                     Scanner printo = new Scanner(System.in);
-
                     this.printInfo(printo, empresa);
                     break;
                 case 4:
                     System.out.println("Exportar Informação");
                     Scanner exporto = new Scanner(System.in);
-
                     this.exportInfo(exporto, empresa);
                     break;
                 case 5:
                     System.out.println("Start");
                     Scanner teste = new Scanner(System.in);
                     this.startTeste(empresa, teste);
-
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -879,7 +875,6 @@ public class Menu {
                     if (firstAnswer == 1) {
                         empresa.export();
                     }
-
                     exit = true;
                     break;
                 default:
