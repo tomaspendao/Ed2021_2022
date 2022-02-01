@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * Classe para armazenar comportamentos de um menu.
  *
- * @author Tomás Pendão
+ * @author Tomás Pendão, Daniel Pinto
  */
 public class Menu {
 
@@ -135,7 +135,7 @@ public class Menu {
                     System.out.println("Start");
 
                     Scanner teste = new Scanner(System.in);
-                    this.startTeste(empresa, teste);
+                    this.startTeste(empresa);
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -145,7 +145,7 @@ public class Menu {
                     int firstAnswer = scanner.nextInt();
 
                     if (firstAnswer == 1) {
-                        empresa.export();
+                        //empresa.export();
                     }
 
                     exit = true;
@@ -431,15 +431,15 @@ public class Menu {
             switch (this.printInfoMenu(printo)) {
                 case 1:
                     System.out.println("Imprimir Vendedor");
-                    System.out.println(empresa.printSellers());
+                    this.printSellersInfo(printo, empresa);
                     break;
                 case 2:
                     System.out.println("Imprimir Mercado");
-                    System.out.println(empresa.printMarket());
+                    this.printMarketInfo(printo, empresa);
                     break;
                 case 3:
                     System.out.println("Imprimir Armazéns");
-                    System.out.println(empresa.printWarehouses());
+                    this.printWarehouseInfo(printo, empresa);
                     break;
                 case 4:
                     System.out.println("Imprimir Caminhos");
@@ -524,7 +524,7 @@ public class Menu {
                     break;
                 case 4:
                     System.out.println("Exportar Empresa");
-                    empresa.export();
+                    //empresa.export();
                     break;
                 case 0:
                     System.out.println("Backing");
@@ -722,6 +722,12 @@ public class Menu {
         }
     }
 
+    /**
+     * Método utilizado para adicionar um cliente a um mercado. Esta operação
+     * pode ser feita manualmente ou aleatoriamente.
+     *
+     * @param mercado Mercado onde o cliente será adicionado.
+     */
     private void addClients(Market mercado) {
         Scanner scanner = new Scanner(System.in);
 
@@ -760,10 +766,15 @@ public class Menu {
         }
     }
 
+    /**
+     * Método utilizado para adicionar um mercado a uma empresa.
+     *
+     * @param vendedor Vendedo a qual vai ser adicionado um mercado.
+     * @param empresa Empresa que detém os mercados.
+     */
     private void addMarkets(Seller vendedor, Company empresa) {
         if (empresa.getMarkets().isEmpty()) {
             System.out.println("Não existem mercados");
-            //addmarket ??
 
             return;
         }
@@ -774,9 +785,6 @@ public class Menu {
         int firstAnswer = scanner.nextInt();
 
         if (firstAnswer == 1) {
-            //switch (this.choiceRandomOrManualMenu(scanner)) {
-            //case 1:
-            //manual
             boolean next = false;
 
             while (!next) {
@@ -864,8 +872,7 @@ public class Menu {
                     break;
                 case 5:
                     System.out.println("Start");
-                    Scanner teste = new Scanner(System.in);
-                    this.startTeste(empresa, teste);
+                    this.startTeste(empresa);
                     break;
                 case 0:
                     System.out.println("Exiting");
@@ -885,7 +892,12 @@ public class Menu {
         }
     }
 
-    private void startTeste(Company empresa, Scanner teste) {
+    /**
+     * Gerar rota para cada vendedor da empresa.
+     *
+     * @param empresa Empresa em questão.
+     */
+    private void startTeste(Company empresa) {
         //System.out.println(empresa.getVendedores().size());
         Iterator<Seller> iter = empresa.getVendedores().iterator();
 
@@ -910,6 +922,15 @@ public class Menu {
         }
     }
 
+    /**
+     * Método utilizado para exportar os resultados de cada rota de cada
+     * vendedor.
+     *
+     * @param empresa Empresa associada a um vendedor.
+     * @param vendedor Vendedor que detém as rotas.
+     * @param rota Rota do vendedor
+     * @return
+     */
     private String exportSellerResults(Company empresa, Seller vendedor, Route rota) {
         File file = new File("exportJSON/resultados/Company_" + empresa.getName() + "_" + vendedor.getNome() + ".json");
         file.getParentFile().mkdirs();
@@ -941,6 +962,174 @@ public class Menu {
             return file.getCanonicalPath();
         } catch (IOException ex) {
             return file.getName();
+        }
+    }
+
+    /**
+     * Método utilizado para apresentar as informações dos vendedores de acordo
+     * com um dado critério.
+     *
+     * @param printo
+     * @param empresa Empresa associada aos vendedores.
+     */
+    private void printSellersInfo(Scanner printo, Company empresa) {
+        boolean exit = false;
+
+        while (!exit) {
+            switch (this.printInfoSellersMenu(printo)) {
+                case 1:
+                    System.out.println("Imprimir Vendedor por ID");
+                    System.out.println(empresa.printSellerById());
+                    break;
+                case 2:
+                    System.out.println("Imprimir Vendedores Por Capacidade");
+                    System.out.println(empresa.printSellersByCapacity());
+                    break;
+                case 3:
+                    System.out.println("Imprimir Vendedores Por Mercados");
+                    System.out.println(empresa.printSellerByMarkets());
+                    break;
+                case 0:
+                    System.out.println("Backing");
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Sub menu que apresenta opções tais como imprimir os vendedores por ID,
+     * capacidae ou por mercados a visitar.
+     *
+     * @param in
+     * @return Opção escolhida.
+     */
+    private int printInfoSellersMenu(Scanner in) {
+        System.out.println("1 - Imprimir Vendedores Por ID\n2 - Imprimir Vendedores Por Capacidade" + "\n"
+                + "3 - Imprimir Vendedores Por Mercados\n"
+                + "0 - Back");
+        System.out.print("Opção: ");
+        int choice = in.nextInt();
+        System.out.println();
+        if (choice >= 0 && choice <= 3) {
+            return choice;
+        } else {
+            System.out.println("Opção inválida!");
+            return choice;
+        }
+    }
+
+    /**
+     * Método utilizado para apresentar as informações dos mercados de acordo
+     * com um dado critério.
+     *
+     * @param printo
+     * @param empresa Empresa associada aos mercados.
+     */
+    private void printMarketInfo(Scanner printo, Company empresa) {
+        boolean exit = false;
+
+        while (!exit) {
+            switch (this.printInfoMarketMenu(printo)) {
+                case 1:
+                    System.out.println("Imprimir Mercados por procura total");
+
+                    System.out.println(empresa.printMarketByTotalDemand());
+                    break;
+                case 2:
+                    System.out.println("Imprimir Mercados por número de clientes");
+                    System.out.println(empresa.printMarketByClients());
+                    break;
+                case 0:
+                    System.out.println("Backing");
+
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Sub menu que apresenta opções tais como imprimir os mercados por procura
+     * total e número de clientes.
+     *
+     * @param in
+     * @return Opção escolhida.
+     */
+    private int printInfoMarketMenu(Scanner in) {
+        System.out.println("1 - Imprimir Mercados por procura total\n2 - Imprimir Mercados por número de clientes"
+                + "\n0 - Back");
+        System.out.print("Opção: ");
+
+        int choice = in.nextInt();
+        System.out.println();
+
+        if (choice >= 0 && choice <= 2) {
+            return choice;
+        } else {
+            System.out.println("Opção inválida!");
+
+            return choice;
+        }
+    }
+
+    /**
+     * Método utilizado para apresentar as informações dos armazéns de acordo
+     * com um dado critério.
+     *
+     * @param printo
+     * @param empresa Empresa associada aos armazéns.
+     */
+    private void printWarehouseInfo(Scanner printo, Company empresa) {
+        boolean exit = false;
+
+        while (!exit) {
+            switch (this.printInfoWarehouseMenu(printo)) {
+                case 1:
+                    System.out.println("Imprimir Armazéns por stock");
+
+                    System.out.println(empresa.printWarehousesByStock());
+                    break;
+                case 2:
+                    System.out.println("Imprimir Armazéns por capacidade máxima");
+                    System.out.println(empresa.printWarehousesByCapacity());
+                    break;
+                case 0:
+                    System.out.println("Backing");
+
+                    exit = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Sub menu que apresenta opções tais como imprimir os armazéns por stock
+     * disponível e capacidade máxima.
+     *
+     * @param in
+     * @return Opção escolhida.
+     */
+    private int printInfoWarehouseMenu(Scanner in) {
+        System.out.println("1 - Imprimir Armazéns por stock\n2 - Imprimir Armazéns por capacidade máxima"
+                + "\n0 - Back");
+        System.out.print("Opção: ");
+
+        int choice = in.nextInt();
+        System.out.println();
+
+        if (choice >= 0 && choice <= 2) {
+            return choice;
+        } else {
+            System.out.println("Opção inválida!");
+
+            return choice;
         }
     }
 }

@@ -673,9 +673,9 @@ public class Company extends Place implements CompanyADT {
 //            byWeight.addToRear(bestTrip.getNome());
 //            str = bestTrip.getNome() + "\n" + str;
 //        }
-//
-//        return str;
-//    }
+////
+////        return str;
+////    }
     /**
      * Exportar para um ficheiro json a empresa.
      *
