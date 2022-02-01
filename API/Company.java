@@ -33,17 +33,24 @@ import java.util.logging.Logger;
 public class Company extends Place implements CompanyADT {
 
     /**
-     * Lista para guardar vendedores.
+     * Lista não ordenada para guardar vendedores.
      */
     private UnorderedListADT<Seller> vendedores;
 
     /**
-     * Lista para guardar os locais (Sede, Mercado, Armazém).
+     * Lista não ordenada para guardar os locais (Sede, Mercado, Armazém).
      */
     private UnorderedListADT<Place> locais;
 
-    private UnorderedListADT<Warehouse> armazens = new ArrayUnorderedList<>();//new
-    private UnorderedListADT<Market> mercados = new ArrayUnorderedList<>();//new
+    /**
+     * Lista não ordenada para armazenar armazéns de uma empresa.
+     */
+    private UnorderedListADT<Warehouse> armazens = new ArrayUnorderedList<>();
+
+    /**
+     * Lista não ordenada para armazenar mercados de uma empresa.
+     */
+    private UnorderedListADT<Market> mercados = new ArrayUnorderedList<>();
 
     /**
      * Grafo Pesado que guarda os caminhos possíveis entre os locais.
@@ -53,10 +60,10 @@ public class Company extends Place implements CompanyADT {
     /**
      * Construtor para criar uma empresa.
      *
-     * @param vendedores Lista de vendedores a adicionar
-     * @param locais Lista de locais a adicionar
-     * @param caminhos Grafo pesado de caminhos a adicionar
-     * @param name Nome da empresa
+     * @param vendedores Lista não ordenada de vendedores a adicionar.
+     * @param locais Lista não ordenada de locais a adicionar.
+     * @param caminhos Grafo pesado de caminhos a adicionar.
+     * @param name Nome da empresa.
      */
     public Company(UnorderedListADT<Seller> vendedores, UnorderedListADT<Place> locais, GraphWeightList<Place> caminhos,
             String name) {
@@ -66,6 +73,8 @@ public class Company extends Place implements CompanyADT {
         this.caminhos = caminhos;
         this.locais.addToFront(this);
         this.caminhos.addVertex(this);
+        this.armazens = new DoubleLinkedUnorderedList<>(); //faltava isto aqui tmb, n?
+        this.mercados = new DoubleLinkedUnorderedList<>(); //faltava isto aqui tmb, n?
     }
 
     /**
@@ -78,8 +87,8 @@ public class Company extends Place implements CompanyADT {
         super(name, "Sede");
         this.vendedores = new DoubleLinkedUnorderedList<>();
         this.locais = new DoubleLinkedUnorderedList<>();
-        this.armazens = new DoubleLinkedUnorderedList<>();//new
-        this.mercados = new DoubleLinkedUnorderedList<>();//new
+        this.armazens = new DoubleLinkedUnorderedList<>();
+        this.mercados = new DoubleLinkedUnorderedList<>();
         this.caminhos = new GraphWeightList<>();
         this.locais.addToFront(this);
         this.caminhos.addVertex(this);
@@ -114,6 +123,7 @@ public class Company extends Place implements CompanyADT {
 
         while (marketIter.hasNext()) {
             String marketString = (String) marketIter.next();
+
             if (this.checkIfMarketExists(marketString) == null) {
                 seller.getMercados_a_visitar().remove(marketString);
                 count++;
@@ -215,7 +225,7 @@ public class Company extends Place implements CompanyADT {
     public void addMarket(Market market) {
         if (checkIfMarketExists(market.getName()) == null) {
             this.locais.addToRear(market);
-            this.mercados.addToRear(market);//new
+            this.mercados.addToRear(market);
             this.caminhos.addVertex(market);
         } else if (market.getClients().isEmpty() != true) {
             this.editMarket(market.getName(), market.getName());
@@ -227,9 +237,10 @@ public class Company extends Place implements CompanyADT {
      * mercado.
      *
      * @param market Nome do mercado(identificador) a ser adicionado.
-     * @param newName
+     * @param newName Novo nome do mercado.
      * @return true se a edição for concluida com sucesso, false se não.
      */
+    @Override
     public boolean editMarket(String market, String newName) {
         Market mak = checkIfMarketExists(market);
 
@@ -250,7 +261,7 @@ public class Company extends Place implements CompanyADT {
     public void addWarehouse(Warehouse warehouse) {
         if (checkIfWarehouseExists(warehouse.getName()) == null) {
             this.locais.addToRear(warehouse);
-            this.armazens.addToRear(warehouse);//new
+            this.armazens.addToRear(warehouse);
             this.caminhos.addVertex(warehouse);
         } else {
             this.editWarehouse(warehouse.getName(), warehouse.getMaxCapacity(), warehouse.getAvailableCapacity());
@@ -280,8 +291,8 @@ public class Company extends Place implements CompanyADT {
     /**
      * Verificar se um determinado aramzém passado como parametro existe.
      *
-     * @param name Nome de um armazém para verificar
-     * @return Retorna o aramazém se existir e null se não existir
+     * @param name Nome de um armazém para verificar.
+     * @return Retorna o aramazém se existir e null se não existir.
      */
     private Warehouse checkIfWarehouseExists(String name) {
         try {
@@ -294,6 +305,7 @@ public class Company extends Place implements CompanyADT {
             }
         } catch (ElementNotFoundException ex) {
             //System.err.println("ELEMENT NOT FOUND");
+
             return null;
         }
 
@@ -313,11 +325,12 @@ public class Company extends Place implements CompanyADT {
     }
 
     /**
-     * Encontrar um local (Sede,armazém,mercado) atraves do nome do mesmo
+     * Encontrar um local (Sede, Armazém, Mercado) atraves do nome do mesmo.
      *
-     * @param name Nome do local a encontrar
-     * @return Retorna o local encontrado, se não existir manda uma exceção
-     * ElementNotFoundException
+     * @param name Nome do local a encontrar.
+     * @return Retorna o local encontrado, se não existir lança uma exceção.
+     * ElementNotFoundException Exeção lançada caso um local não seja
+     * encontrado.
      */
     public Place findPlaceByName(String name) {
         Iterator iter = this.locais.iterator();
@@ -334,7 +347,8 @@ public class Company extends Place implements CompanyADT {
     }
 
     /**
-     * Editar uma rota na empresa (Se a rota não existir será criada uma).
+     * Editar uma rota na empresa. Caso a rota não exista uma nova rota será
+     * criada.
      *
      * @param start Nome do local(identificador) do inicio da rota.
      * @param dest Nome do local(identificador) do fim da rota.
@@ -384,21 +398,68 @@ public class Company extends Place implements CompanyADT {
         return str;
     }
 
+    /**
+     * Método utilizado para imprimir os mercados de uma empresa com base na
+     * procura total por ordem crescente.
+     *
+     * @return String com os mercados com base na procura total.
+     */
     public String printMarketByTotalDemand() {
-        UnorderedListADT<Market> byTotalDemand;
-        float max = 0;
-        Iterator iter = this.getMarkets().iterator();
+        UnorderedListADT<String> byDemand = new DoubleLinkedUnorderedList<>();
+        String str = "";
 
-        while (iter.hasNext()) {
-            Market temp = (Market) iter.next();
+        while (byDemand.size() < this.mercados.size()) {
+            Iterator<Market> iterator = this.mercados.iterator();
+            float maxDemand = -1;
+            Market bestMark = null;
 
-            if (temp.getTotalDemand() > 0) {
+            while (iterator.hasNext()) {
+                Market next = iterator.next();
 
-                max = temp.getTotalDemand();
+                if (next.getTotalDemand() >= maxDemand) {
+                    if (!(byDemand.contains(next.getName()))) {
+                        bestMark = next;
+                    }
+                }
             }
+
+            byDemand.addToRear(bestMark.getName());
+            str = bestMark.getName() + "\n" + str;
         }
 
-        return null;
+        return str;
+    }
+
+    /**
+     * Método utilizado para imprimir os mercados de uma empresa com base no
+     * número de clientes por ordem crescente.
+     *
+     * @return String com os mercados com base no número de clientes.
+     */
+    public String printMarketByClients() {
+        UnorderedListADT<String> byClients = new DoubleLinkedUnorderedList<>();
+        String str = "";
+
+        while (byClients.size() < this.mercados.size()) {
+            Iterator<Market> iterator = this.mercados.iterator();
+            int clients = -1;
+            Market bestMark = null;
+
+            while (iterator.hasNext()) {
+                Market next = iterator.next();
+
+                if (next.getClients().size() >= clients) {
+                    if (!(byClients.contains(next.getName()))) {
+                        bestMark = next;
+                    }
+                }
+            }
+
+            byClients.addToRear(bestMark.getName());
+            str = bestMark.getName() + "\n" + str;
+        }
+
+        return str;
     }
 
     /**
@@ -423,27 +484,198 @@ public class Company extends Place implements CompanyADT {
         return str;
     }
 
-    public String printWarehousesByStock() {//crescenste
+    /**
+     * Método utilizado para imprimir os armazéns com base no stock por ordem
+     * crescente.
+     *
+     * @return String com os armazéns com base no stock.
+     */
+    public String printWarehousesByStock() {
         UnorderedListADT<String> byStock = new DoubleLinkedUnorderedList<>();
         String str = "";
+
         while (byStock.size() < this.armazens.size()) {
             Iterator<Warehouse> iterator = this.armazens.iterator();
             float maxStock = -1;
             Warehouse bestWare = null;
+
             while (iterator.hasNext()) {
                 Warehouse next = iterator.next();
+
                 if (next.getAvailableCapacity() >= maxStock) {
                     if (!(byStock.contains(next.getName()))) {
                         bestWare = next;
                     }
                 }
             }
+
             byStock.addToRear(bestWare.getName());
             str = bestWare.getName() + "\n" + str;
         }
+
         return str;
     }
 
+    /**
+     * Método utilizado para imprimir os armazéns com base na capacidade máxima
+     * por ordem crescente.
+     *
+     * @return String com os armazéns com base na capacidade máxima.
+     */
+    public String printWarehousesByCapacity() {
+        UnorderedListADT<String> byCapacity = new DoubleLinkedUnorderedList<>();
+        String str = "";
+
+        while (byCapacity.size() < this.armazens.size()) {
+            Iterator<Warehouse> iterator = this.armazens.iterator();
+            float maxCapacity = -1;
+            Warehouse bestWare = null;
+
+            while (iterator.hasNext()) {
+                Warehouse next = iterator.next();
+
+                if (next.getAvailableCapacity() >= maxCapacity) {
+                    if (!(byCapacity.contains(next.getName()))) {
+                        bestWare = next;
+                    }
+                }
+            }
+
+            byCapacity.addToRear(bestWare.getName());
+            str = bestWare.getName() + "\n" + str;
+        }
+
+        return str;
+    }
+
+    /**
+     * Método utilizado para imprimir os vendedores com base na capacidade
+     * máxima por ordem crescente.
+     *
+     * @return String com os armazéns com base na capacidade máxima.
+     */
+    public String printSellersByCapacity() {
+        UnorderedListADT<String> byCapacity = new DoubleLinkedUnorderedList<>();
+        String str = "";
+
+        while (byCapacity.size() < this.vendedores.size()) {
+            Iterator<Seller> iterator = this.vendedores.iterator();
+            float maxCapacity = -1;
+            Seller bestSelle = null;
+
+            while (iterator.hasNext()) {
+                Seller next = iterator.next();
+
+                if (next.getCapacidade() >= maxCapacity) {
+                    if (!(byCapacity.contains(next.getNome()))) {
+                        bestSelle = next;
+                    }
+                }
+            }
+
+            byCapacity.addToRear(bestSelle.getNome());
+            str = bestSelle.getNome() + "\n" + str;
+        }
+
+        return str;
+    }
+
+    /**
+     * Método utilizado para imprimir os vendedores de uma empresa com base no
+     * número de mercados a visitar por ordem crescente.
+     *
+     * @return String com os vendedores com base no número de mercados a
+     * visitar.
+     */
+    public String printSellerByMarkets() {
+        UnorderedListADT<String> byClients = new DoubleLinkedUnorderedList<>();
+        String str = "";
+
+        while (byClients.size() < this.vendedores.size()) {
+            Iterator<Seller> iterator = this.vendedores.iterator();
+            int clients = -1;
+            Seller bestSelle = null;
+
+            while (iterator.hasNext()) {
+                Seller next = iterator.next();
+
+                if (next.getMercados_a_visitar().size() >= clients) {
+                    if (!(byClients.contains(next.getNome()))) {
+                        bestSelle = next;
+                    }
+                }
+            }
+
+            byClients.addToRear(bestSelle.getNome());
+            str = bestSelle.getNome() + "\n" + str;
+        }
+
+        return str;
+    }
+
+    /**
+     * Método utilizado para imprimir os vendedores de uma empresa com base no
+     * ID por ordem crescente.
+     *
+     * @return String com os vendedores com base no ID.
+     */
+    public String printSellerById() {
+        UnorderedListADT<String> byId = new DoubleLinkedUnorderedList<>();
+        String str = "";
+
+        while (byId.size() < this.vendedores.size()) {
+            Iterator<Seller> iterator = this.vendedores.iterator();
+            int id = -1;
+            Seller bestSelle = null;
+
+            while (iterator.hasNext()) {
+                Seller next = iterator.next();
+
+                if (next.getMercados_a_visitar().size() >= id) {
+                    if (!(byId.contains(next.getNome()))) {
+                        bestSelle = next;
+                    }
+                }
+            }
+
+            byId.addToRear(bestSelle.getNome());
+            str = bestSelle.getNome() + "\n" + str;
+        }
+
+        return str;
+    }
+
+//     /**
+//     * Método utilizado para imprimir os vendedores de uma empresa com base no
+//     * ID por ordem crescente.
+//     *
+//     * @return String com os vendedores com base no ID.
+//     */
+//    public String printTripByWeight() {
+//        UnorderedListADT<String> byWeight = new DoubleLinkedUnorderedList<>();
+//        String str = "";
+//
+//        while (byWeight.size() < this.caminhos.size()) {
+//            Iterator<Place> iterator = this.caminhos.iterator(); 
+//            int weight = -1;
+//            Seller bestTrip = null;
+//
+//            while (iterator.hasNext()) {
+//                Seller next = iterator.next();
+//
+//                if (next.getTripWeight() >= weight) {
+//                    if (!(byWeight.contains(next.getNome()))) {
+//                        bestTrip = next;
+//                    }
+//                }
+//            }
+//
+//            byWeight.addToRear(bestTrip.getNome());
+//            str = bestTrip.getNome() + "\n" + str;
+//        }
+//
+//        return str;
+//    }
     /**
      * Exportar para um ficheiro json a empresa.
      *
@@ -465,12 +697,14 @@ public class Company extends Place implements CompanyADT {
 
             while (sellersIter.hasNext()) {
                 Seller value = (Seller) sellersIter.next();
+
                 writer.beginObject();
                 writer.name("id").value(value.getId());
                 writer.name("nome").value(value.getNome());
                 writer.name("capacidade").value(value.getCapacidade());
                 writer.name("mercados_a_visitar");
                 writer.beginArray();
+
                 Iterator marketIter = value.getMercados_a_visitar().iterator();
 
                 while (marketIter.hasNext()) {
@@ -492,6 +726,7 @@ public class Company extends Place implements CompanyADT {
 
             while (locaisIter.hasNext()) {
                 Place value = (Place) locaisIter.next();
+
                 writer.beginObject();
                 writer.name("nome").value(value.getName());
                 writer.name("tipo").value(value.getType());
@@ -499,11 +734,13 @@ public class Company extends Place implements CompanyADT {
                 switch (value.getType()) {
                     case "Armazém":
                         Warehouse ware = (Warehouse) value;
+
                         writer.name("capacidade").value(ware.getMaxCapacity());
                         writer.name("stock").value(ware.getAvailableCapacity());
                         break;
                     case "Mercado":
                         Market merc = (Market) value;
+
                         writer.name("clientes");
                         writer.beginArray();
 
@@ -530,6 +767,7 @@ public class Company extends Place implements CompanyADT {
             //caminhos
             writer.name("caminhos");
             writer.beginArray();
+
             DoubleLinkedUnorderedList<ArestaWeight>[] paths = this.caminhos.getAdjList();
 
             for (int i = 0; i < this.caminhos.size(); i++) {
@@ -539,7 +777,9 @@ public class Company extends Place implements CompanyADT {
 
                     while (pathsIter.hasNext()) {
                         writer.beginObject();
+
                         ArestaWeight value = (ArestaWeight) pathsIter.next();
+
                         writer.name("de").value(this.caminhos.getVertice(value.getStart()).getName());
                         writer.name("para").value(this.caminhos.getVertice(value.getTarget()).getName());
                         writer.name("distancia").value(value.getWeight());
@@ -555,11 +795,12 @@ public class Company extends Place implements CompanyADT {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         return true;
     }
 
     /**
-     * Fazer import de um JSON para a criação de uma empresa.
+     * Faz o import de um JSON para a criação de uma empresa.
      *
      * @param filepath Nome do ficheiro com caminho se necessário para fazer o
      * import.
@@ -623,10 +864,12 @@ public class Company extends Place implements CompanyADT {
         for (int i = 0; i < vendedoresJSONArray.size(); i++) {
             //um vendedor
             JsonObject vendedorJSONObject = (JsonObject) vendedoresJSONArray.get(i);
-            Seller seller = new Seller(vendedorJSONObject.get("capacidade").getAsFloat(), vendedorJSONObject.get("id").getAsInt(), vendedorJSONObject.get("nome").getAsString());
+            Seller seller = new Seller(vendedorJSONObject.get("capacidade").getAsFloat(),
+                    vendedorJSONObject.get("id").getAsInt(), vendedorJSONObject.get("nome").getAsString());
 
             //Array de mercados a visitar
             JsonArray mercados_VisitarJSONArray = vendedorJSONObject.get("mercados_a_visitar").getAsJsonArray();
+
             for (int j = 0; j < mercados_VisitarJSONArray.size(); j++) {
                 seller.addMarket(mercados_VisitarJSONArray.get(j).getAsString());
             }
@@ -640,7 +883,8 @@ public class Company extends Place implements CompanyADT {
         for (int i = 0; i < caminhosJSONArray.size(); i++) {
             //um caminho
             JsonObject path = caminhosJSONArray.get(i).getAsJsonObject();
-            res.addRoute(path.get("de").getAsString(), path.get("para").getAsString(), path.get("distancia").getAsFloat());
+            res.addRoute(path.get("de").getAsString(), path.get("para").getAsString(),
+                    path.get("distancia").getAsFloat());
         }
 
         System.out.println("-----Import Concluido-----");
