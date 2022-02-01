@@ -90,11 +90,10 @@ public class Market extends Place implements MarketADT {
     /**
      * Lista todos os clientes de um mercado.
      *
-     * @return Lista de todos os clientes de um mercado.
      */
     @Override
-    public String printClients() {
-        return clients.toString();
+    public void printClients() {
+        System.out.println(clients.toString());
     }
 
     /**
