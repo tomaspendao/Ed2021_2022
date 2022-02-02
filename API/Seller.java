@@ -183,7 +183,7 @@ public class Seller implements SellerADT {
             Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Seller sellerRes = new Seller(jsonObject.get("capacidade").getAsFloat(), jsonObject.get("nome").getAsString());
+        Seller sellerRes = new Seller(jsonObject.get("capacidade").getAsFloat(), jsonObject.get("id").getAsInt(),jsonObject.get("nome").getAsString());
 
         JsonArray mercadosJSONArray = jsonObject.get("mercados").getAsJsonArray();
 
