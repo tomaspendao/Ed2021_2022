@@ -5,7 +5,8 @@
  */
 package ADT;
 
-import API.Seller;
+import API.Place;
+import Collections.LinkedList.GraphWeightList;
 import java.util.Iterator;
 
 /**
@@ -14,25 +15,21 @@ import java.util.Iterator;
  * @author Tomás Pendão
  */
 public interface RouteADT {
-    
-    //getProduct > 0 
-    //genrerateRoute(){}
-    //
+
     /**
      * Método utilizado para criar uma rota para um vendedor.
-     * 
-     * @param vendedor Vendedor para qual vai ser gerada a rota de entregas.
-     * @param marketList Lista de mercados que o vendedor tem de visitar.
+     *
+     * @param caminhos Grafo com os locais.
      * @return rota com o caminho.
      */
-    public Iterator generateRoute(Seller vendedor,UnorderedListADT<String> marketList); //a,b,x abcdx s->a s->y->a     a->b a->x  |a|b|x| -> lista [a|b|x]
+    public Iterator generateRoute(GraphWeightList<Place> caminhos); //a,b,x abcdx s->a s->y->a     a->b a->x  |a|b|x| -> lista [a|b|x]
 
     /**
      * Metodo utilizado para reabastecer um vendedor.
-     * 
-     * @param vendedor Vendedor que vai ter de reabastecer num armazém.
+     *
+     * @param caminhos Grafo com os locais.
+     * @param locais Locais da rota.
      * @return rota com o caminho.
      */
-    public Iterator refillRoute(Seller vendedor); //  stock>=soma  |a|b|c| ex: s-a -> 60  s-b 30 
-
+    public Iterator refillRoute(GraphWeightList<Place> caminhos, UnorderedListADT<Place> locais); //  stock>=soma  |a|b|c| ex: s-a -> 60  s-b 30 
 }

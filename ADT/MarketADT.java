@@ -39,12 +39,4 @@ public interface MarketADT {
      * contrário.
      */
     public boolean exportJSON();
-
-    /**
-     * Importa os dados de um mercado de formato JSON.
-     *
-     * @return true caso seja possível importar de formato JSON, false caso
-     * contrário.
-     */
-    //public static MarketADT importJSON(String filepath);
 }

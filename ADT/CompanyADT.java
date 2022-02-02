@@ -42,10 +42,10 @@ public interface CompanyADT {
      * mercado.
      * 
      * @param market nome do mercado(identificador) a ser adicionado.
-     * @param demand cliente a ser adicionado.
+     * @param newName novo nome
      * @return true se a edição for concluida com sucesso, false se não.
      */
-    public boolean editMarket(String market, float demand);
+    public boolean editMarket(String market, String newName);
 
     /**
      * Adicionar um armazém a empresa.
@@ -109,11 +109,4 @@ public interface CompanyADT {
      * @return true se a edição for concluida com sucesso, false se não.
      */
     public boolean export();
-    
-    /**
-     * Fazer import de um JSON para a criação de uma empresa.
-     *
-     * @return retorna uma empresa gerada a partir de um JSON.
-     */
-    //public Company importCompany();
 }
