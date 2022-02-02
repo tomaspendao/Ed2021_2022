@@ -181,13 +181,8 @@ public class Warehouse extends Place implements WarehouseADT {
 
         Warehouse ware = gson.fromJson(reader, Warehouse.class);
 
-        //System.out.println(ware.capacidade);
-        //System.out.println(ware.stock);
-        //System.out.println(ware.getName());
-        //System.out.println(ware.getType());
         try {
             reader.close();
-            // 2. JSON string to Java object
         } catch (IOException ex) {
             Logger.getLogger(Warehouse.class.getName()).log(Level.SEVERE, null, ex);
         }

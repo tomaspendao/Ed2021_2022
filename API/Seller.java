@@ -5,14 +5,9 @@
  */
 package API;
 
-import ADT.RouteADT;
 import ADT.SellerADT;
 import ADT.UnorderedListADT;
 import Collections.DoubleLinkedList.DoubleLinkedUnorderedList;
-import Collections.LinkedList.GraphWeightList;
-import Collections.LinkedList.LinkedQueue;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -38,6 +33,9 @@ public class Seller implements SellerADT {
      */
     private DoubleLinkedUnorderedList<String> mercados_a_visitar;
 
+    /**
+     * ID estático que permite o id ser único.
+     */
     private static int idStatic = 0;
 
     /**
@@ -67,7 +65,6 @@ public class Seller implements SellerADT {
      * capacidade, id, nome e stock definido.
      *
      * @param capacidade Capacidade que o vendedor consegue transportar.
-     * @param id ID do vendedor.
      * @param nome Nome do vendedor.
      */
     public Seller(float capacidade, String nome) {
@@ -77,6 +74,14 @@ public class Seller implements SellerADT {
         this.mercados_a_visitar = new DoubleLinkedUnorderedList<>();
     }
 
+    /**
+     * Construtor utilizado para criar uma instância de Seller com uma
+     * capacidade, id, nome e stock definido.
+     *
+     * @param capacidade Capacidade que o vendedor consegue transportar.
+     * @param id ID do vendedor.
+     * @param nome Nome do vendedor.
+     */
     public Seller(float capacidade, int id, String nome) {
         this.capacidade = capacidade;
         this.id = id;
@@ -168,12 +173,11 @@ public class Seller implements SellerADT {
     /**
      * Importa os dados de um mercado de formato JSON.
      *
+     * @param filepath Caminho do ficheiro a importar.
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
     public static Seller importJSON(String filepath) {
-
-        UnorderedListADT<String> mercadoRes = new DoubleLinkedUnorderedList<>();
 
         JsonObject jsonObject = new JsonObject();
 
@@ -183,7 +187,7 @@ public class Seller implements SellerADT {
             Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Seller sellerRes = new Seller(jsonObject.get("capacidade").getAsFloat(), jsonObject.get("id").getAsInt(),jsonObject.get("nome").getAsString());
+        Seller sellerRes = new Seller(jsonObject.get("capacidade").getAsFloat(), jsonObject.get("nome").getAsString());
 
         JsonArray mercadosJSONArray = jsonObject.get("mercados").getAsJsonArray();
 

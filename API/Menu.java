@@ -6,8 +6,11 @@
 package API;
 
 import ADT.UnorderedListADT;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -18,7 +21,7 @@ import java.util.logging.Logger;
 /**
  * Classe para armazenar comportamentos de um menu.
  *
- * @author Tomás Pendão, Daniel Pinto
+ * @author Tomás Pendão e Daniel Pinto
  */
 public class Menu {
 
@@ -140,7 +143,6 @@ public class Menu {
                 case 6:
                     System.out.println("Start");
 
-                    Scanner teste = new Scanner(System.in);
                     this.startTeste(empresa);
                     break;
                 case 0:
@@ -220,10 +222,8 @@ public class Menu {
                     String nameMarket = market.nextLine();
                     Market mercado = new Market(nameMarket);
 
-                    //perguntar se quer adicionar clientes automaticamnte ou manualmente
                     this.addClients(mercado);
 
-                    //System.out.println(mercado.getClients().toString());
                     empresa.addMarket(mercado);
 
                     System.out.println(empresa.printMarket());
@@ -329,7 +329,6 @@ public class Menu {
                     System.out.println("Nova Capacidade Máxima do Vendedor (kg): ");
                     float capacityEditSeller = editSeller.nextFloat();
 
-                    //importes e prints
                     empresa.editSeller(idEditSeller, capacityEditSeller);
                     break;
                 case 2:
@@ -405,7 +404,7 @@ public class Menu {
      * ou caminho.
      *
      * @param in
-     * @return
+     * @return Opção escolhida.
      */
     private int editInfoMenu(Scanner in) {
         System.out.println("1 - Editar Vendedor\n2 - Editar Mercado" + "\n3 - Editar Armazém\n4 - Editar Caminho\n"
@@ -437,11 +436,11 @@ public class Menu {
         while (!exit) {
             switch (this.printInfoMenu(printo)) {
                 case 1:
-                    System.out.println("Imprimir Vendedor");
+                    System.out.println("Imprimir Vendedores");
                     this.printSellersInfo(printo, empresa);
                     break;
                 case 2:
-                    System.out.println("Imprimir Mercado");
+                    System.out.println("Imprimir Mercados");
                     this.printMarketInfo(printo, empresa);
                     break;
                 case 3:
@@ -450,19 +449,19 @@ public class Menu {
                     break;
                 case 4:
                     System.out.println("Imprimir Caminhos");
-                    System.out.println(empresa.getCaminhos().getAdjList().toString());//preciso fazer uma cena para listar caminhos
+                    System.out.println(empresa.getCaminhos().getAdjList().toString());
                     break;
                 case 5:
-                    System.out.println("Imprimir Vendedor");
-                    this.printSeller(empresa);
+                    System.out.println("Imprimir um Vendedor");
+                    this.printSeller(printo, empresa);
                     break;
                 case 6:
-                    System.out.println("Imprimir Mercado");
-                    this.printMarket(empresa);
+                    System.out.println("Imprimir um Mercado");
+                    this.printMarket(printo, empresa);
                     break;
                 case 7:
-                    System.out.println("Imprimir Armazém");
-                    this.printWarehouse(empresa);
+                    System.out.println("Imprimir um Armazém");
+                    this.printWarehouse(printo, empresa);
                     break;
                 case 0:
                     System.out.println("Backing");
@@ -480,7 +479,7 @@ public class Menu {
      * mercado, armazém ou caminho.
      *
      * @param in
-     * @return
+     * @return Opção escolhida.
      */
     private int printInfoMenu(Scanner in) {
         System.out.println("1 - Imprimir Vendedores\n2 - Imprimir Mercados" + "\n3 - Imprimir Armazéns\n"
@@ -543,6 +542,18 @@ public class Menu {
                     System.out.println("Exportar Empresa");
                     empresa.export();
                     break;
+                case 5:
+                    System.out.println("Exportar um vendedor");
+                    this.exportSeller(exporto, empresa);
+                    break;
+                case 6:
+                    System.out.println("Exportar um mercado");
+                    this.exportMarket(exporto, empresa);
+                    break;
+                case 7:
+                    System.out.println("Exportar um armazém");
+                    this.exportWarehouse(exporto, empresa);
+                    break;
                 case 0:
                     System.out.println("Backing");
 
@@ -559,16 +570,17 @@ public class Menu {
      * mercado, armazém ou caminho.
      *
      * @param in
-     * @return
+     * @return Opção escolhida.
      */
     private int exportInfoMenu(Scanner in) {
         System.out.println("1 - Exportar Vendedores\n2 - Exportar Mercados" + "\n3 - Exportar Armazéns\n"
-                + "4 - Exportar Empresa\n0 - Back");
+                + "4 - Exportar Empresa\n5 - Exportar um vendedor\n6 - Exportar um mercado\n7 - Exportar um armazém\n"
+                + "0 - Back");
         System.out.print("Opção: ");
         int choice = in.nextInt();
         System.out.println();
 
-        if (choice >= 0 && choice <= 4) {
+        if (choice >= 0 && choice <= 7) {
             return choice;
         } else {
             System.out.println("Opção inválida!");
@@ -577,6 +589,13 @@ public class Menu {
         }
     }
 
+    /**
+     * Executa opções como importar informação de um vendedor, mercado ou
+     * armazém.
+     *
+     * @param in
+     * @param empresa
+     */
     private void importInfo(Scanner importo, Company empresa) {
         boolean exit = false;
 
@@ -602,6 +621,13 @@ public class Menu {
         }
     }
 
+    /**
+     * Sub menu que apresenta as opções de importar informação de um vendedor,
+     * mercado ou armazém.
+     *
+     * @param in
+     * @return Opção escolhida.
+     */
     private int importInfoMenu(Scanner in) {
         System.out.println("1 - Importar Vendedores\n2 - Importar Mercados" + "\n3 - Importar Armazéns\n"
                 + "0 - Back");
@@ -648,9 +674,7 @@ public class Menu {
         while (iter.hasNext()) {
             Market temp = iter.next();
 
-            //if (temp.getType().equals("Mercado")) {
             System.out.println(i + " --> " + temp.getName());
-            //}
 
             i++;
         }
@@ -664,7 +688,6 @@ public class Menu {
 
         while (iter2.hasNext()) {
             Market temp = iter2.next();
-            //System.out.println(i + " --> " + temp.getName());
 
             if (j == newI) {
                 return temp.getName();
@@ -690,9 +713,7 @@ public class Menu {
         while (iter.hasNext()) {
             Warehouse temp = iter.next();
 
-            //if (temp.getType().equals("Armazém")) {
             System.out.println(i + " --> " + temp.getName());
-            //}
 
             i++;
         }
@@ -707,7 +728,6 @@ public class Menu {
 
         while (iter2.hasNext()) {
             Warehouse temp = iter2.next();
-            //System.out.println(i + " --> " + temp.getName());
 
             if (j == newI) {
                 return temp.getName();
@@ -746,7 +766,6 @@ public class Menu {
         int j = 0;
         while (iter2.hasNext()) {
             Place temp = iter2.next();
-            //System.out.println(i + " --> " + temp.getName());
 
             if (j == newI) {
                 return temp.getName();
@@ -865,7 +884,6 @@ public class Menu {
      * @param fileName Nome do ficheiro a importar.
      */
     private void importJSON(Scanner fileName) {
-
         File f = new File("./exportJSON/empresa"); // current directory
 
         File[] files = f.listFiles();
@@ -961,7 +979,6 @@ public class Menu {
      * @param empresa Empresa em questão.
      */
     private void startTeste(Company empresa) {
-        //System.out.println(empresa.getVendedores().size());
         Iterator<Seller> iter = empresa.getVendedores().iterator();
 
         while (iter.hasNext()) {
@@ -1197,8 +1214,14 @@ public class Menu {
         }
     }
 
+    /**
+     * Método utilizado para importar um vendedor.
+     *
+     * @param importo
+     * @param empresa
+     */
     private void importSellerHelper(Scanner importo, Company empresa) {
-        System.out.println("Importar Vendedor");
+        System.out.println("Importar um Vendedor");
         File f = new File("./exportJSON/vendedor"); // current directory
 
         File[] files = f.listFiles();
@@ -1239,8 +1262,14 @@ public class Menu {
         empresa.addSeller(vendedor);
     }
 
+    /**
+     * Método utilizado para importar um mercado.
+     *
+     * @param importo
+     * @param empresa Empresa associada a um mercado.
+     */
     private void importMarketHelper(Scanner importo, Company empresa) {
-        System.out.println("Importar Mercado");
+        System.out.println("Importar um Mercado");
         File f = new File("./exportJSON/mercado"); // current directory
 
         File[] files = f.listFiles();
@@ -1281,8 +1310,14 @@ public class Menu {
         empresa.addMarket(mercado);
     }
 
+    /**
+     * Método utilizado para importar um armazém.
+     *
+     * @param importo
+     * @param empresa Empresa associada a um armazém.
+     */
     private void importWarehouseHelper(Scanner importo, Company empresa) {
-        System.out.println("Importar Armazém");
+        System.out.println("Importar um Armazém");
         File f = new File("./exportJSON/armazem"); // current directory
 
         File[] files = f.listFiles();
@@ -1324,46 +1359,71 @@ public class Menu {
     }
 
     /**
-     * Método utilizado para apresentar dados de um vendedor associado a uma
-     * empresa.
-     *
-     * @param empresa Empresa associada a um vendedor.
-     * @return String com informação acerca do vendedor.
-     */
-    private void printSeller(Company empresa) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("ID do vendedor: ");
-        int newI = scanner.nextInt();
-        Iterator iter = empresa.getVendedores().iterator();
-        int j = 1;
-
-        while (iter.hasNext()) {
-            Seller temp = (Seller) iter.next();
-
-            if (j == newI) {
-                temp.printSeller();
-            }
-
-            j++;
-        }
-    }
-    
-    /**
      * Método utilizado para apresentar dados de um mercado associado a uma
      * empresa.
      *
      * @param empresa Empresa associada a um mercado.
      * @return String com informação acerca do mercado.
      */
-    private void printMarket(Company empresa) {
-        Scanner scanner = new Scanner(System.in);
+    private void printMarket(Scanner importo, Company empresa) {
+        System.out.println("Imprimir um Mercado");
+        File f = new File("./exportJSON/mercado"); // current directory
 
-        System.out.println("Nome do mercado: ");
-        String newI = scanner.next();
-        Market temp = empresa.checkIfMarketExists(newI);
+        File[] files = f.listFiles();
+        int i = 0;
 
-        temp.printClients();
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o número do ficheiro: ");
+
+        int filePos = importo.nextInt();
+        String file = null;
+        int j = 0;
+        String nome = "";
+
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                        JsonObject jsonobject = new JsonObject();
+
+                        jsonobject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+
+                        nome = jsonobject.get("nome").getAsString();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Iterator<Market> iter = empresa.getMarkets().iterator();
+
+        while (iter.hasNext()) {
+            Market temp = iter.next();
+
+            if (nome.equals(temp.getName())) {
+                temp.printClients();
+            }
+
+            j++;
+        }
     }
 
     /**
@@ -1373,13 +1433,333 @@ public class Menu {
      * @param empresa Empresa associada a um armazém.
      * @return String com informação acerca do armazém.
      */
-    private void printWarehouse(Company empresa) {
-        Scanner scanner = new Scanner(System.in);
+    private void printWarehouse(Scanner importo, Company empresa) {
+        System.out.println("Imprimir um Armazém");
+        File f = new File("./exportJSON/armazem"); // current directory
 
-        System.out.println("Nome do armazém: ");
-        String newI = scanner.next();
-        Warehouse temp = empresa.checkIfWarehouseExists(newI);
+        File[] files = f.listFiles();
+        int i = 0;
 
-        System.out.println(temp.printWarehouse());
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o número do ficheiro: ");
+
+        int filePos = importo.nextInt();
+        String file = null;
+        int j = 0;
+        String nome = "";
+
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                        JsonObject jsonobject = new JsonObject();
+
+                        jsonobject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+
+                        nome = jsonobject.get("nome").getAsString();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Iterator<Warehouse> iter = empresa.getWarehouses().iterator();
+
+        while (iter.hasNext()) {
+            Warehouse temp = iter.next();
+
+            if (nome.equals(temp.getName())) {
+                System.out.println(temp.printWarehouse());
+            }
+
+            j++;
+        }
+    }
+
+    /**
+     * Método utilizado para apresentar dados de um vendedor associado a uma
+     * empresa.
+     *
+     * @param empresa Empresa associada a um vendedor.
+     * @return String com informação acerca do vendedor.
+     */
+    private void printSeller(Scanner importo, Company empresa) {
+        System.out.println("Imprimir um Vendedor");
+        File f = new File("./exportJSON/vendedor"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o número do ficheiro: ");
+
+        int filePos = importo.nextInt();
+        String file = null;
+        int j = 0;
+        int id = 0;
+
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                        JsonObject jsonobject = new JsonObject();
+
+                        jsonobject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+
+                        id = jsonobject.get("id").getAsInt();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Iterator iter = empresa.getVendedores().iterator();
+
+        while (iter.hasNext()) {
+            Seller temp = (Seller) iter.next();
+
+            if (j == id) {
+                temp.printSeller();
+            }
+
+            j++;
+        }
+    }
+
+    /**
+     * Método utilizado para exportar informação de um vendedor.
+     *
+     * @param importo
+     * @param empresa Empresa associada a um vendedor.
+     */
+    private void exportSeller(Scanner importo, Company empresa) {
+        System.out.println("Exportar um Vendedor");
+        File f = new File("./exportJSON/vendedor"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o número do ficheiro: ");
+
+        int filePos = importo.nextInt();
+        String file = null;
+        int j = 0;
+        int id = 0;
+
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                        JsonObject jsonobject = new JsonObject();
+
+                        jsonobject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+
+                        id = jsonobject.get("id").getAsInt();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Iterator iter = empresa.getVendedores().iterator();
+
+        while (iter.hasNext()) {
+            Seller temp = (Seller) iter.next();
+
+            if (j == id) {
+                temp.exportJSON();
+            }
+
+            j++;
+        }
+    }
+
+    /**
+     * Método utilizado para exportar informação de um mercado.
+     *
+     * @param importo
+     * @param empresa Empresa associada a um mercado.
+     */
+    private void exportMarket(Scanner exporto, Company empresa) {
+        System.out.println("Exportar um Mercado");
+        File f = new File("./exportJSON/mercado"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o número do ficheiro: ");
+
+        int filePos = exporto.nextInt();
+        String file = null;
+        int j = 0;
+        String nome = "";
+
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                        JsonObject jsonobject = new JsonObject();
+
+                        jsonobject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+
+                        nome = jsonobject.get("nome").getAsString();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Iterator<Market> iter = empresa.getMarkets().iterator();
+
+        while (iter.hasNext()) {
+            Market temp = iter.next();
+
+            if (nome.equals(temp.getName())) {
+                temp.exportJSON();
+            }
+
+            j++;
+        }
+    }
+
+    /**
+     * Método utilizado para exportar informação de um armazém.
+     *
+     * @param importo
+     * @param empresa Empresa associada a um armazém.
+     */
+    private void exportWarehouse(Scanner exporto, Company empresa) {
+        System.out.println("Exportar um Armazém");
+        File f = new File("./exportJSON/armazem"); // current directory
+
+        File[] files = f.listFiles();
+        int i = 0;
+
+        for (File file : files) {
+            if (!file.isDirectory() && file.getName().endsWith(".json")) {
+                i++;
+
+                System.out.println(i + "  " + file.getName());
+            }
+        }
+
+        System.out.println("Intoduza o número do ficheiro: ");
+
+        int filePos = exporto.nextInt();
+        String file = null;
+        int j = 0;
+        String nome = "";
+
+        for (File file2 : files) {
+            if (!file2.isDirectory() && file2.getName().endsWith(".json")) {
+                j++;
+
+                if (j == filePos) {
+                    try {
+                        file = file2.getCanonicalPath();
+                        JsonObject jsonobject = new JsonObject();
+
+                        jsonobject = new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+
+                        nome = jsonobject.get("nome").getAsString();
+                    } catch (IOException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (file == null) {
+            System.out.println("No files");
+            return;
+        }
+
+        System.out.println(file);
+        Iterator<Market> iter = empresa.getMarkets().iterator();
+
+        while (iter.hasNext()) {
+            Market temp = iter.next();
+
+            if (nome.equals(temp.getName())) {
+                temp.exportJSON();
+            }
+
+            j++;
+        }
     }
 }

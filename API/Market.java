@@ -7,8 +7,6 @@ package API;
 
 import ADT.MarketADT;
 import Collections.LinkedList.LinkedQueue;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -18,7 +16,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +31,6 @@ public class Market extends Place implements MarketADT {
      */
     private LinkedQueue<Float> clients;
 
-    //adicionar metadata tipo entrou com que saiu com que ou uma cena assim no armazem tb
     /**
      * Construtor vazio que cria uma instância de mercado.
      */
@@ -76,13 +72,12 @@ public class Market extends Place implements MarketADT {
     public boolean removeClient() {
         return clients.dequeue() != null;
     }
-    
+
     /**
-     * Remove todos os clientes fila quando a procura destes foi
-     * satisfeita.
+     * Remove todos os clientes fila quando a procura destes foi satisfeita.
      */
     public void removeAllClients() {
-        while(this.clients.isEmpty() == false){
+        while (this.clients.isEmpty() == false) {
             this.removeClient();
         }
     }
@@ -141,13 +136,11 @@ public class Market extends Place implements MarketADT {
     /**
      * Importa os dados de um mercado de formato JSON.
      *
+     * @param filepath Caminho do ficheiro.
      * @return true caso seja possível importar de formato JSON, false caso
      * contrário.
      */
     public static Market importJSON(String filepath) {
-        
-        LinkedQueue<Float> clientsRes = new LinkedQueue<>();
-        
         JsonObject jsonObject = new JsonObject();
 
         try {
@@ -155,19 +148,17 @@ public class Market extends Place implements MarketADT {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Company.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
+
         Market marketRes = new Market(jsonObject.get("nome").getAsString());
-        
+
         JsonArray clientesJSONArray = jsonObject.get("clientes").getAsJsonArray();
-        
+
         for (int i = 0; i < clientesJSONArray.size(); i++) {
             marketRes.addClient(clientesJSONArray.get(i).getAsFloat());
         }
 
         return marketRes;
-        
+
     }
 
     /**

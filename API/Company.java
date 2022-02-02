@@ -73,8 +73,8 @@ public class Company extends Place implements CompanyADT {
         this.caminhos = caminhos;
         this.locais.addToFront(this);
         this.caminhos.addVertex(this);
-        this.armazens = new DoubleLinkedUnorderedList<>(); //faltava isto aqui tmb, n?
-        this.mercados = new DoubleLinkedUnorderedList<>(); //faltava isto aqui tmb, n?
+        this.armazens = new DoubleLinkedUnorderedList<>();
+        this.mercados = new DoubleLinkedUnorderedList<>(); 
     }
 
     /**
@@ -246,7 +246,6 @@ public class Company extends Place implements CompanyADT {
 
         if (mak != null) {
             mak.setNome(newName);
-            //mak.addClient(demand);
         }
 
         return false;
@@ -476,11 +475,8 @@ public class Company extends Place implements CompanyADT {
 
         while (iter.hasNext()) {
             Warehouse temp = (Warehouse) iter.next();
-
-            //if (temp.getType().equals("Armazém")) {
             Warehouse newTemp = (Warehouse) temp;
             str = str + newTemp.getName() + ";";
-            //}
         }
 
         return str;
@@ -810,7 +806,6 @@ public class Company extends Place implements CompanyADT {
 
             for (int i = 0; i < this.caminhos.size(); i++) {
                 if (paths[i].size() > 0) {
-                    //System.out.println(paths[i].size());
                     Iterator pathsIter = paths[i].iterator();
 
                     while (pathsIter.hasNext()) {
@@ -894,7 +889,6 @@ public class Company extends Place implements CompanyADT {
                     System.err.println("Local " + locaisJSONArray.get(i).getAsJsonObject().get("nome").getAsString()
                             + " invalido");
                     break;
-                //throw new AssertionError();
             }
         }
 
