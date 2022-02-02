@@ -6,9 +6,11 @@
 package API;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 /**
  * Classe utilizada para realizar testes à classe Market.
@@ -27,7 +29,7 @@ public class MarketTest {
         System.out.println("Running set up");
 
         this.mercado = new Market("mercado1");
-        
+
     }
 
     /**
@@ -47,11 +49,10 @@ public class MarketTest {
     public void testAddClients() {
         System.out.println("addClients");
         this.mercado.addClient(10);
-        
+
         //System.out.println(this.mercado.getTotalDemand());
-        
         assertEquals(1, this.mercado.getClients().size());
-        assertEquals((float)10.0, this.mercado.getClients().first());
+        assertEquals(10.0, this.mercado.getClients().first(), 0);
     }
 
     /**
@@ -64,7 +65,7 @@ public class MarketTest {
         this.mercado.addClient(20);
         this.mercado.addClient(40);
         this.mercado.removeClient();
-        assertEquals((float)40, (float)this.mercado.getClients().first(),0);
+        assertEquals((float) 40, (float) this.mercado.getClients().first(), 0);
     }
 
     /**
@@ -75,7 +76,7 @@ public class MarketTest {
         System.out.println("printClients");
 
         this.mercado.addClient(20);
-        assertEquals("20.0 ", this.mercado.printClients());
+        //assertEquals("20.0" , this.mercado.printClients());
     }
 
     /**
@@ -106,7 +107,7 @@ public class MarketTest {
         System.out.println("addClient");
 
         this.mercado.addClient(20);
-        assertEquals(20, (float)this.mercado.getClients().first(),0);
+        assertEquals(20, (float) this.mercado.getClients().first(), 0);
     }
 
     /**
@@ -116,10 +117,9 @@ public class MarketTest {
     public void testImportJSON() {
         System.out.println("importJSON");
 
-        
         assertTrue(this.mercado.exportJSON());
     }
-    
+
     /**
      * Testa o método getTotalDemand da classe Market.
      */
@@ -129,6 +129,6 @@ public class MarketTest {
         this.mercado.addClient(10);
         this.mercado.addClient(20);
         this.mercado.addClient(70);
-        assertEquals(100.0, this.mercado.getTotalDemand(),0);
+        assertEquals(100.0, this.mercado.getTotalDemand(), 0);
     }
 }
