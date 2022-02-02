@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "nome": "Rui Maria",
+  "capacidade": 100.0,
+  "mercados": [
+    "mercadinho1",
+    "mercadinho1",
+    "mercado1"
+  ]
+}

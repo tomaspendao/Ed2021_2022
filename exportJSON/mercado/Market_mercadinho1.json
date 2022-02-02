@@ -1,0 +1,9 @@
+{
+ "nome": "mercadinho1",
+ "tipo": "Mercado",
+ "clientes": [
+  50.0,
+  40.0,
+  10.0
+ ]
+}

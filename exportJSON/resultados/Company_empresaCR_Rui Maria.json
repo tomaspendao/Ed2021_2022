@@ -1,0 +1,11 @@
+{
+  "vendedor": "Rui Maria",
+  "refills": 1,
+  "missed_clients": 0,
+  "total_distance": "80.0km",
+  "rota": [
+    "empresaCR",
+    "armazem1",
+    "mercadinho1"
+  ]
+}

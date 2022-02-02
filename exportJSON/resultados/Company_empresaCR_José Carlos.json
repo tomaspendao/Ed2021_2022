@@ -1,0 +1,9 @@
+{
+  "vendedor": "José Carlos",
+  "refills": 0,
+  "missed_clients": 0,
+  "total_distance": "0.0km",
+  "rota": [
+    "empresaCR"
+  ]
+}

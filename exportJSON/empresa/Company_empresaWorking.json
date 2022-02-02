@@ -1,0 +1,133 @@
+{
+  "vendedores": [
+    {
+      "id": 1,
+      "nome": "Rui Maria",
+      "capacidade": 100.0,
+      "mercados_a_visitar": [
+        "mercadinho1",
+        "mercadinho1",
+        "mercado1"
+      ]
+    },
+    {
+      "id": 2,
+      "nome": "José Carlos",
+      "capacidade": 10.0,
+      "mercados_a_visitar": [
+        "mercadinho1"
+      ]
+    }
+  ],
+  "locais": [
+    {
+      "nome": "empresaCR",
+      "tipo": "Sede"
+    },
+    {
+      "nome": "mercadinho1",
+      "tipo": "Mercado",
+      "clientes": [
+        10.0,
+        40.0,
+        50.0
+      ]
+    },
+    {
+      "nome": "mercado2",
+      "tipo": "Mercado",
+      "clientes": [
+        1.0
+      ]
+    },
+    {
+      "nome": "mercado1",
+      "tipo": "Mercado",
+      "clientes": []
+    },
+    {
+      "nome": "armazem1",
+      "tipo": "Armazém",
+      "capacidade": 550.0,
+      "stock": 250.0
+    },
+    {
+      "nome": "armazem2",
+      "tipo": "Armazém",
+      "capacidade": 502.0,
+      "stock": 220.0
+    }
+  ],
+  "caminhos": [
+    {
+      "de": "empresaCR",
+      "para": "armazem1",
+      "distancia": 30.0
+    },
+    {
+      "de": "empresaCR",
+      "para": "mercadinho1",
+      "distancia": 30.0
+    },
+    {
+      "de": "mercadinho1",
+      "para": "empresaCR",
+      "distancia": 30.0
+    },
+    {
+      "de": "mercadinho1",
+      "para": "armazem1",
+      "distancia": 50.0
+    },
+    {
+      "de": "mercadinho1",
+      "para": "mercado1",
+      "distancia": 10.0
+    },
+    {
+      "de": "mercado2",
+      "para": "mercado1",
+      "distancia": 30.0
+    },
+    {
+      "de": "mercado1",
+      "para": "mercadinho1",
+      "distancia": 10.0
+    },
+    {
+      "de": "mercado1",
+      "para": "mercado2",
+      "distancia": 30.0
+    },
+    {
+      "de": "mercado1",
+      "para": "armazem1",
+      "distancia": 30.0
+    },
+    {
+      "de": "armazem1",
+      "para": "empresaCR",
+      "distancia": 30.0
+    },
+    {
+      "de": "armazem1",
+      "para": "mercadinho1",
+      "distancia": 50.0
+    },
+    {
+      "de": "armazem1",
+      "para": "mercado1",
+      "distancia": 30.0
+    },
+    {
+      "de": "armazem1",
+      "para": "armazem2",
+      "distancia": 50.0
+    },
+    {
+      "de": "armazem2",
+      "para": "armazem1",
+      "distancia": 50.0
+    }
+  ]
+}
