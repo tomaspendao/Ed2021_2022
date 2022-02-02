@@ -13,3 +13,5 @@ Para começar o programa deve se executar o Main.java.
 
 
 Ao sair do segundo menu irá ser proposto uma exportação da empresa actual de modo a que esta fique guardada na directoria /exportJSON/empresa/
+
+https://github.com/tomaspendao/Ed2021_2022
