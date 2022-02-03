@@ -3,7 +3,10 @@ Trabalho de ED epoca normal
 Realizado por:
   Daniel Pinto 8200412
   Tomás Pendão 8170308
-  
+
+Fazer unzip do ED_AC.zip para o projecto principal
+(ED2021_2022.zip é o projecto das coleções não é necessário fazer unzip é so para o caso)
+ 
 ED_EN_8200412_8170308 é projecto principal
 ED2021_2022 é projecto das Coleções
 
